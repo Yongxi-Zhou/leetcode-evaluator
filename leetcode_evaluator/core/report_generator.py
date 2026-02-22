@@ -12,6 +12,7 @@ from scipy import stats
 from collections import defaultdict
 
 from leetcode_evaluator.core.config import Config
+from leetcode_evaluator.core.stability_metrics import StabilityAnalyzer
 
 
 class ReportGenerator:
@@ -217,6 +218,26 @@ class ReportGenerator:
                 results[f'{topic}_without_prompt_rate'] = np.mean(data['without_prompt']) * 100
         
         return results
+
+    def calculate_stability_metrics(self) -> Dict:
+        """Calculate stability metrics using trials from results"""
+        trials = []
+        for result in self.results:
+            pid = result.get('problem_id')
+            for strategy, key in [('with_prompt', 'detailed'), ('without_prompt', 'minimal')]:
+                for idx, attempt in enumerate(result.get(strategy, [])):
+                    trials.append({
+                        'problem_id': pid,
+                        'prompt_type': key,
+                        'trial_index': idx,
+                        'status': attempt.get('status')
+                    })
+        
+        if not trials:
+            return {}
+            
+        analyzer = StabilityAnalyzer(trials=trials)
+        return analyzer.compute_metrics()
     
     def generate_visualizations(self, output_dir: str = None):
         """Generate all visualization plots"""
@@ -466,9 +487,10 @@ class ReportGenerator:
         performance = self.calculate_performance_metrics()
         comparison = self.calculate_comparison_metrics()
         topic_metrics = self.calculate_topic_metrics()
+        stability = self.calculate_stability_metrics()
         
         # Generate report
-        report = self._generate_markdown_report(correctness, performance, comparison, topic_metrics)
+        report = self._generate_markdown_report(correctness, performance, comparison, topic_metrics, stability)
         
         # Save report
         with open(output_file, 'w') as f:
@@ -481,7 +503,7 @@ class ReportGenerator:
         return output_file
     
     def _generate_markdown_report(self, correctness: Dict, performance: Dict, 
-                                  comparison: Dict, topic_metrics: Dict) -> str:
+                                  comparison: Dict, topic_metrics: Dict, stability: Dict) -> str:
         """Generate markdown formatted report"""
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
@@ -568,25 +590,32 @@ class ReportGenerator:
         report += """
 ### 2.2 Memory Performance
 
-"""
-        
-        if 'with_prompt_mean_memory_percentile' in performance:
-            report += f"""
 | Metric | With Prompt | Without Prompt |
 |--------|-------------|----------------|
 | Mean Memory Percentile | {performance.get('with_prompt_mean_memory_percentile', 0):.1f}% | {performance.get('without_prompt_mean_memory_percentile', 0):.1f}% |
 | Median Memory Percentile | {performance.get('with_prompt_median_memory_percentile', 0):.1f}% | {performance.get('without_prompt_median_memory_percentile', 0):.1f}% |
-"""
-        
-        report += """
+
 ---
 
-## 3. Prompt Impact Analysis
+## 3. Stability Analysis
+
+| Metric | Value |
+|--------|-------|
+| Total Problems | {stability.get('total_problems', 0)} |
+| Total Runs | {stability.get('total_runs', 0)} |
+| Run-Level Pass Rate | {stability.get('run_level_pass_rate', 0):.1f}% |
+| Perfect Stability Rate | {stability.get('perfect_stability_rate', 0):.1f}% |
+| First-Pass Accuracy | {stability.get('first_pass_accuracy', 0):.1f}% |
+| Average Variance | {stability.get('average_variance', 0):.4f} |
+
+---
+
+## 4. Prompt Impact Analysis
 
 """
         
         report += f"""
-### 3.1 Effectiveness Metrics
+### 4.1 Effectiveness Metrics
 
 - **Pass Rate Improvement:** {comparison.get('pass_rate_improvement', 0):.1f}%
 - **Pass Rate Difference:** {comparison.get('pass_rate_difference', 0):+.1f} percentage points
@@ -595,7 +624,7 @@ class ReportGenerator:
         if 'runtime_ttest_pvalue' in comparison:
             sig = "Yes" if comparison.get('runtime_statistically_significant', False) else "No"
             report += f"""
-### 3.2 Statistical Significance
+### 4.2 Statistical Significance
 
 - **Runtime T-Test P-Value:** {comparison.get('runtime_ttest_pvalue', 1):.4f}
 - **Statistically Significant (p<0.05):** {sig}
@@ -604,9 +633,9 @@ class ReportGenerator:
         report += """
 ---
 
-## 4. Conclusions
+## 5. Conclusions
 
-### 4.1 Key Insights
+### 5.1 Key Insights
 
 """
         
@@ -628,7 +657,7 @@ class ReportGenerator:
 """
         
         report += """
-### 4.2 Recommendations
+### 5.2 Recommendations
 
 1. **Use Detailed Prompts** for complex algorithmic problems where optimization matters
 2. **Multiple Attempts** can significantly improve success rates (Pass@k > Pass@1)
@@ -637,7 +666,7 @@ class ReportGenerator:
 
 ---
 
-## 5. Visualizations
+## 6. Visualizations
 
 See the generated PNG files in the reports directory for:
 - Pass rate comparison by difficulty

@@ -7,11 +7,12 @@ from collections import defaultdict
 class StabilityAnalyzer:
     """Analyzes repeated-run experiment results to compute stability and correctness metrics."""
     
-    def __init__(self, detailed_jsonl_path: str):
+    def __init__(self, detailed_jsonl_path: str = None, trials: List[Dict] = None):
         self.detailed_jsonl_path = detailed_jsonl_path
-        self.trials = []
+        self.trials = trials or []
         self.logger = logging.getLogger("StabilityAnalyzer")
-        self.load_trials()
+        if not self.trials and self.detailed_jsonl_path:
+            self.load_trials()
         
     def load_trials(self):
         """Loads raw trial data from the detailed.jsonl file."""
