@@ -24,11 +24,12 @@ wheels/
 *.egg
 
 # Results and reports
-results/*.json
-reports/*.md
-reports/*.png
+results/
+reports/
+experiments/
 !results/.gitkeep
 !reports/.gitkeep
+!experiments/.gitkeep
 
 # IDEs
 .vscode/
