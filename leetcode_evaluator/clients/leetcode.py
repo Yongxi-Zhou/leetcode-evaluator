@@ -6,7 +6,7 @@ import time
 import json
 import uuid
 import cloudscraper
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 from tenacity import retry, stop_after_attempt, wait_exponential
 from leetcode_evaluator.core.config import Config
 
@@ -80,7 +80,7 @@ class LeetCodeClient:
             return False
     
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=1, max=10))
-    def get_problem_list(self, limit: int = 50, skip: int = 0, 
+    def get_problem_list(self, limit: int = 50, skip: int = 0,
                         difficulty: Optional[str] = None) -> List[Dict]:
         """
         Fetch list of problems from LeetCode using V2 API
@@ -152,11 +152,89 @@ class LeetCodeClient:
             "sortBy": {"sortField": "CUSTOM", "sortOrder": "ASCENDING"}
         }
         
-        response = self._graphql_request(query, variables, operation_name="problemsetQuestionListV2")
-        
+        response = self._graphql_request(
+            query, variables, operation_name="problemsetQuestionListV2")
+
         if response and 'data' in response and 'problemsetQuestionListV2' in response['data']:
             return response['data']['problemsetQuestionListV2']['questions']
         return []
+
+    @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=1, max=10))
+    def get_problem_list_page(self, limit: int = 50, skip: int = 0,
+                             difficulty: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Fetch a problem list page and preserve pagination metadata.
+
+        Returns:
+            Dict with keys: questions, totalLength, hasMore
+        """
+        query = """
+        query problemsetQuestionListV2($filters: QuestionFilterInput, $limit: Int, $searchKeyword: String, $skip: Int, $sortBy: QuestionSortByInput, $categorySlug: String) {
+          problemsetQuestionListV2(
+            filters: $filters
+            limit: $limit
+            searchKeyword: $searchKeyword
+            skip: $skip
+            sortBy: $sortBy
+            categorySlug: $categorySlug
+          ) {
+            questions {
+              id
+              titleSlug
+              title
+              questionFrontendId
+              paidOnly
+              difficulty
+              topicTags {
+                name
+                slug
+              }
+              acRate
+            }
+            totalLength
+            hasMore
+          }
+        }
+        """
+
+        filters = {
+            "filterCombineType": "ALL",
+            "statusFilter": {"questionStatuses": [], "operator": "IS"},
+            "difficultyFilter": {"difficulties": [], "operator": "IS"},
+            "languageFilter": {"languageSlugs": [], "operator": "IS"},
+            "topicFilter": {"topicSlugs": [], "operator": "IS"},
+            "acceptanceFilter": {},
+            "frequencyFilter": {},
+            "frontendIdFilter": {},
+            "lastSubmittedFilter": {},
+            "publishedFilter": {},
+            "companyFilter": {"companySlugs": [], "operator": "IS"},
+            "positionFilter": {"positionSlugs": [], "operator": "IS"},
+            "contestPointFilter": {"contestPoints": [], "operator": "IS"},
+            "premiumFilter": {"premiumStatus": [], "operator": "IS"}
+        }
+        if difficulty:
+            filters["difficultyFilter"]["difficulties"] = [difficulty]
+
+        variables = {
+            "categorySlug": "all-code-essentials",
+            "limit": limit,
+            "skip": skip,
+            "filters": filters,
+            "searchKeyword": "",
+            "sortBy": {"sortField": "CUSTOM", "sortOrder": "ASCENDING"}
+        }
+
+        response = self._graphql_request(
+            query, variables, operation_name="problemsetQuestionListV2")
+        if response and 'data' in response and 'problemsetQuestionListV2' in response['data']:
+            data = response['data']['problemsetQuestionListV2']
+            return {
+                'questions': data.get('questions', []),
+                'totalLength': data.get('totalLength', 0),
+                'hasMore': data.get('hasMore', False)
+            }
+        return {'questions': [], 'totalLength': 0, 'hasMore': False}
     
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=1, max=10))
     def get_problem_details(self, title_slug: str) -> Optional[Dict]:
@@ -418,4 +496,54 @@ class LeetCodeClient:
                 detailed_problems.append(details)
             time.sleep(0.5)  # Rate limiting
         
+        return detailed_problems
+
+    def get_latest_problems(self, count: int = 10, difficulty: Optional[str] = None) -> List[Dict]:
+        """
+        Get the latest N free problems by LeetCode frontend question id.
+
+        "Latest" here means larger numeric `questionFrontendId`.
+        Non-numeric frontend ids (e.g. contest/special IDs) are skipped.
+        """
+        page_size = 100
+        page = self.get_problem_list_page(limit=page_size, skip=0, difficulty=difficulty)
+        total = page.get('totalLength', 0)
+        questions = page.get('questions', [])
+
+        if total <= 0 and not questions:
+            return []
+
+        all_questions = list(questions)
+        fetched = len(questions)
+        skip = fetched
+
+        while skip < total:
+            page = self.get_problem_list_page(limit=page_size, skip=skip, difficulty=difficulty)
+            page_questions = page.get('questions', [])
+            if not page_questions:
+                break
+            all_questions.extend(page_questions)
+            skip += len(page_questions)
+            time.sleep(0.2)
+
+        free_numeric = []
+        for problem in all_questions:
+            if problem.get('paidOnly', False):
+                continue
+            frontend_id = str(problem.get('questionFrontendId', '')).strip()
+            if not frontend_id.isdigit():
+                continue
+            problem['_frontend_id_num'] = int(frontend_id)
+            free_numeric.append(problem)
+
+        free_numeric.sort(key=lambda p: p['_frontend_id_num'], reverse=True)
+        selected_problems = free_numeric[:count]
+
+        detailed_problems = []
+        for problem in selected_problems:
+            details = self.get_problem_details(problem['titleSlug'])
+            if details:
+                detailed_problems.append(details)
+            time.sleep(0.5)
+
         return detailed_problems
