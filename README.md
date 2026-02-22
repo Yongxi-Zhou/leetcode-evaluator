@@ -161,17 +161,28 @@ Mean Runtime Percentile (Without Prompt): 48.2%
 
 ## Architecture
 
+The project has been reorganized into a structured package for better maintainability:
+
 ```
-leetcode_evaluator/
-├── config.py              # Configuration and environment variables
-├── leetcode_client.py     # LeetCode API client
-├── bedrock_client.py      # AWS Bedrock integration
-├── evaluator.py           # Main evaluation logic
-├── report_generator.py    # Metrics and visualization
-├── main.py                # CLI entry point
-├── requirements.txt       # Python dependencies
-├── .env                   # Environment variables (not in git)
-└── .env.example           # Example environment file
+leetcode-evaluator/
+├── main.py                    # CLI entry point
+├── leetcode_evaluator/        # Main package
+│   ├── core/                  # Core logic and configuration
+│   │   ├── config.py          # Settings and environment variables
+│   │   ├── evaluator.py       # Main evaluation logic
+│   │   └── report_generator.py # Metrics and visualizations
+│   └── clients/               # External service clients
+│       ├── leetcode.py        # LeetCode API client
+│       └── llm/               # LLM provider clients
+│           ├── base.py        # Abstract base client
+│           ├── bedrock.py     # AWS Bedrock client
+│           ├── gemini.py      # Google Gemini client
+│           ├── grok.py        # xAI Grok client
+│           └── openai.py      # OpenAI client
+├── tests/                     # Unit and integration tests
+├── requirements.txt           # Python dependencies
+├── .env                       # Environment variables (not in git)
+└── .env.example               # Example environment file
 ```
 
 ## Workflow

@@ -3,9 +3,9 @@ Main entry point for LeetCode Evaluator
 """
 import argparse
 import sys
-from evaluator import LeetCodeEvaluator
-from report_generator import ReportGenerator
-from config import Config
+from leetcode_evaluator.core.evaluator import LeetCodeEvaluator
+from leetcode_evaluator.core.report_generator import ReportGenerator
+from leetcode_evaluator.core.config import Config
 
 
 def main():
