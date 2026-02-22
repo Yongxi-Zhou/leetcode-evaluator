@@ -14,6 +14,7 @@ from leetcode_evaluator.clients.leetcode import LeetCodeClient
 from leetcode_evaluator.clients.llm.base import LLMClientFactory
 from leetcode_evaluator.core.config import Config
 from leetcode_evaluator.core.experiment_manager import ExperimentManager
+from leetcode_evaluator.core.stability_metrics import StabilityAnalyzer
 
 
 class LeetCodeEvaluator:
@@ -143,6 +144,7 @@ class LeetCodeEvaluator:
                 if eval_data:
                     result['without_prompt'].append(eval_data)
                     
+            result['params'] = kwargs # Store params for logging
             submissions_queue.put(result)
             tasks_queue.task_done()
 
@@ -198,11 +200,20 @@ class LeetCodeEvaluator:
                                 })
                                 aggregated_result[strategy].append(res)
                                 
-                                # Log to experiment manager
+                                # Log to experiment manager with stability-specific fields
+                                status = res.get('status', 'Unknown')
                                 self.experiment_manager.log_attempt({
+                                    'problem_id': problem.get('question_id'),
                                     'problem': problem['title'],
                                     'strategy': 'detailed' if strategy == 'with_prompt' else 'minimal',
-                                    'attempt': attempt_idx + 1,
+                                    'trial_index': attempt_idx,
+                                    'model_name': self.llm_client.model_id,
+                                    'temperature': item.get('params', {}).get('temperature', Config.MODEL_TEMPERATURE),
+                                    'top_p': item.get('params', {}).get('top_p', Config.MODEL_TOP_P),
+                                    'verdict': status,
+                                    'accepted_bool': 1 if status == 'Accepted' else 0,
+                                    'prompt_tokens': gen_data.get('input_tokens', 0),
+                                    'completion_tokens': gen_data.get('output_tokens', 0),
                                     **res
                                 })
                                 self.experiment_manager.log_solution(
@@ -355,13 +366,22 @@ class LeetCodeEvaluator:
             return None
 
         # Evaluate
-        results = self.evaluate_batch(problems, attempts, **kwargs)
-
+        eval_attempts = kwargs.get('stability_runs', attempts)
+        results = self.evaluate_batch(problems, eval_attempts, **kwargs)
+ 
         # Save final results
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         results_file = f"{Config.RESULTS_DIR}/evaluation_results_{timestamp}.json"
         self._save_results(results, results_file)
-
+        
+        # Stability Analysis
+        if eval_attempts > 1:
+            analyzer = StabilityAnalyzer(self.experiment_manager.jsonl_path)
+            summary = analyzer.compute_metrics()
+            if summary:
+                self.experiment_manager.save_stability_summary(summary)
+                analyzer.print_report(summary)
+ 
         print(f"\n{'='*60}")
         print(f"✓ Evaluation complete!")
         print(f"✓ Results saved to: {results_file}")

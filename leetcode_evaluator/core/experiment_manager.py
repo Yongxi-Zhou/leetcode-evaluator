@@ -23,6 +23,7 @@ class ExperimentManager:
         self.jsonl_path = os.path.join(self.experiment_dir, "detailed.jsonl")
         self.solutions_path = os.path.join(self.experiment_dir, "solutions.md")
         self.summary_path = os.path.join(self.experiment_dir, "summary.csv")
+        self.stability_summary_path = os.path.join(self.experiment_dir, "stability_summary.json")
         self.log_path = os.path.join(self.experiment_dir, "execution.log")
         
         # Setup logging
@@ -80,6 +81,12 @@ class ExperimentManager:
         df = pd.DataFrame(results_list)
         df.to_csv(self.summary_path, index=False)
         self.logger.info(f"Summary saved to {self.summary_path}")
+
+    def save_stability_summary(self, summary_data: Dict[str, Any]):
+        """Save aggregated stability metrics to stability_summary.json"""
+        with open(self.stability_summary_path, 'w') as f:
+            json.dump(summary_data, f, indent=2)
+        self.logger.info(f"Stability summary saved to {self.stability_summary_path}")
 
     def info(self, message: str):
         self.logger.info(message)

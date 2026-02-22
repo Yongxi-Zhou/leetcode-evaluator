@@ -64,6 +64,9 @@ class Config:
     
     SUBMISSION_POLL_INTERVAL = 2  # seconds
     SUBMISSION_TIMEOUT = 60  # seconds
+    
+    # Stability Evaluation
+    DEFAULT_STABILITY_RUNS = int(os.getenv('DEFAULT_STABILITY_RUNS', 10))
 
     # Prompts
     DETAILED_PROMPT = """You are an expert algorithm and data structure engineer. 

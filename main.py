@@ -100,6 +100,13 @@ Examples:
         help=f'Number of concurrent workers for LLM generation (default: {Config.WORKER_THREADS})'
     )
     
+    parser.add_argument(
+        '--stability-runs',
+        type=int,
+        default=Config.DEFAULT_STABILITY_RUNS,
+        help=f'Number of repeated runs per problem for stability analysis (default: {Config.DEFAULT_STABILITY_RUNS})'
+    )
+    
     # Batch Experiment Runner
     parser.add_argument(
         '--experiment-config',
@@ -146,7 +153,16 @@ Examples:
         base_params = {
             'num_problems': args.num_problems,
             'difficulty': args.difficulty,
-            'attempts': args.attempts
+            'attempts': args.attempts,
+            'stability_runs': args.stability_runs,
+            'workers': args.workers
+        }
+        
+        # Collect model overrides
+        run_params = {
+            'temperature': args.temperature,
+            'top_p': args.top_p,
+            'max_tokens': args.max_tokens
         }
         
         if args.experiment_config:
@@ -197,16 +213,13 @@ Examples:
             print(f"Configuration:")
             print(f"  - Problems: {args.num_problems}")
             print(f"  - Difficulty: {args.difficulty or 'All'}")
-            print(f"  - Attempts per approach: {args.attempts}")
-            
-            # CLI Overrides
-            run_params = {}
-            if args.temperature is not None: run_params['temperature'] = args.temperature
-            if args.top_p is not None: run_params['top_p'] = args.top_p
-            if args.max_tokens is not None: run_params['max_tokens'] = args.max_tokens
+            print(f"  - Base Attempts/Stability Runs: {max(args.attempts, args.stability_runs)}")
             
             if run_params:
-                print(f"  - Overrides: {run_params}")
+                # Filter out None values from run_params for display
+                display_params = {k: v for k, v in run_params.items() if v is not None}
+                if display_params:
+                    print(f"  - Overrides: {display_params}")
                 
             # Run evaluation
             results_file = evaluator.run_evaluation(
