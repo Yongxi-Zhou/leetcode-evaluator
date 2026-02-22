@@ -26,18 +26,30 @@ class LLMClient(ABC):
     def __init__(self, model_id: str = None):
         self.model_id = model_id
     
-    def generate_solution(self, problem: Dict, use_detailed_prompt: bool = True) -> GenerationResult:
+    def generate_solution(self, problem: Dict, use_detailed_prompt: bool = True, **kwargs) -> GenerationResult:
         """
         Main entry point for generating a solution.
         Orchestrates prompt preparation, model invocation with retries, and code extraction.
+        
+        Args:
+            problem: Problem dictionary
+            use_detailed_prompt: Whether to use detailed prompt
+            **kwargs: Generation parameters (temperature, top_p, max_tokens)
         """
         prompt = self._prepare_prompt(problem, use_detailed_prompt)
         start_time = time.time()
         
+        # Merge kwargs with defaults
+        gen_params = {
+            'temperature': kwargs.get('temperature', Config.MODEL_TEMPERATURE),
+            'top_p': kwargs.get('top_p', Config.MODEL_TOP_P),
+            'max_tokens': kwargs.get('max_tokens', Config.MODEL_MAX_TOKENS)
+        }
+        
         try:
             # The abstract _invoke_model will be called here via retry wrapper.
             # Response should contain 'text' and 'usage' (input_tokens, output_tokens).
-            response_data = self._invoke_model_with_retry(prompt)
+            response_data = self._invoke_model_with_retry(prompt, **gen_params)
             latency_ms = (time.time() - start_time) * 1000
             
             text = response_data.get('text')
@@ -71,12 +83,12 @@ class LLMClient(ABC):
         wait=wait_exponential(multiplier=Config.RETRY_DELAY, max=Config.RETRY_MAX_DELAY),
         reraise=True
     )
-    def _invoke_model_with_retry(self, prompt: str) -> Dict[str, Any]:
+    def _invoke_model_with_retry(self, prompt: str, **kwargs) -> Dict[str, Any]:
         """Wrapper around _invoke_model with retry logic"""
-        return self._invoke_model(prompt)
+        return self._invoke_model(prompt, **kwargs)
 
     @abstractmethod
-    def _invoke_model(self, prompt: str) -> Dict[str, Any]:
+    def _invoke_model(self, prompt: str, **kwargs) -> Dict[str, Any]:
         """
         Abstract method to be implemented by subclasses.
         Should return a dict with:

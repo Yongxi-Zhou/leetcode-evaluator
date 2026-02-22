@@ -18,7 +18,7 @@ class OpenAIClient(LLMClient):
         # Initialize OpenAI client
         self.client = OpenAI(api_key=self.api_key)
         
-    def _invoke_model(self, prompt: str) -> Dict[str, Any]:
+    def _invoke_model(self, prompt: str, **kwargs) -> Dict[str, Any]:
         """Invoke the OpenAI model and return text with usage metadata"""
         
         try:
@@ -34,9 +34,9 @@ class OpenAIClient(LLMClient):
                         "content": prompt
                     }
                 ],
-                temperature=0.3,
-                max_tokens=4096,
-                top_p=0.9
+                temperature=kwargs.get('temperature', 0.3),
+                max_tokens=kwargs.get('max_tokens', 4096),
+                top_p=kwargs.get('top_p', 0.9)
             )
             
             usage = {'input_tokens': 0, 'output_tokens': 0}

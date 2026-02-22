@@ -51,6 +51,11 @@ class Config:
     RETRY_DELAY = int(os.getenv('RETRY_DELAY', 2))  # initial delay in seconds
     RETRY_MAX_DELAY = int(os.getenv('RETRY_MAX_DELAY', 10))  # max delay for exponential backoff
     MAX_CONSECUTIVE_ERRORS = int(os.getenv('MAX_CONSECUTIVE_ERRORS', 3))  # circuit breaker threshold
+
+    # LLM Parameters
+    MODEL_TEMPERATURE = float(os.getenv('MODEL_TEMPERATURE', 0.3))
+    MODEL_TOP_P = float(os.getenv('MODEL_TOP_P', 0.9))
+    MODEL_MAX_TOKENS = int(os.getenv('MODEL_MAX_TOKENS', 4096))
     
     SUBMISSION_POLL_INTERVAL = 2  # seconds
     SUBMISSION_TIMEOUT = 60  # seconds

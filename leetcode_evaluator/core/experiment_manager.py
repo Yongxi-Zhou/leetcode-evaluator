@@ -9,10 +9,14 @@ from leetcode_evaluator.core.config import Config
 class ExperimentManager:
     """Handles structured logging and archiving of experiment results"""
     
-    def __init__(self, provider: str, model_id: str):
+    def __init__(self, provider: str, model_id: str, experiment_name: str = None):
         # Create experiment directory
         self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.experiment_dir = os.path.join(Config.EXPERIMENTS_DIR, self.timestamp)
+        dir_name = self.timestamp
+        if experiment_name:
+            dir_name = f"{self.timestamp}_{experiment_name}"
+            
+        self.experiment_dir = os.path.join(Config.EXPERIMENTS_DIR, dir_name)
         os.makedirs(self.experiment_dir, exist_ok=True)
         
         # Setup files
@@ -23,8 +27,10 @@ class ExperimentManager:
         
         # Setup logging
         self._setup_logging()
-        self.logger.info(f"Experiment started: {self.timestamp}")
+        self.logger.info(f"Experiment started: {dir_name}")
         self.logger.info(f"Provider: {provider}, Model: {model_id}")
+        if experiment_name:
+            self.logger.info(f"Experiment Name: {experiment_name}")
         
         # Initialize solutions.md
         with open(self.solutions_path, 'w') as f:

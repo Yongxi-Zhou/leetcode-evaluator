@@ -38,28 +38,33 @@ class BedrockClient(LLMClient):
                 config=boto_config
             )
         
-    def _invoke_model(self, prompt: str) -> Dict[str, Any]:
+    def _invoke_model(self, prompt: str, **kwargs) -> Dict[str, Any]:
         """Invoke the Bedrock model and return text with usage metadata"""
+        
+        temperature = kwargs.get('temperature', 0.3)
+        top_p = kwargs.get('top_p', 0.9)
+        max_tokens = kwargs.get('max_tokens', 4096)
         
         # Prepare request based on model family
         if 'anthropic.claude' in self.model_id:
             body = {
                 "anthropic_version": "bedrock-2023-05-31",
-                "max_tokens": 4096,
+                "max_tokens": max_tokens,
                 "messages": [
                     {
                         "role": "user",
                         "content": prompt
                     }
                 ],
-                "temperature": 0.3,
-                "top_p": 0.9
+                "temperature": temperature,
+                "top_p": top_p
             }
         else:
             body = {
                 "prompt": prompt,
-                "max_tokens": 4096,
-                "temperature": 0.3
+                "max_tokens": max_tokens,
+                "temperature": temperature,
+                "top_p": top_p
             }
         
         try:

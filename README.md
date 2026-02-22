@@ -4,18 +4,17 @@ A comprehensive evaluation framework for comparing AI-generated LeetCode solutio
 
 ## Features
 
+- **Experiment Archiving**: Every run is saved in a timestamped folder with full metrics and code solutions
+- **Batch Experiment Runner**: Run multiple configurations (temp, top-p, etc.) sequentially via JSON config
+- **Model Parameters**: Fine-grained control over Temperature, Top-P, and Max Tokens
+- **Multi-Provider Support**: AWS Bedrock, OpenAI, Google Gemini, and xAI Grok
 - **Problem Fetching**: Automatically fetch LeetCode problems by difficulty
 - **Dual Evaluation**: Compare solutions generated with detailed vs minimal prompts
-- **Automated Submission**: Submit solutions to LeetCode and retrieve results
 - **Comprehensive Metrics**: 
+  - Token usage & cost estimation
   - Pass@k success rates
-  - Runtime percentile rankings
-  - Memory usage analysis
-  - Error breakdown by type
-  - Topic-specific performance
-- **Statistical Analysis**: T-tests for significance, effect sizes
-- **Rich Visualizations**: Charts, graphs, and heatmaps
-- **Detailed Reports**: Markdown reports with actionable insights
+  - Runtime & Memory percentile rankings
+- **Rich Visualizations**: Charts, graphs, and performance heatmaps
 
 ## Installation
 
@@ -41,13 +40,21 @@ Edit `.env` and add your credentials:
 LEETCODE_USERNAME=your_username
 LEETCODE_PASSWORD=your_password
 
-# AWS Bedrock Configuration
-AWS_ACCESS_KEY_ID=your_access_key
-AWS_SECRET_ACCESS_KEY=your_secret_key
-AWS_REGION=us-east-1
+# LLM Provider Configuration
+LLM_PROVIDER=bedrock  # bedrock, openai, gemini, grok
 
-# Bedrock Model ID (optional, default: Claude 3.5 Sonnet)
+# AWS Bedrock
+AWS_REGION=us-east-1
 BEDROCK_MODEL_ID=anthropic.claude-3-5-sonnet-20241022-v2:0
+
+# OpenAI
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL_ID=gpt-4o
+
+# Model Parameters (Defaults)
+MODEL_TEMPERATURE=0.3
+MODEL_TOP_P=0.9
+MODEL_MAX_TOKENS=4096
 ```
 
 ## Usage
@@ -68,12 +75,13 @@ python main.py [OPTIONS]
 Options:
   --num-problems INT       Number of problems to evaluate (default: 5)
   --difficulty EASY|MEDIUM|HARD
-                          Filter problems by difficulty
   --attempts INT          Number of attempts per approach (default: 1)
-  --fetch-only            Only fetch problems, don't evaluate
+  --temperature FLOAT     LLM temperature override
+  --max-tokens INT        LLM max tokens override
+  --experiment-config FILE Run multiple experiments defined in a JSON file
   --report FILE           Generate report from existing results
-  --model MODEL_ID        Override Bedrock model ID
-  --help                  Show this help message
+  --provider PROVIDER     bedrock|openai|gemini|grok
+  --model MODEL_ID        Override model ID
 ```
 
 ### Examples
@@ -96,28 +104,34 @@ python main.py --fetch-only --num-problems 20 --difficulty HARD
 python main.py --report results/evaluation_results_20250101_120000.json
 ```
 
-#### 4. Use Different Bedrock Model
+#### 4. Batch Experiment Runner
 
+Run multiple configurations sequentially:
 ```bash
-python main.py --num-problems 5 --model anthropic.claude-3-haiku-20240307-v1:0
+python main.py --experiment-config experiments.json
+```
+
+**experiments.json example:**
+```json
+[
+  { "name": "baseline", "params": { "temperature": 0.1 } },
+  { "name": "creative", "params": { "temperature": 0.8 } }
+]
 ```
 
 ## Output Files
 
 The tool generates several output files:
 
-### Results Directory (`results/`)
-- `problems_TIMESTAMP.json` - Fetched problem data
-- `evaluation_results_TIMESTAMP.json` - Detailed evaluation results
+### Experiment Directory (`experiments/YYYYMMDD_HHMMSS/`)
+- `detailed.jsonl` - Raw LLM responses, tokens, and metadata
+- `summary.csv` - High-level metrics (Pass Rate, Cost, Latency)
+- `solutions.md` - Formatted code blocks of all generated solutions
+- `execution.log` - Application logs for the run
 
 ### Reports Directory (`reports/`)
-- `analysis_report_TIMESTAMP.md` - Comprehensive markdown report
-- `pass_rate_by_difficulty_TIMESTAMP.png` - Success rate visualization
-- `runtime_distribution_TIMESTAMP.png` - Runtime percentile histogram
-- `memory_distribution_TIMESTAMP.png` - Memory usage histogram
-- `runtime_vs_memory_TIMESTAMP.png` - Performance scatter plot
-- `error_types_TIMESTAMP.png` - Error breakdown chart
-- `topic_performance_TIMESTAMP.png` - Topic-specific heatmap
+- `analysis_report_TIMESTAMP.md` - Comprehensive performance breakdown
+- `*.png` - Visualizations (Success rates, Runtime/Memory distributions)
 
 ## Metrics Explained
 

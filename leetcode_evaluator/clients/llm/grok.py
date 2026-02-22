@@ -16,7 +16,7 @@ class GrokClient(LLMClient):
         self.api_key = api_key or Config.GROK_API_KEY
         self.base_url = Config.GROK_API_BASE_URL
         
-    def _invoke_model(self, prompt: str) -> Dict[str, Any]:
+    def _invoke_model(self, prompt: str, **kwargs) -> Dict[str, Any]:
         """Invoke the Grok model and return text with usage metadata"""
         
         headers = {
@@ -36,9 +36,9 @@ class GrokClient(LLMClient):
                     "content": prompt
                 }
             ],
-            "temperature": 0.3,
-            "max_tokens": 4096,
-            "top_p": 0.9
+            "temperature": kwargs.get('temperature', 0.3),
+            "max_tokens": kwargs.get('max_tokens', 4096),
+            "top_p": kwargs.get('top_p', 0.9)
         }
         
         try:

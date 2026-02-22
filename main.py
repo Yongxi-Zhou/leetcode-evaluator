@@ -76,6 +76,30 @@ Examples:
         help='Override model ID from config'
     )
     
+    # New Model Parameters
+    parser.add_argument(
+        '--temperature',
+        type=float,
+        help='LLM temperature override'
+    )
+    parser.add_argument(
+        '--top-p',
+        type=float,
+        help='LLM Top-P override'
+    )
+    parser.add_argument(
+        '--max-tokens',
+        type=int,
+        help='LLM Max Tokens override'
+    )
+    
+    # Batch Experiment Runner
+    parser.add_argument(
+        '--experiment-config',
+        type=str,
+        help='Path to a JSON file defining multiple experiments'
+    )
+    
     args = parser.parse_args()
     
     try:
@@ -108,43 +132,99 @@ Examples:
             print(f"\n✓ Successfully fetched {len(problems)} problems")
             return 0
         
-        # Full evaluation mode
-        print("Starting LeetCode evaluation...")
-        print(f"Configuration:")
-        print(f"  - Problems: {args.num_problems}")
-        print(f"  - Difficulty: {args.difficulty or 'All'}")
-        print(f"  - Attempts per approach: {args.attempts}")
-        provider = args.provider or Config.LLM_PROVIDER
-        model = args.model or getattr(Config, f"{provider.upper()}_MODEL_ID", "default")
-        print(f"  - Provider: {provider}")
-        print(f"  - Model: {model}")
-        print()
+        # Run evaluation (Batch or Single)
+        import json
         
-        # Run evaluation
-        results_file = evaluator.run_evaluation(
-            num_problems=args.num_problems,
-            difficulty=args.difficulty,
-            attempts=args.attempts
-        )
+        # Collect base parameters
+        base_params = {
+            'num_problems': args.num_problems,
+            'difficulty': args.difficulty,
+            'attempts': args.attempts
+        }
         
-        if not results_file:
-            print("✗ Evaluation failed")
-            return 1
-        
-        # Generate report
-        print("\nGenerating comprehensive report...")
-        generator = ReportGenerator(results_file)
-        report_file = generator.generate_full_report()
-        
-        print(f"\n{'='*60}")
-        print("✓ All tasks completed successfully!")
-        print(f"{'='*60}")
-        print(f"Results: {results_file}")
-        print(f"Report: {report_file}")
-        print(f"Visualizations: {Config.REPORT_DIR}/")
-        print(f"{'='*60}")
-        
-        return 0
+        if args.experiment_config:
+            # Batch Mode
+            print(f"🚀 Loading batch experiments from: {args.experiment_config}")
+            with open(args.experiment_config, 'r') as f:
+                experiments = json.load(f)
+                
+            print(f"Found {len(experiments)} experiments to run.")
+            
+            for i, exp in enumerate(experiments):
+                name = exp.get('name', f"exp_{i}")
+                params = exp.get('params', {})
+                
+                print(f"\n{'-'*60}")
+                print(f"RUNNING EXPERIMENT {i+1}/{len(experiments)}: {name}")
+                print(f"Parameters: {params}")
+                print(f"{'-'*60}")
+                
+                # Re-initialize evaluator for each experiment
+                exp_evaluator = LeetCodeEvaluator(
+                    provider=args.provider,
+                    model_id=args.model,
+                    experiment_name=name
+                )
+                
+                results_file = exp_evaluator.run_evaluation(
+                    **base_params,
+                    **params
+                )
+                
+                if results_file:
+                    print(f"✓ Experiment {name} completed. Results: {results_file}")
+                    # Optional: generate report for each
+                    generator = ReportGenerator(results_file)
+                    generator.generate_full_report()
+                else:
+                    print(f"✗ Experiment {name} failed.")
+            
+            print(f"\n{'='*60}")
+            print("✓ All batch experiments completed!")
+            print(f"{'='*60}")
+            return 0
+            
+        else:
+            # Single Evaluation Mode
+            print("Starting LeetCode evaluation...")
+            print(f"Configuration:")
+            print(f"  - Problems: {args.num_problems}")
+            print(f"  - Difficulty: {args.difficulty or 'All'}")
+            print(f"  - Attempts per approach: {args.attempts}")
+            
+            # CLI Overrides
+            run_params = {}
+            if args.temperature is not None: run_params['temperature'] = args.temperature
+            if args.top_p is not None: run_params['top_p'] = args.top_p
+            if args.max_tokens is not None: run_params['max_tokens'] = args.max_tokens
+            
+            if run_params:
+                print(f"  - Overrides: {run_params}")
+                
+            # Run evaluation
+            results_file = evaluator.run_evaluation(
+                **base_params,
+                **run_params
+            )
+            
+            if not results_file:
+                print("✗ Evaluation failed")
+                return 1
+            
+            # Generate report
+            print("\nGenerating comprehensive report...")
+            generator = ReportGenerator(results_file)
+            report_file = generator.generate_full_report()
+            
+            print(f"\n{'='*60}")
+            print("✓ Tasks completed successfully!")
+            print(f"{'='*60}")
+            print(f"Results: {results_file}")
+            print(f"Report: {report_file}")
+            print(f"Visualizations: {Config.REPORT_DIR}/")
+            print(f"{'='*60}")
+            
+            return 0
         
     except KeyboardInterrupt:
         print("\n\n✗ Interrupted by user")

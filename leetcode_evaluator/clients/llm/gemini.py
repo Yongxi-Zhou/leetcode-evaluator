@@ -19,13 +19,14 @@ class GeminiClient(LLMClient):
         genai.configure(api_key=self.api_key)
         self.model = genai.GenerativeModel(self.model_id)
 
-    def _invoke_model(self, prompt: str) -> Dict[str, Any]:
+    def _invoke_model(self, prompt: str, **kwargs) -> Dict[str, Any]:
         """Invoke the Gemini model and return text with usage metadata"""
 
         try:
             generation_config = {
-                "temperature": 0.3,
-                "top_p": 0.9,
+                "temperature": kwargs.get('temperature', 0.3),
+                "top_p": kwargs.get('top_p', 0.9),
+                "max_output_tokens": kwargs.get('max_tokens', 4096),
             }
 
             response = self.model.generate_content(

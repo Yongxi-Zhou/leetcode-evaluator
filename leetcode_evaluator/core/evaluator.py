@@ -16,7 +16,7 @@ from leetcode_evaluator.core.experiment_manager import ExperimentManager
 class LeetCodeEvaluator:
     """Main evaluator for comparing AI-generated solutions"""
 
-    def __init__(self, provider: str = None, model_id: str = None):
+    def __init__(self, provider: str = None, model_id: str = None, experiment_name: str = None):
         self.leetcode_client = LeetCodeClient()
         self.llm_client = LLMClientFactory.create_client(
             provider=provider, model_id=model_id)
@@ -27,7 +27,8 @@ class LeetCodeEvaluator:
         # Initialize Experiment Manager
         self.experiment_manager = ExperimentManager(
             provider=self.provider,
-            model_id=self.llm_client.model_id
+            model_id=self.llm_client.model_id,
+            experiment_name=experiment_name
         )
 
     def initialize(self) -> bool:
@@ -54,9 +55,14 @@ class LeetCodeEvaluator:
         print()
         return True
 
-    def evaluate_problem(self, problem: Dict, attempts: int = 1) -> Dict:
+    def evaluate_problem(self, problem: Dict, attempts: int = 1, **kwargs) -> Dict:
         """
         Evaluate a single problem with both prompted and non-prompted approaches
+        
+        Args:
+            problem: Problem dictionary
+            attempts: Number of solution attempts per approach
+            **kwargs: Generation parameters (temperature, top_p, max_tokens)
 
         Args:
             problem: Problem dictionary
@@ -87,7 +93,8 @@ class LeetCodeEvaluator:
             print(f"  Attempt {attempt + 1}/{attempts}")
             eval_data = self._evaluate_single_solution(
                 problem,
-                use_detailed_prompt=True
+                use_detailed_prompt=True,
+                **kwargs
             )
             if eval_data:
                 result['with_prompt'].append(eval_data)
@@ -116,7 +123,8 @@ class LeetCodeEvaluator:
             print(f"  Attempt {attempt + 1}/{attempts}")
             eval_data = self._evaluate_single_solution(
                 problem,
-                use_detailed_prompt=False
+                use_detailed_prompt=False,
+                **kwargs
             )
             if eval_data:
                 result['without_prompt'].append(eval_data)
@@ -142,14 +150,15 @@ class LeetCodeEvaluator:
         return result
 
     def _evaluate_single_solution(self, problem: Dict,
-                                  use_detailed_prompt: bool) -> Optional[Dict]:
+                                  use_detailed_prompt: bool, **kwargs) -> Optional[Dict]:
         """
         Generate and evaluate a single solution with metadata tracking
         """
         # Generate solution
         gen_result = self.llm_client.generate_solution(
             problem,
-            use_detailed_prompt=use_detailed_prompt
+            use_detailed_prompt=use_detailed_prompt,
+            **kwargs
         )
 
         metadata = {
@@ -210,7 +219,7 @@ class LeetCodeEvaluator:
 
         return result
 
-    def evaluate_batch(self, problems: List[Dict], attempts: int = 1) -> List[Dict]:
+    def evaluate_batch(self, problems: List[Dict], attempts: int = 1, **kwargs) -> List[Dict]:
         """
         Evaluate multiple problems with Circuit Breaker mechanism
 
@@ -232,7 +241,7 @@ class LeetCodeEvaluator:
             print(f"\nProgress: {i+1}/{len(problems)}")
 
             try:
-                result = self.evaluate_problem(problem, attempts)
+                result = self.evaluate_problem(problem, attempts, **kwargs)
                 results.append(result)
                 
                 # Check for "Generation Failed" in all attempts
@@ -340,7 +349,7 @@ class LeetCodeEvaluator:
         return problems
 
     def run_evaluation(self, num_problems: int = 10, difficulty: str = None,
-                       attempts: int = 1) -> str:
+                       attempts: int = 1, **kwargs) -> str:
         """
         Run complete evaluation workflow
 
@@ -364,7 +373,7 @@ class LeetCodeEvaluator:
             return None
 
         # Evaluate
-        results = self.evaluate_batch(problems, attempts)
+        results = self.evaluate_batch(problems, attempts, **kwargs)
 
         # Save final results
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
