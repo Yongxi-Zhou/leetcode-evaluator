@@ -3,8 +3,8 @@ Test script to verify Google Gemini API is working correctly
 """
 import os
 import sys
-from gemini_client import GeminiClient
-from config import Config
+from leetcode_evaluator.clients.llm.gemini import GeminiClient
+from leetcode_evaluator.core.config import Config
 
 
 def test_configuration():

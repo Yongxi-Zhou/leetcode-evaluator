@@ -8,7 +8,7 @@ import uuid
 import cloudscraper
 from typing import Dict, List, Optional
 from tenacity import retry, stop_after_attempt, wait_exponential
-from config import Config
+from leetcode_evaluator.core.config import Config
 
 
 class LeetCodeClient:

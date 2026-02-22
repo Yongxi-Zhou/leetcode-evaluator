@@ -3,8 +3,8 @@ Test script to verify OpenAI API is working correctly
 """
 import os
 import sys
-from openai_client import OpenAIClient
-from config import Config
+from leetcode_evaluator.clients.llm.openai import OpenAIClient
+from leetcode_evaluator.core.config import Config
 
 
 def test_configuration():

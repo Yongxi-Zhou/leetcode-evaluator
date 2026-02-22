@@ -3,7 +3,7 @@ Base LLM Client interface and factory for multiple providers
 """
 from abc import ABC, abstractmethod
 from typing import Dict, Optional
-from config import Config
+from leetcode_evaluator.core.config import Config
 
 
 class LLMClient(ABC):
@@ -71,16 +71,16 @@ class LLMClientFactory:
         provider = provider or Config.LLM_PROVIDER
         
         if provider == 'bedrock':
-            from bedrock_client import BedrockClient
+            from leetcode_evaluator.clients.llm.bedrock import BedrockClient
             return BedrockClient(model_id=model_id)
         elif provider == 'openai':
-            from openai_client import OpenAIClient
+            from leetcode_evaluator.clients.llm.openai import OpenAIClient
             return OpenAIClient(model_id=model_id)
         elif provider == 'gemini':
-            from gemini_client import GeminiClient
+            from leetcode_evaluator.clients.llm.gemini import GeminiClient
             return GeminiClient(model_id=model_id)
         elif provider == 'grok':
-            from grok_client import GrokClient
+            from leetcode_evaluator.clients.llm.grok import GrokClient
             return GrokClient(model_id=model_id)
         else:
             raise ValueError(f"Unsupported LLM provider: {provider}")

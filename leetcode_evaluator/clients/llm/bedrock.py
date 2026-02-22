@@ -1,22 +1,42 @@
 """
-OpenAI Client for generating code solutions
+AWS Bedrock Client for generating code solutions
 """
+import json
 import re
+import boto3
 from typing import Dict, Optional
-from openai import OpenAI
-from config import Config
-from llm_client import LLMClient
+from botocore.config import Config as BotoConfig
+from leetcode_evaluator.core.config import Config
+from leetcode_evaluator.clients.llm.base import LLMClient
 
 
-class OpenAIClient(LLMClient):
-    """Client for interacting with OpenAI models (GPT-4, GPT-3.5, etc.)"""
+class BedrockClient(LLMClient):
+    """Client for interacting with AWS Bedrock models"""
     
-    def __init__(self, model_id: str = None, api_key: str = None):
-        super().__init__(model_id=model_id or Config.OPENAI_MODEL_ID)
-        self.api_key = api_key or Config.OPENAI_API_KEY
+    def __init__(self, model_id: str = None, region: str = None, profile: str = None):
+        super().__init__(model_id=model_id or Config.BEDROCK_MODEL_ID)
+        self.region = region or Config.AWS_REGION
+        self.profile = profile or Config.AWS_PROFILE
         
-        # Initialize OpenAI client
-        self.client = OpenAI(api_key=self.api_key)
+        # Initialize Bedrock client
+        boto_config = BotoConfig(
+            region_name=self.region,
+            retries={'max_attempts': 3, 'mode': 'adaptive'}
+        )
+        
+        # Use AWS profile if specified, otherwise use default credentials or explicit keys
+        if self.profile:
+            # Use profile from ~/.aws/credentials
+            session = boto3.Session(profile_name=self.profile, region_name=self.region)
+            self.client = session.client('bedrock-runtime', config=boto_config)
+            print(f"✓ Using AWS profile: {self.profile}")
+        else:
+            # Use default credentials chain (env vars, instance profile, etc.)
+            self.client = boto3.client(
+                'bedrock-runtime',
+                region_name=self.region,
+                config=boto_config
+            )
         
     def generate_solution(self, problem: Dict, use_detailed_prompt: bool = True) -> Optional[str]:
         """
@@ -33,7 +53,9 @@ class OpenAIClient(LLMClient):
         prompt = self._prepare_prompt(problem, use_detailed_prompt)
         
         try:
-            # Call OpenAI API
+            # Call Bedrock API
+            print(f"Using model: {self.model_id}")
+            print(f"With prompt: {prompt}")
             response = self._invoke_model(prompt)
             
             if response:
@@ -47,33 +69,53 @@ class OpenAIClient(LLMClient):
         return None
     
     def _invoke_model(self, prompt: str) -> Optional[str]:
-        """Invoke the OpenAI model with the given prompt"""
+        """Invoke the Bedrock model with the given prompt"""
         
-        try:
-            response = self.client.chat.completions.create(
-                model=self.model_id,
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are an expert Python programmer specializing in algorithmic problem solving."
-                    },
+        # Prepare request based on model family
+        if 'anthropic.claude' in self.model_id:
+            body = {
+                "anthropic_version": "bedrock-2023-05-31",
+                "max_tokens": 4096,
+                "messages": [
                     {
                         "role": "user",
                         "content": prompt
                     }
                 ],
-                temperature=0.3,
-                max_tokens=4096,
-                top_p=0.9
+                "temperature": 0.3,
+                "top_p": 0.9
+            }
+        else:
+            # Generic format for other models
+            body = {
+                "prompt": prompt,
+                "max_tokens": 4096,
+                "temperature": 0.3
+            }
+        
+        try:
+            response = self.client.invoke_model(
+                modelId=self.model_id,
+                body=json.dumps(body),
+                contentType='application/json',
+                accept='application/json'
             )
             
-            if response.choices and len(response.choices) > 0:
-                return response.choices[0].message.content
+            response_body = json.loads(response['body'].read())
+            
+            # Extract text based on model response format
+            if 'anthropic.claude' in self.model_id:
+                if 'content' in response_body and len(response_body['content']) > 0:
+                    return response_body['content'][0]['text']
+            elif 'completion' in response_body:
+                return response_body['completion']
+            elif 'generated_text' in response_body:
+                return response_body['generated_text']
             
             return None
             
         except Exception as e:
-            print(f"OpenAI API error: {str(e)}")
+            print(f"Model invocation error: {str(e)}")
             return None
     
     def _extract_code(self, response: str) -> Optional[str]:

@@ -7,9 +7,9 @@ from typing import Dict, List, Optional
 from datetime import datetime
 from tqdm import tqdm
 
-from leetcode_client import LeetCodeClient
-from llm_client import LLMClientFactory
-from config import Config
+from leetcode_evaluator.clients.leetcode import LeetCodeClient
+from leetcode_evaluator.clients.llm.base import LLMClientFactory
+from leetcode_evaluator.core.config import Config
 
 
 class LeetCodeEvaluator:

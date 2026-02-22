@@ -1,20 +1,22 @@
 """
-xAI Grok Client for generating code solutions
+OpenAI Client for generating code solutions
 """
 import re
-import requests
 from typing import Dict, Optional
-from config import Config
-from llm_client import LLMClient
+from openai import OpenAI
+from leetcode_evaluator.core.config import Config
+from leetcode_evaluator.clients.llm.base import LLMClient
 
 
-class GrokClient(LLMClient):
-    """Client for interacting with xAI Grok models"""
+class OpenAIClient(LLMClient):
+    """Client for interacting with OpenAI models (GPT-4, GPT-3.5, etc.)"""
     
     def __init__(self, model_id: str = None, api_key: str = None):
-        super().__init__(model_id=model_id or Config.GROK_MODEL_ID)
-        self.api_key = api_key or Config.GROK_API_KEY
-        self.base_url = Config.GROK_API_BASE_URL
+        super().__init__(model_id=model_id or Config.OPENAI_MODEL_ID)
+        self.api_key = api_key or Config.OPENAI_API_KEY
+        
+        # Initialize OpenAI client
+        self.client = OpenAI(api_key=self.api_key)
         
     def generate_solution(self, problem: Dict, use_detailed_prompt: bool = True) -> Optional[str]:
         """
@@ -31,7 +33,7 @@ class GrokClient(LLMClient):
         prompt = self._prepare_prompt(problem, use_detailed_prompt)
         
         try:
-            # Call Grok API
+            # Call OpenAI API
             response = self._invoke_model(prompt)
             
             if response:
@@ -45,48 +47,33 @@ class GrokClient(LLMClient):
         return None
     
     def _invoke_model(self, prompt: str) -> Optional[str]:
-        """Invoke the Grok model with the given prompt"""
-        
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json"
-        }
-        
-        payload = {
-            "model": self.model_id,
-            "messages": [
-                {
-                    "role": "system",
-                    "content": "You are an expert Python programmer specializing in algorithmic problem solving."
-                },
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            "temperature": 0.3,
-            "max_tokens": 4096,
-            "top_p": 0.9
-        }
+        """Invoke the OpenAI model with the given prompt"""
         
         try:
-            response = requests.post(
-                f"{self.base_url}/chat/completions",
-                headers=headers,
-                json=payload,
-                timeout=60
+            response = self.client.chat.completions.create(
+                model=self.model_id,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are an expert Python programmer specializing in algorithmic problem solving."
+                    },
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                temperature=0.3,
+                max_tokens=4096,
+                top_p=0.9
             )
-            response.raise_for_status()
             
-            data = response.json()
-            
-            if data.get('choices') and len(data['choices']) > 0:
-                return data['choices'][0]['message']['content']
+            if response.choices and len(response.choices) > 0:
+                return response.choices[0].message.content
             
             return None
             
         except Exception as e:
-            print(f"Grok API error: {str(e)}")
+            print(f"OpenAI API error: {str(e)}")
             return None
     
     def _extract_code(self, response: str) -> Optional[str]:

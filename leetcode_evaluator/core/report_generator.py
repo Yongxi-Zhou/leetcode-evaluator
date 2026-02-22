@@ -11,7 +11,7 @@ from datetime import datetime
 from scipy import stats
 from collections import defaultdict
 
-from config import Config
+from leetcode_evaluator.core.config import Config
 
 
 class ReportGenerator:

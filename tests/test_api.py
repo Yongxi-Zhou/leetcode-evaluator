@@ -1,8 +1,8 @@
 """
 Test script to verify LeetCode API is working correctly
 """
-from leetcode_client import LeetCodeClient
-from config import Config
+from leetcode_evaluator.clients.leetcode import LeetCodeClient
+from leetcode_evaluator.core.config import Config
 
 def test_authentication():
     """Test if session cookies work"""
