@@ -1,0 +1,3 @@
+2026-02-21 18:27:55,736 - INFO - Experiment started: 20260221_182755
+2026-02-21 18:27:55,737 - INFO - Provider: openai, Model: <MagicMock name='mock.OpenAIClient().model_id' id='4397608096'>
+2026-02-21 18:28:02,791 - INFO - Summary saved to experiments/20260221_182755/summary.csv

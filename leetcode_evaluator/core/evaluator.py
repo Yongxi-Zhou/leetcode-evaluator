@@ -10,6 +10,7 @@ from tqdm import tqdm
 from leetcode_evaluator.clients.leetcode import LeetCodeClient
 from leetcode_evaluator.clients.llm.base import LLMClientFactory
 from leetcode_evaluator.core.config import Config
+from leetcode_evaluator.core.experiment_manager import ExperimentManager
 
 
 class LeetCodeEvaluator:
@@ -22,6 +23,12 @@ class LeetCodeEvaluator:
         # Store the actual provider being used
         self.provider = provider or Config.LLM_PROVIDER
         self.results = []
+        
+        # Initialize Experiment Manager
+        self.experiment_manager = ExperimentManager(
+            provider=self.provider,
+            model_id=self.llm_client.model_id
+        )
 
     def initialize(self) -> bool:
         """Initialize clients and authenticate"""
@@ -43,6 +50,7 @@ class LeetCodeEvaluator:
 
         print(
             f"✓ Using {self.provider} provider with model: {self.llm_client.model_id}")
+        self.experiment_manager.info(f"Initialized evaluator with {self.provider}")
         print()
         return True
 
@@ -77,32 +85,58 @@ class LeetCodeEvaluator:
         print("\n[1/2] Evaluating WITH detailed prompt...")
         for attempt in range(attempts):
             print(f"  Attempt {attempt + 1}/{attempts}")
-            evaluation = self._evaluate_single_solution(
+            eval_data = self._evaluate_single_solution(
                 problem,
                 use_detailed_prompt=True
             )
-            if evaluation:
-                result['with_prompt'].append(evaluation)
-                print(f"    ✓ Status: {evaluation['status']}")
-                if evaluation.get('runtime_percentile'):
+            if eval_data:
+                result['with_prompt'].append(eval_data)
+                print(f"    ✓ Status: {eval_data['status']}")
+                if eval_data.get('runtime_percentile'):
                     print(
-                        f"    Runtime: {evaluation['runtime_percentile']:.1f}th percentile")
+                        f"    Runtime: {eval_data['runtime_percentile']:.1f}th percentile")
+                
+                # Log to experiment manager
+                self.experiment_manager.log_attempt({
+                    'problem': problem['title'],
+                    'strategy': 'detailed',
+                    'attempt': attempt + 1,
+                    **eval_data
+                })
+                self.experiment_manager.log_solution(
+                    problem['title'], 
+                    'detailed', 
+                    eval_data.get('code')
+                )
             time.sleep(2)  # Rate limiting
 
         # Evaluate without detailed prompt
         print("\n[2/2] Evaluating WITHOUT detailed prompt...")
         for attempt in range(attempts):
             print(f"  Attempt {attempt + 1}/{attempts}")
-            evaluation = self._evaluate_single_solution(
+            eval_data = self._evaluate_single_solution(
                 problem,
                 use_detailed_prompt=False
             )
-            if evaluation:
-                result['without_prompt'].append(evaluation)
-                print(f"    ✓ Status: {evaluation['status']}")
-                if evaluation.get('runtime_percentile'):
+            if eval_data:
+                result['without_prompt'].append(eval_data)
+                print(f"    ✓ Status: {eval_data['status']}")
+                if eval_data.get('runtime_percentile'):
                     print(
-                        f"    Runtime: {evaluation['runtime_percentile']:.1f}th percentile")
+                        f"    Runtime: {eval_data['runtime_percentile']:.1f}th percentile")
+                
+                # Log to experiment manager
+                self.experiment_manager.log_attempt({
+                    'problem': problem['title'],
+                    'strategy': 'minimal',
+                    'attempt': attempt + 1,
+                    **eval_data
+                })
+                self.experiment_manager.log_solution(
+                    problem['title'], 
+                    'minimal', 
+                    eval_data.get('code')
+                )
             time.sleep(2)  # Rate limiting
 
         return result
@@ -110,25 +144,36 @@ class LeetCodeEvaluator:
     def _evaluate_single_solution(self, problem: Dict,
                                   use_detailed_prompt: bool) -> Optional[Dict]:
         """
-        Generate and evaluate a single solution
-
-        Args:
-            problem: Problem dictionary
-            use_detailed_prompt: Whether to use detailed prompt
-
-        Returns:
-            Evaluation results or None if failed
+        Generate and evaluate a single solution with metadata tracking
         """
         # Generate solution
-        code = self.llm_client.generate_solution(
+        gen_result = self.llm_client.generate_solution(
             problem,
             use_detailed_prompt=use_detailed_prompt
         )
 
-        if not code:
+        metadata = {
+            'input_tokens': gen_result.input_tokens,
+            'output_tokens': gen_result.output_tokens,
+            'latency_ms': gen_result.latency_ms,
+            'cost': gen_result.cost,
+            'gen_status': gen_result.status
+        }
+
+        if gen_result.status != "Success":
             return {
                 'status': 'Generation Failed',
-                'error': 'Failed to generate code'
+                'error': gen_result.error,
+                **metadata
+            }
+
+        code = gen_result.code
+        if not code:
+            return {
+                'status': 'Extraction Failed',
+                'error': 'Failed to extract code from response',
+                'raw_response': gen_result.raw_response,
+                **metadata
             }
 
         # Validate syntax
@@ -136,10 +181,11 @@ class LeetCodeEvaluator:
             return {
                 'status': 'Syntax Error',
                 'error': 'Invalid Python syntax',
-                'code': code
+                'code': code,
+                **metadata
             }
 
-        # Submit to LeetCode (REST API requires question_id)
+        # Submit to LeetCode
         submission_id = self.leetcode_client.submit_solution(
             title_slug=problem['title_slug'],
             code=code,
@@ -150,7 +196,8 @@ class LeetCodeEvaluator:
             return {
                 'status': 'Submission Failed',
                 'error': 'Failed to submit to LeetCode',
-                'code': code
+                'code': code,
+                **metadata
             }
 
         # Check submission result
@@ -159,12 +206,13 @@ class LeetCodeEvaluator:
         if result:
             result['code'] = code
             result['prompt_type'] = 'detailed' if use_detailed_prompt else 'minimal'
+            result.update(metadata)
 
         return result
 
     def evaluate_batch(self, problems: List[Dict], attempts: int = 1) -> List[Dict]:
         """
-        Evaluate multiple problems
+        Evaluate multiple problems with Circuit Breaker mechanism
 
         Args:
             problems: List of problem dictionaries
@@ -174,6 +222,7 @@ class LeetCodeEvaluator:
             List of evaluation results
         """
         results = []
+        consecutive_errors = 0
 
         print(
             f"\nEvaluating {len(problems)} problems with {attempts} attempt(s) each")
@@ -185,21 +234,67 @@ class LeetCodeEvaluator:
             try:
                 result = self.evaluate_problem(problem, attempts)
                 results.append(result)
+                
+                # Check for "Generation Failed" in all attempts
+                all_failed = True
+                for approach in ['with_prompt', 'without_prompt']:
+                    for attempt_res in result.get(approach, []):
+                        if attempt_res.get('status') != 'Generation Failed':
+                            all_failed = False
+                            break
+                    if not all_failed:
+                        break
+                
+                if all_failed and (result.get('with_prompt') or result.get('without_prompt')):
+                    consecutive_errors += 1
+                else:
+                    consecutive_errors = 0
 
                 # Save intermediate results
                 self._save_results(results)
 
             except Exception as e:
-                print(f"✗ Error evaluating {problem['title']}: {str(e)}")
+                self.experiment_manager.error(f"Error evaluating {problem['title']}: {str(e)}")
                 results.append({
                     'problem_id': problem['question_id'],
                     'title': problem['title'],
                     'error': str(e),
                     'timestamp': datetime.now().isoformat()
                 })
+                consecutive_errors += 1
+
+            # Circuit Breaker check
+            if consecutive_errors >= Config.MAX_CONSECUTIVE_ERRORS:
+                msg = f"CIRCUIT BREAKER TRIGGERED: {consecutive_errors} consecutive failures."
+                self.experiment_manager.error(msg)
+                print(f"\n{'!'*60}")
+                print(f"⚠ {msg}")
+                print("Aborting evaluation to prevent token wastage.")
+                print(f"{'!'*60}")
+                break
 
             time.sleep(3)  # Rate limiting between problems
 
+        # Save summary CSV
+        summary_data = []
+        for res in results:
+            for strategy_key, strategy_name in [('with_prompt', 'detailed'), ('without_prompt', 'minimal')]:
+                for attempt in res.get(strategy_key, []):
+                    summary_data.append({
+                        'Timestamp': attempt.get('timestamp', datetime.now().isoformat()),
+                        'Problem': res.get('title'),
+                        'Difficulty': res.get('difficulty'),
+                        'Model': self.llm_client.model_id,
+                        'Strategy': strategy_name,
+                        'Status': attempt.get('status'),
+                        'Runtime(ms)': attempt.get('runtime'),
+                        'Memory(MB)': attempt.get('memory'),
+                        'Gen Time(s)': attempt.get('latency_ms', 0) / 1000,
+                        'Tokens(In/Out)': f"{attempt.get('input_tokens', 0)}/{attempt.get('output_tokens', 0)}",
+                        'Est Cost($)': attempt.get('cost', 0)
+                    })
+        
+        self.experiment_manager.save_summary(summary_data)
         return results
 
     def _save_results(self, results: List[Dict], filename: str = None):

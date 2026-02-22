@@ -47,8 +47,11 @@ class Config:
     LEETCODE_LOGIN_URL = "https://leetcode.com/accounts/login/"
 
     # Evaluation Settings
-    MAX_RETRIES = 3
-    RETRY_DELAY = 2  # seconds
+    MAX_RETRIES = int(os.getenv('MAX_RETRIES', 3))
+    RETRY_DELAY = int(os.getenv('RETRY_DELAY', 2))  # initial delay in seconds
+    RETRY_MAX_DELAY = int(os.getenv('RETRY_MAX_DELAY', 10))  # max delay for exponential backoff
+    MAX_CONSECUTIVE_ERRORS = int(os.getenv('MAX_CONSECUTIVE_ERRORS', 3))  # circuit breaker threshold
+    
     SUBMISSION_POLL_INTERVAL = 2  # seconds
     SUBMISSION_TIMEOUT = 60  # seconds
 
@@ -87,6 +90,19 @@ Provide ONLY the complete Python code solution, no explanations or markdown form
     # Report Settings
     REPORT_DIR = "reports"
     RESULTS_DIR = "results"
+    EXPERIMENTS_DIR = "experiments"
+    
+    # Model Pricing (per 1k tokens)
+    MODEL_PRICING = {
+        'anthropic.claude-3-5-sonnet-20240620-v1:0': {'input': 0.003, 'output': 0.015},
+        'anthropic.claude-3-haiku-20240307-v1:0': {'input': 0.00025, 'output': 0.00125},
+        'gpt-4o': {'input': 0.005, 'output': 0.015},
+        'gpt-3.5-turbo': {'input': 0.0005, 'output': 0.0015},
+        'gemini-1.5-pro': {'input': 0.0035, 'output': 0.0105},
+        'gemini-1.5-flash': {'input': 0.000075, 'output': 0.0003},
+        'grok-beta': {'input': 0.005, 'output': 0.015},
+        'default': {'input': 0.0, 'output': 0.0}
+    }
 
     @classmethod
     def validate(cls):
