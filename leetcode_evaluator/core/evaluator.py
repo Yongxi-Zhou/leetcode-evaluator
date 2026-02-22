@@ -328,7 +328,7 @@ class LeetCodeEvaluator:
         if difficulty:
             print(f"Difficulty filter: {difficulty}")
 
-        problems = self.leetcode_client.get_random_problems(count, difficulty)
+        problems = self.leetcode_client.get_latest_problems(count, difficulty)
 
         print(f"✓ Fetched {len(problems)} problems")
 
