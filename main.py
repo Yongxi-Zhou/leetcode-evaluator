@@ -93,6 +93,13 @@ Examples:
         help='LLM Max Tokens override'
     )
     
+    parser.add_argument(
+        '--workers',
+        type=int,
+        default=Config.WORKER_THREADS,
+        help=f'Number of concurrent workers for LLM generation (default: {Config.WORKER_THREADS})'
+    )
+    
     # Batch Experiment Runner
     parser.add_argument(
         '--experiment-config',

@@ -57,6 +57,11 @@ class Config:
     MODEL_TOP_P = float(os.getenv('MODEL_TOP_P', 0.9))
     MODEL_MAX_TOKENS = int(os.getenv('MODEL_MAX_TOKENS', 4096))
     
+    # Concurrency and Throttling
+    WORKER_THREADS = int(os.getenv('WORKER_THREADS', 4))
+    LEETCODE_SUBMISSION_DELAY_S = int(os.getenv('LEETCODE_SUBMISSION_DELAY_S', 10))
+    LEETCODE_RATE_LIMIT_COOLDOWN_S = int(os.getenv('LEETCODE_RATE_LIMIT_COOLDOWN_S', 60))
+    
     SUBMISSION_POLL_INTERVAL = 2  # seconds
     SUBMISSION_TIMEOUT = 60  # seconds
 

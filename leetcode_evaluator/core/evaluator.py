@@ -3,6 +3,9 @@ Main evaluation logic for comparing prompted vs non-prompted solutions
 """
 import json
 import time
+import queue
+import threading
+import concurrent.futures
 from typing import Dict, List, Optional
 from datetime import datetime
 from tqdm import tqdm
@@ -17,7 +20,9 @@ class LeetCodeEvaluator:
     """Main evaluator for comparing AI-generated solutions"""
 
     def __init__(self, provider: str = None, model_id: str = None, experiment_name: str = None):
-        self.leetcode_client = LeetCodeClient()
+        self.global_rate_limit_pause = threading.Event()
+        self.global_rate_limit_pause.set()  # Initial state: Allow submissions
+        self.leetcode_client = LeetCodeClient(rate_limit_pause=self.global_rate_limit_pause)
         self.llm_client = LLMClientFactory.create_client(
             provider=provider, model_id=model_id)
         # Store the actual provider being used
@@ -55,104 +60,10 @@ class LeetCodeEvaluator:
         print()
         return True
 
-    def evaluate_problem(self, problem: Dict, attempts: int = 1, **kwargs) -> Dict:
-        """
-        Evaluate a single problem with both prompted and non-prompted approaches
-        
-        Args:
-            problem: Problem dictionary
-            attempts: Number of solution attempts per approach
-            **kwargs: Generation parameters (temperature, top_p, max_tokens)
-
-        Args:
-            problem: Problem dictionary
-            attempts: Number of solution attempts per approach
-
-        Returns:
-            Evaluation results dictionary
-        """
-        print(f"\n{'='*60}")
-        print(f"Problem: {problem['title']} ({problem['difficulty']})")
-        print(f"Topics: {', '.join(problem['topics'][:3])}")
-        print(f"{'='*60}")
-
-        result = {
-            'problem_id': problem['question_id'],
-            'title': problem['title'],
-            'title_slug': problem['title_slug'],
-            'difficulty': problem['difficulty'],
-            'topics': problem['topics'],
-            'timestamp': datetime.now().isoformat(),
-            'with_prompt': [],
-            'without_prompt': []
-        }
-
-        # Evaluate with detailed prompt
-        print("\n[1/2] Evaluating WITH detailed prompt...")
-        for attempt in range(attempts):
-            print(f"  Attempt {attempt + 1}/{attempts}")
-            eval_data = self._evaluate_single_solution(
-                problem,
-                use_detailed_prompt=True,
-                **kwargs
-            )
-            if eval_data:
-                result['with_prompt'].append(eval_data)
-                print(f"    ✓ Status: {eval_data['status']}")
-                if eval_data.get('runtime_percentile'):
-                    print(
-                        f"    Runtime: {eval_data['runtime_percentile']:.1f}th percentile")
-                
-                # Log to experiment manager
-                self.experiment_manager.log_attempt({
-                    'problem': problem['title'],
-                    'strategy': 'detailed',
-                    'attempt': attempt + 1,
-                    **eval_data
-                })
-                self.experiment_manager.log_solution(
-                    problem['title'], 
-                    'detailed', 
-                    eval_data.get('code')
-                )
-            time.sleep(2)  # Rate limiting
-
-        # Evaluate without detailed prompt
-        print("\n[2/2] Evaluating WITHOUT detailed prompt...")
-        for attempt in range(attempts):
-            print(f"  Attempt {attempt + 1}/{attempts}")
-            eval_data = self._evaluate_single_solution(
-                problem,
-                use_detailed_prompt=False,
-                **kwargs
-            )
-            if eval_data:
-                result['without_prompt'].append(eval_data)
-                print(f"    ✓ Status: {eval_data['status']}")
-                if eval_data.get('runtime_percentile'):
-                    print(
-                        f"    Runtime: {eval_data['runtime_percentile']:.1f}th percentile")
-                
-                # Log to experiment manager
-                self.experiment_manager.log_attempt({
-                    'problem': problem['title'],
-                    'strategy': 'minimal',
-                    'attempt': attempt + 1,
-                    **eval_data
-                })
-                self.experiment_manager.log_solution(
-                    problem['title'], 
-                    'minimal', 
-                    eval_data.get('code')
-                )
-            time.sleep(2)  # Rate limiting
-
-        return result
-
     def _evaluate_single_solution(self, problem: Dict,
                                   use_detailed_prompt: bool, **kwargs) -> Optional[Dict]:
         """
-        Generate and evaluate a single solution with metadata tracking
+        Generate and validate a single solution (part of concurrent workflow)
         """
         # Generate solution
         gen_result = self.llm_client.generate_solution(
@@ -194,95 +105,166 @@ class LeetCodeEvaluator:
                 **metadata
             }
 
-        # Submit to LeetCode
-        submission_id = self.leetcode_client.submit_solution(
-            title_slug=problem['title_slug'],
-            code=code,
-            question_id=problem['question_id']
-        )
+        return {
+            'status': 'Success',
+            'code': code,
+            **metadata
+        }
 
-        if not submission_id:
-            return {
-                'status': 'Submission Failed',
-                'error': 'Failed to submit to LeetCode',
-                'code': code,
-                **metadata
+    def _producer_worker(self, tasks_queue: queue.Queue, submissions_queue: queue.Queue, 
+                         attempts: int, **kwargs):
+        """Worker function for LLM generation (Producer)"""
+        while True:
+            try:
+                problem = tasks_queue.get_nowait()
+            except queue.Empty:
+                break
+            
+            # Generate solutions for both strategies
+            result = {
+                'problem': problem,
+                'with_prompt': [],
+                'without_prompt': []
             }
+            
+            # Detailed prompt attempts
+            for attempt in range(attempts):
+                eval_data = self._evaluate_single_solution(
+                    problem, use_detailed_prompt=True, **kwargs
+                )
+                if eval_data:
+                    result['with_prompt'].append(eval_data)
+            
+            # Minimal prompt attempts
+            for attempt in range(attempts):
+                eval_data = self._evaluate_single_solution(
+                    problem, use_detailed_prompt=False, **kwargs
+                )
+                if eval_data:
+                    result['without_prompt'].append(eval_data)
+                    
+            submissions_queue.put(result)
+            tasks_queue.task_done()
 
-        # Check submission result
-        result = self.leetcode_client.check_submission(submission_id)
-
-        if result:
-            result['code'] = code
-            result['prompt_type'] = 'detailed' if use_detailed_prompt else 'minimal'
-            result.update(metadata)
-
-        return result
+    def _consumer_worker(self, submissions_queue: queue.Queue, results_list: List[Dict], 
+                         results_lock: threading.Lock, pbar: tqdm):
+        """Worker function for LeetCode submission (Consumer)"""
+        while True:
+            item = submissions_queue.get()
+            if item is None: # Sentinel
+                submissions_queue.task_done()
+                break
+                
+            problem = item['problem']
+            aggregated_result = {
+                'problem_id': problem['question_id'],
+                'title': problem['title'],
+                'title_slug': problem['title_slug'],
+                'difficulty': problem['difficulty'],
+                'topics': problem['topics'],
+                'timestamp': datetime.now().isoformat(),
+                'with_prompt': [],
+                'without_prompt': []
+            }
+            
+            # Process submissions one by one with delay
+            for strategy in ['with_prompt', 'without_prompt']:
+                for attempt_idx, gen_data in enumerate(item[strategy]):
+                    # Check global rate limit pause
+                    self.global_rate_limit_pause.wait()
+                    
+                    code = gen_data.get('code')
+                    if code:
+                        # Submit to LeetCode
+                        submission_id = self.leetcode_client.submit_solution(
+                            title_slug=problem['title_slug'],
+                            code=code,
+                            question_id=problem['question_id']
+                        )
+                        
+                        if submission_id:
+                            # Check result
+                            res = self.leetcode_client.check_submission(submission_id)
+                            if res:
+                                res['code'] = code
+                                res['prompt_type'] = 'detailed' if strategy == 'with_prompt' else 'minimal'
+                                # Update with LLM metadata
+                                res.update({
+                                    'input_tokens': gen_data.get('input_tokens', 0),
+                                    'output_tokens': gen_data.get('output_tokens', 0),
+                                    'latency_ms': gen_data.get('latency_ms', 0),
+                                    'cost': gen_data.get('cost', 0),
+                                    'gen_status': gen_data.get('gen_status', 'Success')
+                                })
+                                aggregated_result[strategy].append(res)
+                                
+                                # Log to experiment manager
+                                self.experiment_manager.log_attempt({
+                                    'problem': problem['title'],
+                                    'strategy': 'detailed' if strategy == 'with_prompt' else 'minimal',
+                                    'attempt': attempt_idx + 1,
+                                    **res
+                                })
+                                self.experiment_manager.log_solution(
+                                    problem['title'], 
+                                    'detailed' if strategy == 'with_prompt' else 'minimal', 
+                                    code
+                                )
+                    
+                    # Mandatory delay between submissions
+                    time.sleep(Config.LEETCODE_SUBMISSION_DELAY_S)
+            
+            with results_lock:
+                results_list.append(aggregated_result)
+                self._save_results(results_list)
+            
+            pbar.update(1)
+            submissions_queue.task_done()
 
     def evaluate_batch(self, problems: List[Dict], attempts: int = 1, **kwargs) -> List[Dict]:
         """
-        Evaluate multiple problems with Circuit Breaker mechanism
-
-        Args:
-            problems: List of problem dictionaries
-            attempts: Number of attempts per approach per problem
-
-        Returns:
-            List of evaluation results
+        Evaluate multiple problems concurrently using Producer-Consumer pattern
         """
         results = []
-        consecutive_errors = 0
-
-        print(
-            f"\nEvaluating {len(problems)} problems with {attempts} attempt(s) each")
-        print(f"Total evaluations: {len(problems) * attempts * 2}")
-
-        for i, problem in enumerate(tqdm(problems, desc="Problems")):
-            print(f"\nProgress: {i+1}/{len(problems)}")
-
-            try:
-                result = self.evaluate_problem(problem, attempts, **kwargs)
-                results.append(result)
-                
-                # Check for "Generation Failed" in all attempts
-                all_failed = True
-                for approach in ['with_prompt', 'without_prompt']:
-                    for attempt_res in result.get(approach, []):
-                        if attempt_res.get('status') != 'Generation Failed':
-                            all_failed = False
-                            break
-                    if not all_failed:
-                        break
-                
-                if all_failed and (result.get('with_prompt') or result.get('without_prompt')):
-                    consecutive_errors += 1
-                else:
-                    consecutive_errors = 0
-
-                # Save intermediate results
-                self._save_results(results)
-
-            except Exception as e:
-                self.experiment_manager.error(f"Error evaluating {problem['title']}: {str(e)}")
-                results.append({
-                    'problem_id': problem['question_id'],
-                    'title': problem['title'],
-                    'error': str(e),
-                    'timestamp': datetime.now().isoformat()
-                })
-                consecutive_errors += 1
-
-            # Circuit Breaker check
-            if consecutive_errors >= Config.MAX_CONSECUTIVE_ERRORS:
-                msg = f"CIRCUIT BREAKER TRIGGERED: {consecutive_errors} consecutive failures."
-                self.experiment_manager.error(msg)
-                print(f"\n{'!'*60}")
-                print(f"⚠ {msg}")
-                print("Aborting evaluation to prevent token wastage.")
-                print(f"{'!'*60}")
-                break
-
-            time.sleep(3)  # Rate limiting between problems
+        results_lock = threading.Lock()
+        tasks_queue = queue.Queue()
+        submissions_queue = queue.Queue()
+        
+        # Determine number of workers
+        num_workers = kwargs.get('workers', Config.WORKER_THREADS)
+        
+        print(f"\n🚀 Starting concurrent evaluation:")
+        print(f"  - Problems: {len(problems)}")
+        print(f"  - LLM Workers: {num_workers}")
+        print(f"  - Submission Delay: {Config.LEETCODE_SUBMISSION_DELAY_S}s")
+        print(f"  - Total Evaluations: {len(problems) * attempts * 2}")
+        
+        # Populate tasks
+        for prob in problems:
+            tasks_queue.put(prob)
+            
+        pbar = tqdm(total=len(problems), desc="Progress")
+        
+        # Start Consumer thread
+        consumer_thread = threading.Thread(
+            target=self._consumer_worker,
+            args=(submissions_queue, results, results_lock, pbar),
+            daemon=True
+        )
+        consumer_thread.start()
+        
+        # Start Producers using ThreadPoolExecutor
+        with concurrent.futures.ThreadPoolExecutor(max_workers=num_workers) as executor:
+            futures = [
+                executor.submit(self._producer_worker, tasks_queue, submissions_queue, attempts, **kwargs)
+                for _ in range(num_workers)
+            ]
+            concurrent.futures.wait(futures)
+            
+        # Signal consumer to finish
+        submissions_queue.put(None)
+        consumer_thread.join()
+        pbar.close()
 
         # Save summary CSV
         summary_data = []

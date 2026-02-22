@@ -55,6 +55,11 @@ OPENAI_MODEL_ID=gpt-4o
 MODEL_TEMPERATURE=0.3
 MODEL_TOP_P=0.9
 MODEL_MAX_TOKENS=4096
+
+# Concurrency & Throttling
+WORKER_THREADS=4
+LEETCODE_SUBMISSION_DELAY_S=10
+LEETCODE_RATE_LIMIT_COOLDOWN_S=60
 ```
 
 ## Usage
@@ -78,6 +83,7 @@ Options:
   --attempts INT          Number of attempts per approach (default: 1)
   --temperature FLOAT     LLM temperature override
   --max-tokens INT        LLM max tokens override
+  --workers INT           Number of concurrent LLM generative workers (default: 4)
   --experiment-config FILE Run multiple experiments defined in a JSON file
   --report FILE           Generate report from existing results
   --provider PROVIDER     bedrock|openai|gemini|grok

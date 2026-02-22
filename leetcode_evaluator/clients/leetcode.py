@@ -6,6 +6,7 @@ import time
 import json
 import uuid
 import cloudscraper
+import threading
 from typing import Dict, List, Optional
 from tenacity import retry, stop_after_attempt, wait_exponential
 from leetcode_evaluator.core.config import Config
@@ -14,10 +15,12 @@ from leetcode_evaluator.core.config import Config
 class LeetCodeClient:
     """Client for interacting with LeetCode API using session cookies"""
     
-    def __init__(self, session_cookie: str = None, csrf_token: str = None):
+    def __init__(self, session_cookie: str = None, csrf_token: str = None, 
+                 rate_limit_pause: threading.Event = None):
         # Get session cookies from parameters or config
         self.session_cookie = session_cookie or Config.LEETCODE_SESSION_COOKIE
         self.csrf_token = csrf_token or Config.LEETCODE_CSRF_TOKEN
+        self.rate_limit_pause = rate_limit_pause
         
         # Use cloudscraper to bypass Cloudflare protection
         self.session = cloudscraper.create_scraper(
@@ -264,9 +267,17 @@ class LeetCodeClient:
             response = self.session.post(url, json=payload, headers=headers, timeout=30)
             
             if response.status_code == 429:
-                # Rate limited - raise exception to trigger retry
-                print(f"⚠ Rate limited (429) - will retry with backoff...")
-                raise Exception(f"Rate limited: {response.status_code}")
+                # Rate limited - clear global pause event to block others
+                print(f"CRITICAL: Rate limit hit! Pausing all submissions for {Config.LEETCODE_RATE_LIMIT_COOLDOWN_S} seconds.")
+                if self.rate_limit_pause:
+                    self.rate_limit_pause.clear()
+                
+                time.sleep(Config.LEETCODE_RATE_LIMIT_COOLDOWN_S)
+                
+                if self.rate_limit_pause:
+                    self.rate_limit_pause.set()
+                    
+                raise Exception(f"Rate limited (429)")
             
             if response.status_code != 200:
                 print(f"Submission Error: {response.status_code}")
