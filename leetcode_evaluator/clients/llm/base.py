@@ -179,7 +179,7 @@ class LLMClientFactory:
         Create an LLM client based on provider
         
         Args:
-            provider: Provider name (bedrock, openai, gemini, grok)
+            provider: Provider name (bedrock, openai, gemini, grok, qwen)
             model_id: Model ID to use
         
         Returns:
@@ -199,5 +199,8 @@ class LLMClientFactory:
         elif provider == 'grok':
             from leetcode_evaluator.clients.llm.grok import GrokClient
             return GrokClient(model_id=model_id)
+        elif provider == 'qwen':
+            from leetcode_evaluator.clients.llm.qwen import QwenClient
+            return QwenClient(model_id=model_id)
         else:
             raise ValueError(f"Unsupported LLM provider: {provider}")

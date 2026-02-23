@@ -90,7 +90,7 @@ Examples:
     parser.add_argument(
         '--provider',
         type=str,
-        choices=['bedrock', 'openai', 'gemini', 'grok'],
+        choices=['bedrock', 'openai', 'gemini', 'grok', 'qwen'],
         help='LLM provider to use (default: from config or bedrock)'
     )
     

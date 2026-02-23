@@ -16,7 +16,7 @@ class Config:
     LEETCODE_CSRF_TOKEN = os.getenv('LEETCODE_CSRF_TOKEN')
 
     # LLM Provider Configuration
-    # bedrock, openai, gemini, grok
+    # bedrock, openai, gemini, grok, qwen
     LLM_PROVIDER = os.getenv('LLM_PROVIDER', 'bedrock')
 
     # AWS Bedrock Configuration
@@ -31,6 +31,14 @@ class Config:
     # OpenAI Configuration
     OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
     OPENAI_MODEL_ID = os.getenv('OPENAI_MODEL_ID', 'gpt-4-turbo-preview')
+
+    # Qwen / DashScope (OpenAI-compatible) Configuration
+    DASHSCOPE_API_KEY = os.getenv('DASHSCOPE_API_KEY')
+    QWEN_API_BASE_URL = os.getenv(
+        'QWEN_API_BASE_URL',
+        os.getenv('OPENAI_BASE_URL', 'https://dashscope.aliyuncs.com/compatible-mode/v1')
+    )
+    QWEN_MODEL_ID = os.getenv('QWEN_MODEL_ID', 'qwen-plus')
 
     # Google Gemini Configuration
     GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
@@ -122,6 +130,7 @@ Provide ONLY the complete Python code solution, no explanations or markdown form
         'gemini-1.5-pro': {'input': 0.0035, 'output': 0.0105},
         'gemini-1.5-flash': {'input': 0.000075, 'output': 0.0003},
         'grok-beta': {'input': 0.005, 'output': 0.015},
+        'qwen-plus': {'input': 0.0, 'output': 0.0},
         'default': {'input': 0.0, 'output': 0.0}
     }
 
@@ -161,9 +170,14 @@ Provide ONLY the complete Python code solution, no explanations or markdown form
             required.update({
                 'GROK_API_KEY': cls.GROK_API_KEY,
             })
+        elif provider == 'qwen':
+            required.update({
+                # Allow either explicit DashScope key or OPENAI_API_KEY fallback for compatibility
+                'DASHSCOPE_API_KEY/OPENAI_API_KEY': cls.DASHSCOPE_API_KEY or cls.OPENAI_API_KEY,
+            })
         else:
             raise ValueError(
-                f"Unsupported LLM provider: {provider}. Choose from: bedrock, openai, gemini, grok")
+                f"Unsupported LLM provider: {provider}. Choose from: bedrock, openai, gemini, grok, qwen")
 
         missing = [key for key, value in required.items() if not value]
         if missing:
