@@ -5,6 +5,7 @@ Uses session cookies from browser to bypass Cloudflare protection
 import time
 import json
 import uuid
+import threading
 import cloudscraper
 from typing import Any, Dict, List, Optional
 from tenacity import retry, stop_after_attempt, wait_exponential

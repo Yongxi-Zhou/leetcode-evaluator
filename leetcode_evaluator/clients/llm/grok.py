@@ -3,7 +3,7 @@ xAI Grok Client for generating code solutions
 """
 import re
 import requests
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
 from leetcode_evaluator.core.config import Config
 from leetcode_evaluator.clients.llm.base import LLMClient
 

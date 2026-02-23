@@ -4,7 +4,7 @@ AWS Bedrock Client for generating code solutions
 import json
 import re
 import boto3
-from typing import Dict, Optional
+from typing import Dict, Optional, Any, List
 from botocore.config import Config as BotoConfig
 from leetcode_evaluator.core.config import Config
 from leetcode_evaluator.clients.llm.base import LLMClient
