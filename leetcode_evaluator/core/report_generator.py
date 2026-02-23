@@ -53,6 +53,10 @@ class ReportGenerator:
                     'memory_percentile': attempt.get('memory_percentile'),
                     'total_correct': attempt.get('total_correct'),
                     'total_testcases': attempt.get('total_testcases'),
+                    'latency_ms': attempt.get('latency_ms'),
+                    'input_tokens': attempt.get('input_tokens'),
+                    'output_tokens': attempt.get('output_tokens'),
+                    'cost': attempt.get('cost'),
                 })
             
             # Process without_prompt results
@@ -70,9 +74,26 @@ class ReportGenerator:
                     'memory_percentile': attempt.get('memory_percentile'),
                     'total_correct': attempt.get('total_correct'),
                     'total_testcases': attempt.get('total_testcases'),
+                    'latency_ms': attempt.get('latency_ms'),
+                    'input_tokens': attempt.get('input_tokens'),
+                    'output_tokens': attempt.get('output_tokens'),
+                    'cost': attempt.get('cost'),
                 })
-        
-        return pd.DataFrame(rows)
+
+        df = pd.DataFrame(rows)
+        if df.empty:
+            return df
+
+        # Normalize numeric fields; LeetCode/API responses may store numbers as strings/nulls.
+        numeric_cols = [
+            'runtime_percentile', 'memory_percentile', 'total_correct', 'total_testcases',
+            'latency_ms', 'input_tokens', 'output_tokens', 'cost'
+        ]
+        for col in numeric_cols:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce')
+
+        return df
     
     def calculate_correctness_metrics(self) -> Dict:
         """Calculate correctness and success rate metrics"""
@@ -136,31 +157,55 @@ class ReportGenerator:
     def calculate_performance_metrics(self) -> Dict:
         """Calculate runtime and memory performance metrics"""
         metrics = {}
-        
-        # Only consider accepted solutions
+
+        # Generation metrics are available even for failed submissions
+        for prompt_type in ['with_prompt', 'without_prompt']:
+            all_df_subset = self.df[self.df['prompt_type'] == prompt_type]
+            if len(all_df_subset) > 0:
+                latency_values = all_df_subset['latency_ms'].dropna() if 'latency_ms' in all_df_subset else pd.Series(dtype=float)
+                if len(latency_values) > 0:
+                    metrics[f'{prompt_type}_mean_latency_ms'] = float(latency_values.mean())
+                    metrics[f'{prompt_type}_median_latency_ms'] = float(latency_values.median())
+                    metrics[f'{prompt_type}_p90_latency_ms'] = float(latency_values.quantile(0.9))
+
+                input_tokens = all_df_subset['input_tokens'].dropna() if 'input_tokens' in all_df_subset else pd.Series(dtype=float)
+                output_tokens = all_df_subset['output_tokens'].dropna() if 'output_tokens' in all_df_subset else pd.Series(dtype=float)
+                if len(input_tokens) > 0:
+                    metrics[f'{prompt_type}_mean_input_tokens'] = float(input_tokens.mean())
+                if len(output_tokens) > 0:
+                    metrics[f'{prompt_type}_mean_output_tokens'] = float(output_tokens.mean())
+                if len(input_tokens) > 0 or len(output_tokens) > 0:
+                    total_tokens = all_df_subset[['input_tokens', 'output_tokens']].fillna(0).sum(axis=1)
+                    total_tokens = total_tokens[total_tokens > 0]
+                    if len(total_tokens) > 0:
+                        metrics[f'{prompt_type}_mean_total_tokens'] = float(total_tokens.mean())
+
+                cost_values = all_df_subset['cost'].dropna() if 'cost' in all_df_subset else pd.Series(dtype=float)
+                if len(cost_values) > 0:
+                    metrics[f'{prompt_type}_mean_cost'] = float(cost_values.mean())
+
+        # Judge runtime/memory percentiles only exist for accepted submissions
         accepted_df = self.df[self.df['status'] == 'Accepted']
-        
         for prompt_type in ['with_prompt', 'without_prompt']:
             df_subset = accepted_df[accepted_df['prompt_type'] == prompt_type]
-            
-            if len(df_subset) > 0:
-                # Runtime metrics
-                runtime_percentiles = df_subset['runtime_percentile'].dropna()
-                if len(runtime_percentiles) > 0:
-                    metrics[f'{prompt_type}_mean_runtime_percentile'] = float(runtime_percentiles.mean())
-                    metrics[f'{prompt_type}_median_runtime_percentile'] = float(runtime_percentiles.median())
-                    metrics[f'{prompt_type}_std_runtime_percentile'] = float(runtime_percentiles.std())
-                    metrics[f'{prompt_type}_top_25_runtime_pct'] = float(
-                        (runtime_percentiles >= 75).sum() / len(runtime_percentiles) * 100
-                    )
-                
-                # Memory metrics
-                memory_percentiles = df_subset['memory_percentile'].dropna()
-                if len(memory_percentiles) > 0:
-                    metrics[f'{prompt_type}_mean_memory_percentile'] = float(memory_percentiles.mean())
-                    metrics[f'{prompt_type}_median_memory_percentile'] = float(memory_percentiles.median())
-                    metrics[f'{prompt_type}_std_memory_percentile'] = float(memory_percentiles.std())
-        
+            if len(df_subset) == 0:
+                continue
+
+            runtime_percentiles = df_subset['runtime_percentile'].dropna()
+            if len(runtime_percentiles) > 0:
+                metrics[f'{prompt_type}_mean_runtime_percentile'] = float(runtime_percentiles.mean())
+                metrics[f'{prompt_type}_median_runtime_percentile'] = float(runtime_percentiles.median())
+                metrics[f'{prompt_type}_std_runtime_percentile'] = float(runtime_percentiles.std())
+                metrics[f'{prompt_type}_top_25_runtime_pct'] = float(
+                    (runtime_percentiles >= 75).sum() / len(runtime_percentiles) * 100
+                )
+
+            memory_percentiles = df_subset['memory_percentile'].dropna()
+            if len(memory_percentiles) > 0:
+                metrics[f'{prompt_type}_mean_memory_percentile'] = float(memory_percentiles.mean())
+                metrics[f'{prompt_type}_median_memory_percentile'] = float(memory_percentiles.median())
+                metrics[f'{prompt_type}_std_memory_percentile'] = float(memory_percentiles.std())
+
         return metrics
     
     def calculate_comparison_metrics(self) -> Dict:
@@ -537,6 +582,11 @@ class ReportGenerator:
 - **Mean Runtime Percentile (With Prompt):** {performance['with_prompt_mean_runtime_percentile']:.1f}%
 - **Mean Runtime Percentile (Without Prompt):** {performance.get('without_prompt_mean_runtime_percentile', 0):.1f}%
 """
+        elif 'with_prompt_mean_latency_ms' in performance or 'without_prompt_mean_latency_ms' in performance:
+            report += f"""
+- **Mean Generation Latency (With Prompt):** {performance.get('with_prompt_mean_latency_ms', 0):.0f} ms
+- **Mean Generation Latency (Without Prompt):** {performance.get('without_prompt_mean_latency_ms', 0):.0f} ms
+"""
         
         report += """
 ---
@@ -573,28 +623,61 @@ class ReportGenerator:
 
 ## 2. Performance Analysis
 
-### 2.1 Runtime Performance
+### 2.1 Generation Performance (LLM Call)
 
 """
-        
+
+        if ('with_prompt_mean_latency_ms' in performance or
+                'without_prompt_mean_latency_ms' in performance or
+                'with_prompt_mean_total_tokens' in performance or
+                'without_prompt_mean_total_tokens' in performance):
+            report += f"""| Metric | With Prompt | Without Prompt |
+|--------|-------------|----------------|
+| Mean Latency (ms) | {performance.get('with_prompt_mean_latency_ms', 0):.0f} | {performance.get('without_prompt_mean_latency_ms', 0):.0f} |
+| Median Latency (ms) | {performance.get('with_prompt_median_latency_ms', 0):.0f} | {performance.get('without_prompt_median_latency_ms', 0):.0f} |
+| P90 Latency (ms) | {performance.get('with_prompt_p90_latency_ms', 0):.0f} | {performance.get('without_prompt_p90_latency_ms', 0):.0f} |
+| Mean Input Tokens | {performance.get('with_prompt_mean_input_tokens', 0):.1f} | {performance.get('without_prompt_mean_input_tokens', 0):.1f} |
+| Mean Output Tokens | {performance.get('with_prompt_mean_output_tokens', 0):.1f} | {performance.get('without_prompt_mean_output_tokens', 0):.1f} |
+| Mean Total Tokens | {performance.get('with_prompt_mean_total_tokens', 0):.1f} | {performance.get('without_prompt_mean_total_tokens', 0):.1f} |
+| Mean Cost | {performance.get('with_prompt_mean_cost', 0):.6f} | {performance.get('without_prompt_mean_cost', 0):.6f} |
+"""
+        else:
+            report += "_No generation latency/token/cost data found in the results file._\n"
+
+        report += """
+
+### 2.2 Judge Runtime Performance (Accepted Only)
+
+"""
+
         if 'with_prompt_mean_runtime_percentile' in performance:
-            report += f"""
-| Metric | With Prompt | Without Prompt |
+            report += f"""| Metric | With Prompt | Without Prompt |
 |--------|-------------|----------------|
 | Mean Runtime Percentile | {performance.get('with_prompt_mean_runtime_percentile', 0):.1f}% | {performance.get('without_prompt_mean_runtime_percentile', 0):.1f}% |
 | Median Runtime Percentile | {performance.get('with_prompt_median_runtime_percentile', 0):.1f}% | {performance.get('without_prompt_median_runtime_percentile', 0):.1f}% |
 | Std Dev | {performance.get('with_prompt_std_runtime_percentile', 0):.1f} | {performance.get('without_prompt_std_runtime_percentile', 0):.1f} |
 | Top 25% Rate | {performance.get('with_prompt_top_25_runtime_pct', 0):.1f}% | {performance.get('without_prompt_top_25_runtime_pct', 0):.1f}% |
 """
-        
-        report += """
-### 2.2 Memory Performance
+        else:
+            report += "_No accepted submissions with runtime percentile data in this run._\n"
 
-| Metric | With Prompt | Without Prompt |
+        report += """
+
+### 2.3 Judge Memory Performance (Accepted Only)
+
+"""
+
+        if ('with_prompt_mean_memory_percentile' in performance or
+                'without_prompt_mean_memory_percentile' in performance):
+            report += f"""| Metric | With Prompt | Without Prompt |
 |--------|-------------|----------------|
 | Mean Memory Percentile | {performance.get('with_prompt_mean_memory_percentile', 0):.1f}% | {performance.get('without_prompt_mean_memory_percentile', 0):.1f}% |
 | Median Memory Percentile | {performance.get('with_prompt_median_memory_percentile', 0):.1f}% | {performance.get('without_prompt_median_memory_percentile', 0):.1f}% |
+"""
+        else:
+            report += "_No accepted submissions with memory percentile data in this run._\n"
 
+        report += f"""
 ---
 
 ## 3. Stability Analysis
