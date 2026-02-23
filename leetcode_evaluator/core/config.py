@@ -66,7 +66,7 @@ class Config:
     SUBMISSION_TIMEOUT = 60  # seconds
     
     # Stability Evaluation
-    DEFAULT_STABILITY_RUNS = int(os.getenv('DEFAULT_STABILITY_RUNS', 10))
+    DEFAULT_STABILITY_RUNS = int(os.getenv('DEFAULT_STABILITY_RUNS', 1))
 
     # Prompts
     DETAILED_PROMPT = """You are an expert algorithm and data structure engineer. 

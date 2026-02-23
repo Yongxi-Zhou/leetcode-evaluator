@@ -57,6 +57,13 @@ Examples:
         help='Only fetch problems without evaluation'
     )
     
+    parser.add_argument(
+        '--selection',
+        choices=['LATEST', 'RANDOM'],
+        default='LATEST',
+        help='Selection strategy for problems (default: LATEST)'
+    )
+    
     # Report generation
     parser.add_argument(
         '--report',
@@ -144,7 +151,8 @@ Examples:
             
             problems = evaluator.fetch_problems(
                 count=args.num_problems,
-                difficulty=args.difficulty
+                difficulty=args.difficulty,
+                selection=args.selection
             )
             
             print(f"\n✓ Successfully fetched {len(problems)} problems")
@@ -158,7 +166,8 @@ Examples:
             'difficulty': args.difficulty,
             'attempts': args.attempts,
             'stability_runs': args.stability_runs,
-            'workers': args.workers
+            'workers': args.workers,
+            'selection': args.selection
         }
         
         # Collect model overrides
@@ -220,6 +229,7 @@ Examples:
             print(f"Configuration:")
             print(f"  - Problems: {args.num_problems}")
             print(f"  - Difficulty: {args.difficulty or 'All'}")
+            print(f"  - Selection: {args.selection}")
             print(f"  - Base Attempts/Stability Runs: {max(args.attempts, args.stability_runs)}")
             
             if run_params:

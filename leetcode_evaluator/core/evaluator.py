@@ -313,13 +313,14 @@ class LeetCodeEvaluator:
         with open(filename, 'r') as f:
             return json.load(f)
 
-    def fetch_problems(self, count: int = 10, difficulty: str = None) -> List[Dict]:
+    def fetch_problems(self, count: int = 10, difficulty: str = None, selection: str = 'LATEST') -> List[Dict]:
         """
         Fetch problems from LeetCode
 
         Args:
             count: Number of problems to fetch
             difficulty: Filter by difficulty (EASY, MEDIUM, HARD)
+            selection: Selection strategy ('LATEST' or 'RANDOM')
 
         Returns:
             List of problem dictionaries
@@ -327,8 +328,12 @@ class LeetCodeEvaluator:
         print(f"\nFetching {count} problems from LeetCode...")
         if difficulty:
             print(f"Difficulty filter: {difficulty}")
+        print(f"Selection strategy: {selection}")
 
-        problems = self.leetcode_client.get_latest_problems(count, difficulty)
+        if selection.upper() == 'RANDOM':
+            problems = self.leetcode_client.get_random_problems(count, difficulty)
+        else:
+            problems = self.leetcode_client.get_latest_problems(count, difficulty)
 
         print(f"✓ Fetched {len(problems)} problems")
 
@@ -342,7 +347,7 @@ class LeetCodeEvaluator:
         return problems
 
     def run_evaluation(self, num_problems: int = 10, difficulty: str = None,
-                       attempts: int = 1, **kwargs) -> str:
+                       attempts: int = 1, selection: str = 'LATEST', **kwargs) -> str:
         """
         Run complete evaluation workflow
 
@@ -350,6 +355,7 @@ class LeetCodeEvaluator:
             num_problems: Number of problems to evaluate
             difficulty: Optional difficulty filter
             attempts: Number of attempts per approach
+            selection: Selection strategy ('LATEST' or 'RANDOM')
 
         Returns:
             Path to results file
@@ -359,7 +365,7 @@ class LeetCodeEvaluator:
             return None
 
         # Fetch problems
-        problems = self.fetch_problems(num_problems, difficulty)
+        problems = self.fetch_problems(num_problems, difficulty, selection)
 
         if not problems:
             print("✗ No problems fetched")
