@@ -1,6 +1,4 @@
-"""
-Main evaluation logic for comparing prompted vs non-prompted solutions
-"""
+import os
 import json
 import time
 import queue
@@ -303,7 +301,8 @@ class LeetCodeEvaluator:
         """Save results to JSON file"""
         if filename is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"{Config.RESULTS_DIR}/evaluation_results_{timestamp}.json"
+            os.makedirs(Config.RESULTS_EVALUATIONS, exist_ok=True)
+            filename = f"{Config.RESULTS_EVALUATIONS}/evaluation_results_{timestamp}.json"
 
         with open(filename, 'w') as f:
             json.dump(results, f, indent=2)
@@ -339,7 +338,8 @@ class LeetCodeEvaluator:
 
         # Save problems to file
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"{Config.RESULTS_DIR}/problems_{timestamp}.json"
+        os.makedirs(Config.RESULTS_PROBLEMS, exist_ok=True)
+        filename = f"{Config.RESULTS_PROBLEMS}/problems_{timestamp}.json"
         with open(filename, 'w') as f:
             json.dump(problems, f, indent=2)
         print(f"✓ Problems saved to {filename}")
@@ -377,7 +377,8 @@ class LeetCodeEvaluator:
  
         # Save final results
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        results_file = f"{Config.RESULTS_DIR}/evaluation_results_{timestamp}.json"
+        os.makedirs(Config.RESULTS_EVALUATIONS, exist_ok=True)
+        results_file = f"{Config.RESULTS_EVALUATIONS}/evaluation_results_{timestamp}.json"
         self._save_results(results, results_file)
         
         # Stability Analysis

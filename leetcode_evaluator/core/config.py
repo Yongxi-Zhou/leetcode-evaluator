@@ -110,6 +110,8 @@ Provide ONLY the complete Python code solution, no explanations or markdown form
     RESULTS_SUMMARY = os.path.join(RESULTS_DIR, "summary")
     RESULTS_TABLES = os.path.join(RESULTS_DIR, "tables")
     RESULTS_FIGURES = os.path.join(RESULTS_DIR, "figures")
+    RESULTS_EVALUATIONS = os.path.join(RESULTS_DIR, "evaluations")
+    RESULTS_PROBLEMS = os.path.join(RESULTS_DIR, "problems")
     
     # Model Pricing (per 1k tokens)
     MODEL_PRICING = {
