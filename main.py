@@ -8,6 +8,8 @@ import json
 from leetcode_evaluator.core.evaluator import LeetCodeEvaluator
 from leetcode_evaluator.core.report_generator import ReportGenerator
 from leetcode_evaluator.core.config import Config
+from leetcode_evaluator.core.aggregation_manager import AggregationManager
+from leetcode_evaluator.core.stability_metrics import StabilityAnalyzer
 
 
 def main():
@@ -52,6 +54,13 @@ Examples:
     )
     
     parser.add_argument(
+        '--num-trials',
+        type=int,
+        dest='attempts',
+        help='Alias for --attempts, number of evaluation trials per problem'
+    )
+    
+    parser.add_argument(
         '--fetch-only',
         action='store_true',
         help='Only fetch problems without evaluation'
@@ -69,6 +78,12 @@ Examples:
         '--report',
         type=str,
         help='Generate report from existing results file'
+    )
+    
+    parser.add_argument(
+        '--generate-report',
+        action='store_true',
+        help='Aggregate all results from results/summary and generate paper-ready tables and plots'
     )
     
     # LLM configuration
@@ -135,6 +150,17 @@ Examples:
             print(f"\n✓ Report generation complete!")
             print(f"✓ Report saved to: {report_file}")
             print(f"✓ Visualizations saved to: {report_dir}/")
+            return 0
+            
+        # Global aggregation mode
+        if args.generate_report:
+            print("🚀 Generating paper-ready aggregated report...")
+            agg_manager = AggregationManager()
+            leaderboard_path = agg_manager.aggregate_leaderboard()
+            agg_manager.generate_plots()
+            print(f"\n✓ Aggregation complete!")
+            print(f"✓ Leaderboard saved to: {leaderboard_path}")
+            print(f"✓ Figures saved to: {Config.RESULTS_FIGURES}/")
             return 0
         
         # Initialize evaluator with provider and model
@@ -215,6 +241,20 @@ Examples:
                     generator = ReportGenerator(results_file, output_dir=report_dir)
                     report_file = generator.generate_full_report()
                     print(f"✓ Report generated: {report_file}")
+                    
+                    # Archive for paper publication
+                    agg_manager = AggregationManager()
+                    analyzer = StabilityAnalyzer(trials=exp_evaluator.experiment_manager.jsonl_path)
+                    metrics = analyzer.compute_metrics()
+                    
+                    config_data = {
+                        'model_name': exp_evaluator.llm_client.model_id,
+                        'prompt_type': name, # Use experiment name as prompt type for batch
+                        'temperature': params.get('temperature', Config.MODEL_TEMPERATURE),
+                        'top_p': params.get('top_p', Config.MODEL_TOP_P)
+                    }
+                    agg_manager.save_experiment_summary(name, metrics, config_data)
+                    agg_manager.copy_raw_data(exp_evaluator.experiment_manager)
                 else:
                     print(f"✗ Experiment {name} failed.")
             
@@ -265,6 +305,21 @@ Examples:
             print(f"Report: {report_file}")
             print(f"Visualizations: {report_dir}/")
             print(f"{'='*60}")
+            
+            # Archive for paper publication
+            agg_manager = AggregationManager()
+            analyzer = StabilityAnalyzer(detailed_jsonl_path=evaluator.experiment_manager.jsonl_path)
+            metrics = analyzer.compute_metrics()
+            
+            config_data = {
+                'model_name': evaluator.llm_client.model_id,
+                'prompt_type': 'standard', # Default prompt type
+                'temperature': args.temperature or Config.MODEL_TEMPERATURE,
+                'top_p': args.top_p or Config.MODEL_TOP_P
+            }
+            exp_name = os.path.basename(evaluator.experiment_manager.experiment_dir)
+            agg_manager.save_experiment_summary(exp_name, metrics, config_data)
+            agg_manager.copy_raw_data(evaluator.experiment_manager)
             
             return 0
         

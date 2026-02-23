@@ -105,6 +105,12 @@ Provide ONLY the complete Python code solution, no explanations or markdown form
     RESULTS_DIR = "results"
     EXPERIMENTS_DIR = "experiments"
     
+    # Paper-ready Result Structure
+    RESULTS_RAW = os.path.join(RESULTS_DIR, "raw")
+    RESULTS_SUMMARY = os.path.join(RESULTS_DIR, "summary")
+    RESULTS_TABLES = os.path.join(RESULTS_DIR, "tables")
+    RESULTS_FIGURES = os.path.join(RESULTS_DIR, "figures")
+    
     # Model Pricing (per 1k tokens)
     MODEL_PRICING = {
         'anthropic.claude-3-5-sonnet-20240620-v1:0': {'input': 0.003, 'output': 0.015},

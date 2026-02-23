@@ -315,6 +315,15 @@ class ReportGenerator:
         # 6. Topic performance heatmap
         self._plot_topic_heatmap(f"{output_dir}/topic_performance.png")
         
+        # 7. Prompt Comparison Bar Chart (Figure 3)
+        self._plot_prompt_comparison(f"{output_dir}/figure3_prompt_comparison.png")
+        
+        # 8. Per-Problem Stability Heatmap (Figure 4)
+        self._plot_stability_heatmap(f"{output_dir}/figure4_stability_heatmap.png")
+        
+        # 9. Distribution of Problem-Level Success (Figure 5)
+        self._plot_success_distribution(f"{output_dir}/figure5_success_distribution.png")
+        
         print(f"✓ Visualizations saved to {output_dir}")
     
     def _plot_pass_rate_by_difficulty(self, filename: str):
@@ -520,6 +529,106 @@ class ReportGenerator:
                              ha="center", va="center", color="black", fontsize=10)
         
         plt.tight_layout()
+        plt.savefig(filename, dpi=300, bbox_inches='tight')
+        plt.close()
+
+    def _plot_prompt_comparison(self, filename: str):
+        """Figure 3: Prompt Comparison Bar Chart (Accuracy and Stability)"""
+        if self.df.empty: return
+        
+        metrics = []
+        for ptype in self.df['prompt_type'].unique():
+            subset = self.df[self.df['prompt_type'] == ptype]
+            
+            # Use original results structure for stability calculation if needed, 
+            # but here we can approx or use StabilityAnalyzer
+            analyzer = StabilityAnalyzer(trials=subset.to_dict('records'))
+            stats = analyzer.compute_metrics()
+            
+            metrics.append({
+                'Prompt': 'Detailed' if ptype == 'with_prompt' else 'Minimal',
+                'Metric': 'First-Pass Accuracy',
+                'Value': stats.get('first_pass_accuracy', 0)
+            })
+            metrics.append({
+                'Prompt': 'Detailed' if ptype == 'with_prompt' else 'Minimal',
+                'Metric': 'Perfect Stability Rate',
+                'Value': stats.get('perfect_stability_rate', 0)
+            })
+            
+        plot_df = pd.DataFrame(metrics)
+        plt.figure(figsize=(10, 6))
+        ax = sns.barplot(x='Metric', y='Value', hue='Prompt', data=plot_df, palette='viridis')
+        plt.title('Prompt Strategy Comparison: Accuracy vs Stability')
+        plt.ylabel('Rate (%)')
+        plt.ylim(0, 105)
+        
+        # Add values on top of bars
+        for p in ax.patches:
+            ax.annotate(f'{p.get_height():.1f}%', 
+                        (p.get_x() + p.get_width() / 2., p.get_height()), 
+                        ha='center', va='center', fontsize=11, color='gray', xytext=(0, 5),
+                        textcoords='offset points')
+            
+        plt.savefig(filename, dpi=300, bbox_inches='tight')
+        plt.close()
+
+    def _plot_stability_heatmap(self, filename: str):
+        """Figure 4: Per-Problem Stability Heatmap"""
+        if self.df.empty: return
+        
+        data_matrix = []
+        problem_titles = []
+        
+        for result in self.results:
+            title = result.get('title')
+            # For simplicity, we just show 'with_prompt' stability
+            attempts = result.get('with_prompt', [])
+            if not attempts: continue
+            
+            row = [1 if a.get('status') == 'Accepted' else 0 for a in attempts]
+            data_matrix.append(row)
+            problem_titles.append(title[:30] + '...' if len(title) > 30 else title)
+            
+        if not data_matrix: return
+        
+        # Pad rows to same length if inconsistent
+        max_len = max(len(r) for r in data_matrix)
+        data_matrix = [r + [0]*(max_len - len(r)) for r in data_matrix]
+        
+        plt.figure(figsize=(12, min(len(problem_titles) * 0.4, 15)))
+        sns.heatmap(data_matrix, annot=False, cmap='RdYlGn', cbar=False, 
+                    yticklabels=problem_titles, xticklabels=range(max_len))
+        plt.title('Per-Problem Stability Heatmap (Green=Accepted, Red=Failed)')
+        plt.xlabel('Trial Index')
+        plt.ylabel('Problem')
+        
+        plt.savefig(filename, dpi=300, bbox_inches='tight')
+        plt.close()
+
+    def _plot_success_distribution(self, filename: str):
+        """Figure 5: Distribution of Problem-Level Success Counts"""
+        if self.df.empty: return
+        
+        success_counts = []
+        for result in self.results:
+            attempts = result.get('with_prompt', [])
+            if not attempts: continue
+            count = sum(1 for a in attempts if a.get('status') == 'Accepted')
+            success_counts.append(count)
+            
+        if not success_counts: return
+        
+        max_attempts = max(len(result.get('with_prompt', [])) for result in self.results)
+        
+        plt.figure(figsize=(10, 6))
+        plt.hist(success_counts, bins=range(max_attempts + 2), align='left', rwidth=0.8, color='skyblue', edgecolor='black')
+        plt.xticks(range(max_attempts + 1))
+        plt.title('Distribution of Problem-Level Success Counts')
+        plt.xlabel('Number of Successful Runs (out of N)')
+        plt.ylabel('Number of Problems')
+        plt.grid(axis='y', linestyle='--', alpha=0.7)
+        
         plt.savefig(filename, dpi=300, bbox_inches='tight')
         plt.close()
     
