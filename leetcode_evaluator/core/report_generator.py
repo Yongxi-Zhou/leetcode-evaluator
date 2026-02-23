@@ -1,6 +1,7 @@
 """
 Report generator for comprehensive analysis of evaluation results
 """
+import os
 import json
 import numpy as np
 import pandas as pd
@@ -18,10 +19,11 @@ from leetcode_evaluator.core.stability_metrics import StabilityAnalyzer
 class ReportGenerator:
     """Generate comprehensive analysis reports"""
     
-    def __init__(self, results_file: str):
+    def __init__(self, results_file: str, output_dir: str = None):
         self.results_file = results_file
         self.results = self._load_results()
         self.df = self._create_dataframe()
+        self.output_dir = output_dir
         
     def _load_results(self) -> List[Dict]:
         """Load results from JSON file"""
@@ -287,31 +289,31 @@ class ReportGenerator:
     def generate_visualizations(self, output_dir: str = None):
         """Generate all visualization plots"""
         if output_dir is None:
-            output_dir = Config.REPORT_DIR
+            output_dir = self.output_dir or Config.REPORT_DIR
         
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        os.makedirs(output_dir, exist_ok=True)
         
         # Set style
         sns.set_style("whitegrid")
         plt.rcParams['figure.figsize'] = (12, 8)
         
         # 1. Pass rate comparison by difficulty
-        self._plot_pass_rate_by_difficulty(f"{output_dir}/pass_rate_by_difficulty_{timestamp}.png")
+        self._plot_pass_rate_by_difficulty(f"{output_dir}/pass_rate_by_difficulty.png")
         
         # 2. Runtime percentile distribution
-        self._plot_runtime_distribution(f"{output_dir}/runtime_distribution_{timestamp}.png")
+        self._plot_runtime_distribution(f"{output_dir}/runtime_distribution.png")
         
         # 3. Memory percentile distribution
-        self._plot_memory_distribution(f"{output_dir}/memory_distribution_{timestamp}.png")
+        self._plot_memory_distribution(f"{output_dir}/memory_distribution.png")
         
         # 4. Runtime vs Memory scatter
-        self._plot_runtime_vs_memory(f"{output_dir}/runtime_vs_memory_{timestamp}.png")
+        self._plot_runtime_vs_memory(f"{output_dir}/runtime_vs_memory.png")
         
         # 5. Error type comparison
-        self._plot_error_types(f"{output_dir}/error_types_{timestamp}.png")
+        self._plot_error_types(f"{output_dir}/error_types.png")
         
         # 6. Topic performance heatmap
-        self._plot_topic_heatmap(f"{output_dir}/topic_performance_{timestamp}.png")
+        self._plot_topic_heatmap(f"{output_dir}/topic_performance.png")
         
         print(f"✓ Visualizations saved to {output_dir}")
     
@@ -521,11 +523,19 @@ class ReportGenerator:
         plt.savefig(filename, dpi=300, bbox_inches='tight')
         plt.close()
     
-    def generate_full_report(self, output_file: str = None) -> str:
+    def generate_full_report(self, output_dir: str = None) -> str:
         """Generate complete analysis report"""
-        if output_file is None:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_file = f"{Config.REPORT_DIR}/analysis_report_{timestamp}.md"
+        if output_dir is None:
+            if self.output_dir:
+                output_dir = self.output_dir
+            else:
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                output_dir = os.path.join(Config.REPORT_DIR, timestamp)
+        
+        os.makedirs(output_dir, exist_ok=True)
+        self.output_dir = output_dir
+        
+        output_file = os.path.join(output_dir, "analysis_report.md")
         
         # Calculate all metrics
         correctness = self.calculate_correctness_metrics()
@@ -542,7 +552,7 @@ class ReportGenerator:
             f.write(report)
         
         # Generate visualizations
-        self.generate_visualizations()
+        self.generate_visualizations(output_dir)
         
         print(f"✓ Report generated: {output_file}")
         return output_file

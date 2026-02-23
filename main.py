@@ -3,6 +3,8 @@ Main entry point for LeetCode Evaluator
 """
 import argparse
 import sys
+import os
+import json
 from leetcode_evaluator.core.evaluator import LeetCodeEvaluator
 from leetcode_evaluator.core.report_generator import ReportGenerator
 from leetcode_evaluator.core.config import Config
@@ -122,8 +124,10 @@ Examples:
             print("Generating report from existing results...")
             generator = ReportGenerator(args.report)
             report_file = generator.generate_full_report()
+            report_dir = os.path.dirname(report_file)
             print(f"\n✓ Report generation complete!")
             print(f"✓ Report saved to: {report_file}")
+            print(f"✓ Visualizations saved to: {report_dir}/")
             return 0
         
         # Initialize evaluator with provider and model
@@ -147,7 +151,6 @@ Examples:
             return 0
         
         # Run evaluation (Batch or Single)
-        import json
         
         # Collect base parameters
         base_params = {
@@ -196,9 +199,13 @@ Examples:
                 
                 if results_file:
                     print(f"✓ Experiment {name} completed. Results: {results_file}")
-                    # Optional: generate report for each
-                    generator = ReportGenerator(results_file)
-                    generator.generate_full_report()
+                    # Use the same directory name for reports as for experiments
+                    exp_dir_name = os.path.basename(exp_evaluator.experiment_manager.experiment_dir)
+                    report_dir = os.path.join(Config.REPORT_DIR, exp_dir_name)
+                    
+                    generator = ReportGenerator(results_file, output_dir=report_dir)
+                    report_file = generator.generate_full_report()
+                    print(f"✓ Report generated: {report_file}")
                 else:
                     print(f"✗ Experiment {name} failed.")
             
@@ -233,15 +240,20 @@ Examples:
             
             # Generate report
             print("\nGenerating comprehensive report...")
-            generator = ReportGenerator(results_file)
+            # Use the same directory name for reports as for experiments
+            exp_dir_name = os.path.basename(evaluator.experiment_manager.experiment_dir)
+            report_dir = os.path.join(Config.REPORT_DIR, exp_dir_name)
+            
+            generator = ReportGenerator(results_file, output_dir=report_dir)
             report_file = generator.generate_full_report()
+            report_dir = os.path.dirname(report_file)
             
             print(f"\n{'='*60}")
             print("✓ Tasks completed successfully!")
             print(f"{'='*60}")
             print(f"Results: {results_file}")
             print(f"Report: {report_file}")
-            print(f"Visualizations: {Config.REPORT_DIR}/")
+            print(f"Visualizations: {report_dir}/")
             print(f"{'='*60}")
             
             return 0
