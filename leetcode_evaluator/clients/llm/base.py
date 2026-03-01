@@ -199,6 +199,9 @@ class LLMClientFactory:
         elif provider == 'grok':
             from leetcode_evaluator.clients.llm.grok import GrokClient
             return GrokClient(model_id=model_id)
+        elif provider == 'openrouter':
+            from leetcode_evaluator.clients.llm.openrouter import OpenRouterClient
+            return OpenRouterClient(model_id=model_id)
         elif provider == 'qwen':
             from leetcode_evaluator.clients.llm.qwen import QwenClient
             return QwenClient(model_id=model_id)

@@ -90,7 +90,7 @@ Examples:
     parser.add_argument(
         '--provider',
         type=str,
-        choices=['bedrock', 'openai', 'gemini', 'grok', 'qwen'],
+        choices=['bedrock', 'openai', 'gemini', 'grok', 'qwen', 'openrouter'],
         help='LLM provider to use (default: from config or bedrock)'
     )
     
@@ -223,7 +223,7 @@ Examples:
                 # Re-initialize evaluator for each experiment
                 exp_evaluator = LeetCodeEvaluator(
                     provider=args.provider,
-                    model_id=args.model,
+                    model_id=params.get('model', args.model),
                     experiment_name=name
                 )
                 
@@ -244,7 +244,7 @@ Examples:
                     
                     # Archive for paper publication
                     agg_manager = AggregationManager()
-                    analyzer = StabilityAnalyzer(trials=exp_evaluator.experiment_manager.jsonl_path)
+                    analyzer = StabilityAnalyzer(detailed_jsonl_path=exp_evaluator.experiment_manager.jsonl_path)
                     metrics = analyzer.compute_metrics()
                     
                     config_data = {

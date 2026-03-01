@@ -113,6 +113,15 @@ class LeetCodeEvaluator:
     def _producer_worker(self, tasks_queue: queue.Queue, submissions_queue: queue.Queue, 
                          attempts: int, **kwargs):
         """Worker function for LLM generation (Producer)"""
+        # Normalize generation params once so downstream logging always has concrete values.
+        run_params = dict(kwargs)
+        if run_params.get('temperature') is None:
+            run_params['temperature'] = Config.MODEL_TEMPERATURE
+        if run_params.get('top_p') is None:
+            run_params['top_p'] = Config.MODEL_TOP_P
+        if run_params.get('max_tokens') is None:
+            run_params['max_tokens'] = Config.MODEL_MAX_TOKENS
+
         while True:
             try:
                 problem = tasks_queue.get_nowait()
@@ -129,7 +138,7 @@ class LeetCodeEvaluator:
             # Detailed prompt attempts
             for attempt in range(attempts):
                 eval_data = self._evaluate_single_solution(
-                    problem, use_detailed_prompt=True, **kwargs
+                    problem, use_detailed_prompt=True, **run_params
                 )
                 if eval_data:
                     result['with_prompt'].append(eval_data)
@@ -137,12 +146,12 @@ class LeetCodeEvaluator:
             # Minimal prompt attempts
             for attempt in range(attempts):
                 eval_data = self._evaluate_single_solution(
-                    problem, use_detailed_prompt=False, **kwargs
+                    problem, use_detailed_prompt=False, **run_params
                 )
                 if eval_data:
                     result['without_prompt'].append(eval_data)
                     
-            result['params'] = kwargs # Store params for logging
+            result['params'] = run_params  # Store normalized params for logging
             submissions_queue.put(result)
             tasks_queue.task_done()
 
@@ -205,9 +214,23 @@ class LeetCodeEvaluator:
                                     'problem': problem['title'],
                                     'strategy': 'detailed' if strategy == 'with_prompt' else 'minimal',
                                     'trial_index': attempt_idx,
+                                    'provider': self.provider,
                                     'model_name': self.llm_client.model_id,
-                                    'temperature': item.get('params', {}).get('temperature', Config.MODEL_TEMPERATURE),
-                                    'top_p': item.get('params', {}).get('top_p', Config.MODEL_TOP_P),
+                                    'temperature': (
+                                        item.get('params', {}).get('temperature')
+                                        if item.get('params', {}).get('temperature') is not None
+                                        else Config.MODEL_TEMPERATURE
+                                    ),
+                                    'top_p': (
+                                        item.get('params', {}).get('top_p')
+                                        if item.get('params', {}).get('top_p') is not None
+                                        else Config.MODEL_TOP_P
+                                    ),
+                                    'max_tokens': (
+                                        item.get('params', {}).get('max_tokens')
+                                        if item.get('params', {}).get('max_tokens') is not None
+                                        else Config.MODEL_MAX_TOKENS
+                                    ),
                                     'verdict': status,
                                     'accepted_bool': 1 if status == 'Accepted' else 0,
                                     'prompt_tokens': gen_data.get('input_tokens', 0),

@@ -24,6 +24,7 @@ class ReportGenerator:
         self.results = self._load_results()
         self.df = self._create_dataframe()
         self.output_dir = output_dir
+        self.experiment_metadata = {}
         
     def _load_results(self) -> List[Dict]:
         """Load results from JSON file"""
@@ -96,6 +97,31 @@ class ReportGenerator:
                 df[col] = pd.to_numeric(df[col], errors='coerce')
 
         return df
+
+    def _load_experiment_metadata(self) -> Dict:
+        """
+        Load experiment config/summary metadata from results/summary/<experiment_name>.json
+        when the report output directory follows reports/<experiment_name>/...
+        """
+        if not self.output_dir:
+            return {}
+
+        experiment_name = os.path.basename(os.path.normpath(self.output_dir))
+        if not experiment_name:
+            return {}
+
+        summary_path = os.path.join(Config.RESULTS_SUMMARY, f"{experiment_name}.json")
+        if not os.path.exists(summary_path):
+            return {}
+
+        try:
+            with open(summary_path, 'r') as f:
+                data = json.load(f)
+            data['_summary_path'] = summary_path
+            return data
+        except Exception as e:
+            print(f"Warning: failed to load experiment metadata from {summary_path}: {e}")
+            return {}
     
     def calculate_correctness_metrics(self) -> Dict:
         """Calculate correctness and success rate metrics"""
@@ -643,6 +669,7 @@ class ReportGenerator:
         
         os.makedirs(output_dir, exist_ok=True)
         self.output_dir = output_dir
+        self.experiment_metadata = self._load_experiment_metadata()
         
         output_file = os.path.join(output_dir, "analysis_report.md")
         
@@ -695,7 +722,29 @@ class ReportGenerator:
 - **Overall Pass Rate (Without Prompt):** {without_pass:.1f}%
 - **Improvement:** {improvement:+.1f} percentage points
 """
-        
+
+        if self.experiment_metadata:
+            report += """
+
+### Experiment Configuration
+
+| Variable | Value |
+|---|---|
+"""
+            config_rows = [
+                ("Experiment Name", self.experiment_metadata.get('experiment_name')),
+                ("Model", self.experiment_metadata.get('model_name')),
+                ("Prompt Profile", self.experiment_metadata.get('prompt_type')),
+                ("Temperature", self.experiment_metadata.get('temperature')),
+                ("Top-p", self.experiment_metadata.get('top_p')),
+                ("Max Tokens", self.experiment_metadata.get('max_tokens')),
+                ("Total Problems", self.experiment_metadata.get('total_problems')),
+                ("Total Runs", self.experiment_metadata.get('total_runs')),
+            ]
+            for key, value in config_rows:
+                if value is not None:
+                    report += f"| {key} | {value} |\n"
+
         if 'with_prompt_mean_runtime_percentile' in performance:
             report += f"""
 - **Mean Runtime Percentile (With Prompt):** {performance['with_prompt_mean_runtime_percentile']:.1f}%

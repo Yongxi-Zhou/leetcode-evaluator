@@ -49,6 +49,11 @@ class Config:
     GROK_MODEL_ID = os.getenv('GROK_MODEL_ID', 'grok-beta')
     GROK_API_BASE_URL = os.getenv('GROK_API_BASE_URL', 'https://api.x.ai/v1')
 
+    # OpenRouter Configuration
+    OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY')
+    OPENROUTER_MODEL_ID = os.getenv('OPENROUTER_MODEL_ID', 'openai/gpt-4o')
+    OPENROUTER_API_BASE_URL = os.getenv('OPENROUTER_API_BASE_URL', 'https://openrouter.ai/api/v1')
+
     # LeetCode API Endpoints
     LEETCODE_BASE_URL = "https://leetcode.com"
     LEETCODE_GRAPHQL_URL = "https://leetcode.com/graphql"
@@ -169,6 +174,10 @@ Provide ONLY the complete Python code solution, no explanations or markdown form
         elif provider == 'grok':
             required.update({
                 'GROK_API_KEY': cls.GROK_API_KEY,
+            })
+        elif provider == 'openrouter':
+            required.update({
+                'OPENROUTER_API_KEY': cls.OPENROUTER_API_KEY,
             })
         elif provider == 'qwen':
             required.update({
