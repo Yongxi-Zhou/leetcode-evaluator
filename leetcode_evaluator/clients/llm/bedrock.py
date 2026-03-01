@@ -4,7 +4,7 @@ AWS Bedrock Client for generating code solutions
 import json
 import re
 import boto3
-from typing import Dict, Optional
+from typing import Dict, Optional, Any, List
 from botocore.config import Config as BotoConfig
 from leetcode_evaluator.core.config import Config
 from leetcode_evaluator.clients.llm.base import LLMClient
@@ -38,59 +38,33 @@ class BedrockClient(LLMClient):
                 config=boto_config
             )
         
-    def generate_solution(self, problem: Dict, use_detailed_prompt: bool = True) -> Optional[str]:
-        """
-        Generate a solution for the given problem
+    def _invoke_model(self, prompt: str, **kwargs) -> Dict[str, Any]:
+        """Invoke the Bedrock model and return text with usage metadata"""
         
-        Args:
-            problem: Problem dictionary with description and code_template
-            use_detailed_prompt: Whether to use detailed prompt or minimal
-        
-        Returns:
-            Generated Python code solution
-        """
-        # Prepare prompt
-        prompt = self._prepare_prompt(problem, use_detailed_prompt)
-        
-        try:
-            # Call Bedrock API
-            print(f"Using model: {self.model_id}")
-            print(f"With prompt: {prompt}")
-            response = self._invoke_model(prompt)
-            
-            if response:
-                # Extract code from response
-                code = self._extract_code(response)
-                return code
-            
-        except Exception as e:
-            print(f"Error generating solution: {str(e)}")
-        
-        return None
-    
-    def _invoke_model(self, prompt: str) -> Optional[str]:
-        """Invoke the Bedrock model with the given prompt"""
+        temperature = kwargs.get('temperature', 0.3)
+        top_p = kwargs.get('top_p', 0.9)
+        max_tokens = kwargs.get('max_tokens', 4096)
         
         # Prepare request based on model family
         if 'anthropic.claude' in self.model_id:
             body = {
                 "anthropic_version": "bedrock-2023-05-31",
-                "max_tokens": 4096,
+                "max_tokens": max_tokens,
                 "messages": [
                     {
                         "role": "user",
                         "content": prompt
                     }
                 ],
-                "temperature": 0.3,
-                "top_p": 0.9
+                "temperature": temperature,
+                "top_p": top_p
             }
         else:
-            # Generic format for other models
             body = {
                 "prompt": prompt,
-                "max_tokens": 4096,
-                "temperature": 0.3
+                "max_tokens": max_tokens,
+                "temperature": temperature,
+                "top_p": top_p
             }
         
         try:
@@ -102,86 +76,32 @@ class BedrockClient(LLMClient):
             )
             
             response_body = json.loads(response['body'].read())
+            text = None
+            usage = {'input_tokens': 0, 'output_tokens': 0}
             
-            # Extract text based on model response format
+            # Extract text and usage based on model response format
             if 'anthropic.claude' in self.model_id:
                 if 'content' in response_body and len(response_body['content']) > 0:
-                    return response_body['content'][0]['text']
+                    text = response_body['content'][0]['text']
+                
+                # Check for usage metadata in Claude responses
+                if 'usage' in response_body:
+                    usage['input_tokens'] = response_body['usage'].get('input_tokens', 0)
+                    usage['output_tokens'] = response_body['usage'].get('output_tokens', 0)
+                    
             elif 'completion' in response_body:
-                return response_body['completion']
+                text = response_body['completion']
             elif 'generated_text' in response_body:
-                return response_body['generated_text']
+                text = response_body['generated_text']
             
-            return None
+            if text is None:
+                raise ValueError(f"Could not extract response from Bedrock: {response_body}")
+                
+            return {
+                'text': text,
+                'usage': usage
+            }
             
         except Exception as e:
-            print(f"Model invocation error: {str(e)}")
-            return None
-    
-    def _extract_code(self, response: str) -> Optional[str]:
-        """
-        Extract Python code from model response
-        
-        Handles various response formats:
-        - Markdown code blocks (```python ... ```)
-        - Plain code
-        - Code with explanations
-        """
-        if not response:
-            return None
-        
-        # Try to find code in markdown blocks
-        code_block_pattern = r'```(?:python|python3)?\s*\n(.*?)\n```'
-        matches = re.findall(code_block_pattern, response, re.DOTALL)
-        
-        if matches:
-            # Return the first code block found
-            return matches[0].strip()
-        
-        # If no markdown blocks, look for class definitions (common in LeetCode)
-        class_pattern = r'(class\s+\w+.*?)(?=\n\n|\Z)'
-        class_matches = re.findall(class_pattern, response, re.DOTALL)
-        
-        if class_matches:
-            return class_matches[0].strip()
-        
-        # Last resort: check if the entire response looks like code
-        lines = response.strip().split('\n')
-        code_indicators = ['def ', 'class ', 'import ', 'from ', 'return ', '    ']
-        
-        if any(any(line.strip().startswith(indicator) for indicator in code_indicators) 
-               for line in lines):
-            return response.strip()
-        
-        # If we still can't find code, try to extract everything between first 'class' and end
-        if 'class ' in response:
-            start_idx = response.find('class ')
-            return response[start_idx:].strip()
-        
-        return None
-    
-    def generate_multiple_solutions(self, problem: Dict, count: int = 5, 
-                                   use_detailed_prompt: bool = True) -> list:
-        """
-        Generate multiple solutions for the same problem
-        
-        Args:
-            problem: Problem dictionary
-            count: Number of solutions to generate
-            use_detailed_prompt: Whether to use detailed prompt
-        
-        Returns:
-            List of generated code solutions
-        """
-        solutions = []
-        
-        for i in range(count):
-            print(f"Generating solution {i+1}/{count}...")
-            solution = self.generate_solution(problem, use_detailed_prompt)
-            
-            if solution and self.validate_code_syntax(solution):
-                solutions.append(solution)
-            else:
-                print(f"  ✗ Solution {i+1} failed validation")
-        
-        return solutions
+            print(f"Bedrock invocation error: {str(e)}")
+            raise e
