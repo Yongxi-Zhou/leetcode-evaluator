@@ -113,10 +113,11 @@ Code Template:
 Provide ONLY the complete Python code solution, no explanations or markdown formatting.
 """
 
-    # Report Settings
-    REPORT_DIR = "reports"
-    RESULTS_DIR = "results"
-    EXPERIMENTS_DIR = "experiments"
+    # Consolidated Output Directory
+    OUTPUT_ROOT = "output"
+    RESULTS_DIR = os.path.join(OUTPUT_ROOT, "results")
+    REPORTS_DIR = os.path.join(OUTPUT_ROOT, "reports")
+    EXPERIMENTS_DIR = os.path.join(OUTPUT_ROOT, "experiments")
     
     # Paper-ready Result Structure
     RESULTS_RAW = os.path.join(RESULTS_DIR, "raw")

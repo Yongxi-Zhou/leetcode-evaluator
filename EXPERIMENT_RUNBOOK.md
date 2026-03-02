@@ -158,25 +158,21 @@ python main.py --experiment-config experiments/multi_provider.json --num-problem
 - Model comparison across experiments
 - Cost-effectiveness analysis
 
-## Output Files Structure
+## Output Structure
+All outputs are consolidated in the `output/` directory:
 ```
-results/
-├── evaluations/           # Evaluation results JSON
-├── problems/             # Problem metadata
-├── raw/                  # Raw JSONL trial data
-├── summary/              # Aggregated metrics
-└── tables/               # Paper-ready tables
-
-reports/
-└── YYYYMMDD_HHMMSS_*/   # Individual experiment reports
-    ├── analysis_report.md
-    ├── metrics.json
-    └── plots/           # Visualizations
-
-experiments/
-└── YYYYMMDD_HHMMSS_*/   # Experiment metadata
-    ├── summary.csv
-    └── detailed.jsonl
+output/
+├── results/
+│   ├── evaluations/           # Evaluation results JSON
+│   ├── problems/             # Problem metadata
+│   ├── raw/                  # Raw JSONL trial data
+│   ├── summary/              # Aggregated metrics
+│   ├── tables/               # Paper-ready tables
+│   └── figures/              # Visualizations
+├── reports/
+│   └── YYYYMMDD_HHMMSS_*/   # Individual experiment reports
+└── experiments/
+    └── YYYYMMDD_HHMMSS_*/   # Experiment metadata
 ```
 
 ## Quick Reference
