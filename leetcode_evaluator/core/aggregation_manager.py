@@ -62,19 +62,36 @@ class AggregationManager:
             return "No summary data found to aggregate."
 
         df = pd.DataFrame(all_summaries)
+
+        def format_ci(value):
+            if isinstance(value, list) and len(value) == 2:
+                return f"[{value[0]}, {value[1]}]"
+            return ""
+
+        ci_columns = {
+            'run_level_ci_95': 'RLPR 95% CI',
+            'first_pass_ci_95': 'FPA 95% CI',
+            'perfect_stability_ci_95': 'PSR 95% CI',
+            'average_variance_ci_95': 'AV 95% CI',
+        }
+        for raw_col, formatted_col in ci_columns.items():
+            if raw_col in df.columns:
+                df[formatted_col] = df[raw_col].apply(format_ci)
         
         # Columns requested by paper requirements:
-        # Model, Prompt, Temperature, Run-Level Pass Rate, First-Pass Accuracy, 
-        # Perfect Stability Rate, Average Variance, p90 Latency
+        # Model, Prompt, point estimates, confidence intervals, and latency.
         
         column_mapping = {
             'model_name': 'Model',
             'prompt_type': 'Prompt',
-            'temperature': 'Temperature',
             'run_level_pass_rate': 'Run-Level Pass Rate',
             'first_pass_accuracy': 'First-Pass Accuracy',
             'perfect_stability_rate': 'Perfect Stability Rate',
             'average_variance': 'Average Variance',
+            'RLPR 95% CI': 'RLPR 95% CI',
+            'FPA 95% CI': 'FPA 95% CI',
+            'PSR 95% CI': 'PSR 95% CI',
+            'AV 95% CI': 'AV 95% CI',
             'p90_latency_ms': 'p90 Latency'
         }
         
@@ -99,7 +116,7 @@ class AggregationManager:
         return md_path
 
     def generate_plots(self):
-        """Generate multi-configuration plots (Figure 1 and Figure 2)."""
+        """Generate multi-configuration plots for paper-ready aggregation."""
         all_summaries = []
         for filename in os.listdir(self.summary_dir):
             if filename.endswith(".json"):
@@ -121,17 +138,6 @@ class AggregationManager:
             plt.ylabel('Perfect Stability Rate (%)')
             plt.grid(True, linestyle='--', alpha=0.6)
             plt.savefig(os.path.join(fig_dir, "figure1_accuracy_vs_stability.png"), dpi=300)
-            plt.close()
-
-        # Figure 2: Temperature vs Variance Curve
-        if 'temperature' in df.columns and 'average_variance' in df.columns:
-            plt.figure(figsize=(10, 6))
-            sns.lineplot(x='temperature', y='average_variance', hue='model_name', marker='o', data=df)
-            plt.title('Temperature vs Solution Variance')
-            plt.xlabel('Temperature')
-            plt.ylabel('Average Variance')
-            plt.grid(True, linestyle='--', alpha=0.6)
-            plt.savefig(os.path.join(fig_dir, "figure2_temperature_vs_variance.png"), dpi=300)
             plt.close()
 
     def copy_raw_data(self, experiment_manager):

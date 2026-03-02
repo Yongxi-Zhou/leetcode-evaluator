@@ -99,6 +99,9 @@ class ReportGenerator:
             if col in df.columns:
                 df[col] = pd.to_numeric(df[col], errors='coerce')
 
+        if 'difficulty' in df.columns:
+            df['difficulty'] = df['difficulty'].astype(str).str.strip().str.title()
+
         return df
 
     def _load_experiment_metadata(self) -> Dict:
@@ -321,14 +324,18 @@ class ReportGenerator:
                         'problem_id': pid,
                         'prompt_type': key,
                         'trial_index': idx,
-                        'status': attempt.get('status')
+                        'status': attempt.get('status'),
+                        'latency_ms': attempt.get('latency_ms', 0)
                     })
         
         if not trials:
             return {}
             
         analyzer = StabilityAnalyzer(trials=trials)
-        return analyzer.compute_metrics()
+        return {
+            'overall': analyzer.compute_metrics(),
+            'by_prompt': analyzer.compute_metrics_by_strategy()
+        }
     
     def generate_visualizations(self, output_dir: str = None):
         """Generate all visualization plots"""
@@ -715,6 +722,14 @@ class ReportGenerator:
                                   comparison: Dict, topic_metrics: Dict, stability: Dict) -> str:
         """Generate markdown formatted report"""
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        overall_stability = stability.get('overall', {})
+        stability_by_prompt = stability.get('by_prompt', {})
+
+        def format_ci(ci: List[float], percent: bool = True, decimals: int = 2) -> str:
+            if not isinstance(ci, list) or len(ci) != 2:
+                return "N/A"
+            suffix = "%" if percent else ""
+            return f"[{ci[0]:.{decimals}f}{suffix}, {ci[1]:.{decimals}f}{suffix}]"
         
         model_line = ""
         if self.model_name:
@@ -880,13 +895,51 @@ class ReportGenerator:
 
 | Metric | Value |
 |--------|-------|
-| Total Problems | {stability.get('total_problems', 0)} |
-| Total Runs | {stability.get('total_runs', 0)} |
-| Run-Level Pass Rate | {stability.get('run_level_pass_rate', 0):.1f}% |
-| Perfect Stability Rate | {stability.get('perfect_stability_rate', 0):.1f}% |
-| First-Pass Accuracy | {stability.get('first_pass_accuracy', 0):.1f}% |
-| Average Variance | {stability.get('average_variance', 0):.4f} |
+| Total Problems | {overall_stability.get('total_problems', 0)} |
+| Total Runs | {overall_stability.get('total_runs', 0)} |
+| Run-Level Pass Rate | {overall_stability.get('run_level_pass_rate', 0):.1f}% |
+| RLPR 95% CI | {format_ci(overall_stability.get('run_level_ci_95', []))} |
+| Perfect Stability Rate | {overall_stability.get('perfect_stability_rate', 0):.1f}% |
+| PSR 95% CI | {format_ci(overall_stability.get('perfect_stability_ci_95', []))} |
+| First-Pass Accuracy | {overall_stability.get('first_pass_accuracy', 0):.1f}% |
+| FPA 95% CI | {format_ci(overall_stability.get('first_pass_ci_95', []))} |
+| Pass@1 | {overall_stability.get('pass@1', 0):.1f}% |
+| Pass@3 | {overall_stability.get('pass@3', 0):.1f}% |
+| Pass@5 | {overall_stability.get('pass@5', 0):.1f}% |
+| Average Variance | {overall_stability.get('average_variance', 0):.4f} |
+| AV 95% CI | {format_ci(overall_stability.get('average_variance_ci_95', []), percent=False, decimals=4)} |
+"""
 
+        if stability_by_prompt:
+            report += """
+### 3.1 Stability by Prompt
+
+| Prompt | Total Problems | Total Runs | RLPR | RLPR 95% CI | PSR | PSR 95% CI | FPA | FPA 95% CI | Pass@1 | Pass@3 | Pass@5 | AV | AV 95% CI |
+|--------|----------------|------------|------|-------------|-----|------------|-----|------------|--------|--------|--------|----|----------|
+"""
+            for prompt_type in ['detailed', 'minimal']:
+                prompt_metrics = stability_by_prompt.get(prompt_type)
+                if not prompt_metrics:
+                    continue
+                report += (
+                    f"| {prompt_type} | "
+                    f"{prompt_metrics.get('total_problems', 0)} | "
+                    f"{prompt_metrics.get('total_runs', 0)} | "
+                    f"{prompt_metrics.get('run_level_pass_rate', 0):.1f}% | "
+                    f"{format_ci(prompt_metrics.get('run_level_ci_95', []))} | "
+                    f"{prompt_metrics.get('perfect_stability_rate', 0):.1f}% | "
+                    f"{format_ci(prompt_metrics.get('perfect_stability_ci_95', []))} | "
+                    f"{prompt_metrics.get('first_pass_accuracy', 0):.1f}% | "
+                    f"{format_ci(prompt_metrics.get('first_pass_ci_95', []))} | "
+                    f"{prompt_metrics.get('pass@1', 0):.1f}% | "
+                    f"{prompt_metrics.get('pass@3', 0):.1f}% | "
+                    f"{prompt_metrics.get('pass@5', 0):.1f}% | "
+                    f"{prompt_metrics.get('average_variance', 0):.4f} | "
+                    f"{format_ci(prompt_metrics.get('average_variance_ci_95', []), percent=False, decimals=4)} |\n"
+                )
+            report += "\n"
+
+        report += """
 ---
 
 ## 4. Prompt Impact Analysis

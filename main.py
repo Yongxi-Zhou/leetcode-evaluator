@@ -66,7 +66,14 @@ Examples:
         action='store_true',
         help='Only fetch problems without evaluation'
     )
-    
+
+    parser.add_argument(
+        '--dataset',
+        type=str,
+        default='main',
+        help='Dataset selector: e.g. main, test, or a direct JSON path'
+    )
+
     parser.add_argument(
         '--selection',
         choices=['LATEST', 'RANDOM'],
@@ -202,7 +209,8 @@ Examples:
             'attempts': args.attempts,
             'stability_runs': args.stability_runs,
             'workers': args.workers,
-            'selection': args.selection
+            'selection': args.selection,
+            'dataset': args.dataset
         }
         
         # Collect model overrides
@@ -220,7 +228,6 @@ Examples:
                 
             print(f"Found {len(experiments)} experiments to run.")
             
-            import concurrent.futures
             import time
             
             def run_single_experiment(exp, i, args, base_params):
@@ -234,7 +241,7 @@ Examples:
                 
                 # Re-initialize evaluator for each experiment
                 exp_evaluator = LeetCodeEvaluator(
-                    provider=args.provider,
+                    provider=params.get('provider', args.provider),
                     model_id=params.get('model', args.model),
                     experiment_name=name
                 )
@@ -246,10 +253,37 @@ Examples:
                 
                 if results_file:
                     print(f"✓ Experiment {name} completed. Results: {results_file}")
+                    agg_manager = AggregationManager()
+                    analyzer = StabilityAnalyzer(detailed_jsonl_path=exp_evaluator.experiment_manager.jsonl_path)
+                    prompt_metrics = analyzer.compute_metrics_by_strategy()
+
+                    for prompt_type, metrics in prompt_metrics.items():
+                        config_data = {
+                            'model_name': exp_evaluator.llm_client.model_id,
+                            'prompt_type': prompt_type,
+                            'temperature': params.get('temperature', Config.MODEL_TEMPERATURE),
+                            'top_p': params.get('top_p', Config.MODEL_TOP_P),
+                            'max_tokens': params.get('max_tokens', Config.MODEL_MAX_TOKENS),
+                            'provider': params.get('provider', args.provider or Config.LLM_PROVIDER)
+                        }
+                        agg_manager.save_experiment_summary(
+                            f"{name}_{prompt_type}",
+                            metrics,
+                            config_data
+                        )
+                    agg_manager.copy_raw_data(exp_evaluator.experiment_manager)
+
                     # Use the same directory name for reports as for experiments
                     exp_dir_name = os.path.basename(exp_evaluator.experiment_manager.experiment_dir)
                     report_dir = os.path.join(Config.REPORTS_DIR, exp_dir_name)
                     
+                    # Set matplotlib backend to non-interactive for thread safety
+                    import matplotlib
+                    matplotlib.use('Agg')
+                    
+                    generator = ReportGenerator(results_file, output_dir=report_dir)
+                    report_file = generator.generate_full_report()
+                    print(f"✓ Report generated: {report_file}")
                     # Save summary data for report generator and global aggregation
                     agg_manager = AggregationManager()
                     analyzer = StabilityAnalyzer(detailed_jsonl_path=exp_evaluator.experiment_manager.jsonl_path)
@@ -287,28 +321,20 @@ Examples:
                     print(f"✗ Experiment {name} failed.")
                     return name, False
             
-            # Run experiments in parallel with staggered start to avoid rate limits
-            max_workers = min(len(experiments), Config.WORKER_THREADS)
-            print(f"\n🚀 Running {len(experiments)} experiments in parallel with {max_workers} workers...")
-            
-            with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-                futures = []
-                for i, exp in enumerate(experiments):
-                    # Stagger start times to avoid rate limits
-                    if i > 0:
-                        time.sleep(5)
-                    future = executor.submit(run_single_experiment, exp, i, args, base_params)
-                    futures.append(future)
-                
-                # Collect results
-                results = []
-                for future in concurrent.futures.as_completed(futures):
-                    try:
-                        name, success = future.result()
-                        results.append((name, success))
-                    except Exception as e:
-                        print(f"✗ Experiment failed with error: {str(e)}")
-                        results.append(("unknown", False))
+            # Run experiments sequentially to keep LeetCode-side rate limiting from
+            # contaminating model/config comparisons.
+            print(f"\n🚀 Running {len(experiments)} experiments sequentially...")
+            results = []
+            for i, exp in enumerate(experiments):
+                if i > 0:
+                    time.sleep(5)
+                try:
+                    name, success = run_single_experiment(exp, i, args, base_params)
+                    results.append((name, success))
+                except Exception as e:
+                    exp_name = exp.get('name', f"exp_{i}")
+                    print(f"✗ Experiment {exp_name} failed with error: {str(e)}")
+                    results.append((exp_name, False))
             
             # Summary
             successful = sum(1 for _, success in results if success)
@@ -326,6 +352,7 @@ Examples:
             print("Starting LeetCode evaluation...")
             print(f"Configuration:")
             print(f"  - Problems: {args.num_problems}")
+            print(f"  - Dataset: {args.dataset}")
             print(f"  - Difficulty: {args.difficulty or 'All'}")
             print(f"  - Selection: {args.selection}")
             print(f"  - Base Attempts/Stability Runs: {max(args.attempts, args.stability_runs)}")
@@ -387,6 +414,26 @@ Examples:
             print(f"Report: {report_file}")
             print(f"Visualizations: {report_dir}/")
             print(f"{'='*60}")
+            
+            agg_manager = AggregationManager()
+            analyzer = StabilityAnalyzer(detailed_jsonl_path=evaluator.experiment_manager.jsonl_path)
+            exp_name = os.path.basename(evaluator.experiment_manager.experiment_dir)
+            prompt_metrics = analyzer.compute_metrics_by_strategy()
+            for prompt_type, metrics in prompt_metrics.items():
+                config_data = {
+                    'model_name': evaluator.llm_client.model_id,
+                    'prompt_type': prompt_type,
+                    'temperature': args.temperature or Config.MODEL_TEMPERATURE,
+                    'top_p': args.top_p or Config.MODEL_TOP_P,
+                    'max_tokens': args.max_tokens or Config.MODEL_MAX_TOKENS,
+                    'provider': args.provider or Config.LLM_PROVIDER
+                }
+                agg_manager.save_experiment_summary(
+                    f"{exp_name}_{prompt_type}",
+                    metrics,
+                    config_data
+                )
+            agg_manager.copy_raw_data(evaluator.experiment_manager)
             
             return 0
         

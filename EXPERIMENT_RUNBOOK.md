@@ -61,12 +61,50 @@ LLM_PROVIDER=openrouter
 Run a single Easy problem with a specific model to ensure everything is working.
 ```bash
 python main.py --num-problems 1 --difficulty EASY --provider openrouter --model google/gemini-flash-1.5
+## Fixed Dataset
+Experiments read from a local fixed dataset by default:
+
+```text
+dataset/main-dataset.json
+```
+
+This is the recommended workflow for paper experiments so all models are evaluated on the same problem set. The `--num-problems` flag slices the first `n` tasks from this local dataset. To switch datasets, use `--dataset <name>`, for example `--dataset test` to read `dataset/test-dataset.json`. Use `--fetch-only` only when you intentionally want to create a new dataset snapshot.
+
+## Approach 1: OpenRouter (Single API Key)
+
+### Step 1: Configure Experiments
+Edit `experiments/config.json`:
+```json
+[
+  {
+    "name": "gpt-4o-mini",
+    "params": {
+      "model": "openai/gpt-4o-mini"
+    }
+  },
+  {
+    "name": "claude-3-5-sonnet",
+    "params": {
+      "model": "anthropic/claude-3.5-sonnet"
+    }
+  }
+]
 ```
 
 ### 2. Standard Evaluation
 Evaluate 10 Medium problems with Llama 3.1 via OpenRouter.
 ```bash
 python main.py --num-problems 10 --difficulty MEDIUM --provider openrouter --model meta-llama/llama-3.1-405b-instruct
+# Run all experiments against the same fixed local dataset
+python main.py --provider openrouter --experiment-config experiments/config.json \
+  --num-problems 30 --attempts 3
+
+# Options:
+# --num-problems N    Number of problems (default: 5)
+# --dataset NAME      Dataset selector, e.g. main or test
+# --difficulty LEVEL  EASY/MEDIUM/HARD
+# --attempts N        Attempts per problem (default: 1)
+# --stability-runs N  Repeated runs for stability (default: 1)
 ```
 
 ### 3. Stability Analysis (Multiple Trials)
@@ -86,6 +124,21 @@ python main.py --experiment-config experiments/config.json --num-problems 10 --w
 Fine-tune the generation by overriding temperature and max tokens.
 ```bash
 python main.py --num-problems 5 --temperature 0.7 --max-tokens 2048 --provider qwen --model qwen-max
+# OpenAI
+python main.py --provider openai --model gpt-4o-mini \
+  --num-problems 30
+
+# Gemini
+python main.py --provider gemini --model gemini-1.5-flash \
+  --num-problems 30
+
+# Grok
+python main.py --provider grok --model grok-beta \
+  --num-problems 30
+
+# Qwen
+python main.py --provider qwen --model qwen-plus \
+  --num-problems 30
 ```
 
 ### 6. Generate Report from Existing Data
@@ -98,6 +151,8 @@ python main.py --report output/20260301_120000/results/evaluations/evaluation_re
 Generate a global comparison table and plots from all finished experiments.
 ```bash
 python main.py --generate-report
+python main.py --experiment-config experiments/multi_provider.json \
+  --num-problems 30
 ```
 
 ## Available Metrics
@@ -158,11 +213,18 @@ output/
 ### Common Commands
 ```bash
 # Quick test (1 problem)
-python main.py --provider openrouter --model openai/gpt-4o-mini --num-problems 1
+python main.py --provider openrouter --model openai/gpt-4o-mini \
+  --num-problems 1
 
 # Full evaluation (10 problems, 3 attempts)
 python main.py --provider openrouter --experiment-config experiments/config.json \
-  --num-problems 10 --attempts 3
+  --num-problems 30 --attempts 3
+
+# Run against the test dataset
+python main.py --dataset test --num-problems 5 --attempts 1
+
+# Create a new dataset snapshot intentionally
+python main.py --fetch-only --num-problems 30 --difficulty MEDIUM
 
 # Generate report from existing results
 python main.py --report results/evaluations/evaluation_results_*.json

@@ -181,70 +181,79 @@ class LeetCodeEvaluator:
                 for attempt_idx, gen_data in enumerate(item[strategy]):
                     # Check global rate limit pause
                     self.global_rate_limit_pause.wait()
-                    
+
+                    normalized_prompt = 'detailed' if strategy == 'with_prompt' else 'minimal'
+                    attempt_result = {
+                        'status': gen_data.get('status', 'Unknown'),
+                        'prompt_type': normalized_prompt,
+                        'input_tokens': gen_data.get('input_tokens', 0),
+                        'output_tokens': gen_data.get('output_tokens', 0),
+                        'latency_ms': gen_data.get('latency_ms', 0),
+                        'cost': gen_data.get('cost', 0),
+                        'gen_status': gen_data.get('gen_status', 'Unknown')
+                    }
+
                     code = gen_data.get('code')
                     if code:
+                        attempt_result['code'] = code
                         # Submit to LeetCode
                         submission_id = self.leetcode_client.submit_solution(
                             title_slug=problem['title_slug'],
                             code=code,
                             question_id=problem['question_id']
                         )
-                        
+
                         if submission_id:
                             # Check result
                             res = self.leetcode_client.check_submission(submission_id)
                             if res:
-                                res['code'] = code
-                                res['prompt_type'] = 'detailed' if strategy == 'with_prompt' else 'minimal'
-                                # Update with LLM metadata
-                                res.update({
-                                    'input_tokens': gen_data.get('input_tokens', 0),
-                                    'output_tokens': gen_data.get('output_tokens', 0),
-                                    'latency_ms': gen_data.get('latency_ms', 0),
-                                    'cost': gen_data.get('cost', 0),
-                                    'gen_status': gen_data.get('gen_status', 'Success')
-                                })
-                                aggregated_result[strategy].append(res)
-                                
-                                # Log to experiment manager with stability-specific fields
-                                status = res.get('status', 'Unknown')
-                                self.experiment_manager.log_attempt({
-                                    'problem_id': problem.get('question_id'),
-                                    'problem': problem['title'],
-                                    'strategy': 'detailed' if strategy == 'with_prompt' else 'minimal',
-                                    'trial_index': attempt_idx,
-                                    'provider': self.provider,
-                                    'model_name': self.llm_client.model_id,
-                                    'temperature': (
-                                        item.get('params', {}).get('temperature')
-                                        if item.get('params', {}).get('temperature') is not None
-                                        else Config.MODEL_TEMPERATURE
-                                    ),
-                                    'top_p': (
-                                        item.get('params', {}).get('top_p')
-                                        if item.get('params', {}).get('top_p') is not None
-                                        else Config.MODEL_TOP_P
-                                    ),
-                                    'max_tokens': (
-                                        item.get('params', {}).get('max_tokens')
-                                        if item.get('params', {}).get('max_tokens') is not None
-                                        else Config.MODEL_MAX_TOKENS
-                                    ),
-                                    'verdict': status,
-                                    'accepted_bool': 1 if status == 'Accepted' else 0,
-                                    'prompt_tokens': gen_data.get('input_tokens', 0),
-                                    'completion_tokens': gen_data.get('output_tokens', 0),
-                                    **res
-                                })
-                                self.experiment_manager.log_solution(
-                                    problem['title'], 
-                                    'detailed' if strategy == 'with_prompt' else 'minimal', 
-                                    code
-                                )
-                    
-                    # Mandatory delay between submissions
-                    time.sleep(Config.LEETCODE_SUBMISSION_DELAY_S)
+                                attempt_result.update(res)
+                            else:
+                                attempt_result['status'] = 'Submission Result Missing'
+                        else:
+                            attempt_result['status'] = 'Submission Failed'
+
+                    aggregated_result[strategy].append(attempt_result)
+
+                    status = attempt_result.get('status', 'Unknown')
+                    self.experiment_manager.log_attempt({
+                        'problem_id': problem.get('question_id'),
+                        'problem': problem['title'],
+                        'strategy': normalized_prompt,
+                        'trial_index': attempt_idx,
+                        'provider': self.provider,
+                        'model_name': self.llm_client.model_id,
+                        'temperature': (
+                            item.get('params', {}).get('temperature')
+                            if item.get('params', {}).get('temperature') is not None
+                            else Config.MODEL_TEMPERATURE
+                        ),
+                        'top_p': (
+                            item.get('params', {}).get('top_p')
+                            if item.get('params', {}).get('top_p') is not None
+                            else Config.MODEL_TOP_P
+                        ),
+                        'max_tokens': (
+                            item.get('params', {}).get('max_tokens')
+                            if item.get('params', {}).get('max_tokens') is not None
+                            else Config.MODEL_MAX_TOKENS
+                        ),
+                        'verdict': status,
+                        'accepted_bool': 1 if status == 'Accepted' else 0,
+                        'prompt_tokens': gen_data.get('input_tokens', 0),
+                        'completion_tokens': gen_data.get('output_tokens', 0),
+                        **attempt_result
+                    })
+                    if code:
+                        self.experiment_manager.log_solution(
+                            problem['title'],
+                            normalized_prompt,
+                            code
+                        )
+
+                    if code:
+                        # Mandatory delay only applies to actual submissions.
+                        time.sleep(Config.LEETCODE_SUBMISSION_DELAY_S)
             
             with results_lock:
                 results_list.append(aggregated_result)
@@ -335,6 +344,17 @@ class LeetCodeEvaluator:
         with open(filename, 'r') as f:
             return json.load(f)
 
+    def load_problems(self, filename: str) -> List[Dict]:
+        """Load a fixed problem set from a JSON file."""
+        with open(filename, 'r') as f:
+            problems = json.load(f)
+
+        if not isinstance(problems, list):
+            raise ValueError(f"Problems file must contain a JSON list: {filename}")
+
+        print(f"✓ Loaded {len(problems)} problems from {filename}")
+        return problems
+
     def fetch_problems(self, count: int = 10, difficulty: str = None, selection: str = 'LATEST') -> List[Dict]:
         """
         Fetch problems from LeetCode
@@ -387,8 +407,21 @@ class LeetCodeEvaluator:
         if not self.initialize():
             return None
 
-        # Fetch problems
-        problems = self.fetch_problems(num_problems, difficulty, selection)
+        dataset_name = kwargs.get('dataset', 'main')
+        problems_file = Config.resolve_dataset_file(dataset_name)
+        problems = []
+        if problems_file and os.path.exists(problems_file):
+            print(f"\nLoading fixed problem set from: {problems_file}")
+            problems = self.load_problems(problems_file)
+            if difficulty:
+                problems = [p for p in problems if str(p.get('difficulty', '')).upper() == difficulty.upper()]
+            if num_problems:
+                problems = problems[:num_problems]
+            print(f"✓ Using {len(problems)} fixed problems for evaluation")
+        else:
+            print(f"\nFixed problems file not found, falling back to fetch: {problems_file}")
+            # Fetch problems
+            problems = self.fetch_problems(num_problems, difficulty, selection)
 
         if not problems:
             print("✗ No problems fetched")

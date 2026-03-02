@@ -66,10 +66,22 @@ LEETCODE_RATE_LIMIT_COOLDOWN_S=60
 
 ### Quick Start
 
-Evaluate 5 easy problems:
+Evaluate 5 fixed-dataset problems from the local paper dataset:
 
 ```bash
-python main.py --num-problems 5 --difficulty EASY --attempts 1
+python main.py --num-problems 5 --attempts 1
+```
+
+By default, evaluations now reuse the local dataset file:
+
+```text
+dataset/main-dataset.json
+```
+
+To switch datasets, use `--dataset`. For example:
+
+```bash
+python main.py --dataset test --num-problems 5 --attempts 1
 ```
 
 ### Command Line Options
@@ -79,6 +91,7 @@ python main.py [OPTIONS]
 
 Options:
   --num-problems INT       Number of problems to evaluate (default: 5)
+  --dataset NAME|FILE      Dataset selector, e.g. main, test, or a JSON path
   --difficulty EASY|MEDIUM|HARD
   --attempts INT          Number of attempts per approach (default: 1)
   --temperature FLOAT     LLM temperature override
@@ -92,25 +105,37 @@ Options:
 
 ### Examples
 
-#### 1. Evaluate 10 Medium Problems
+#### 1. Evaluate 10 Problems from the Local Dataset
 
 ```bash
-python main.py --num-problems 10 --difficulty MEDIUM --attempts 2
+python main.py --num-problems 10 --attempts 2
 ```
 
-#### 2. Fetch Problems Only
+#### 2. Evaluate the First 30 Problems from the Local Dataset
+
+```bash
+python main.py --num-problems 30 --attempts 3
+```
+
+#### 3. Evaluate the Test Dataset
+
+```bash
+python main.py --dataset test --num-problems 5 --attempts 1
+```
+
+#### 4. Fetch Problems Only
 
 ```bash
 python main.py --fetch-only --num-problems 20 --difficulty HARD
 ```
 
-#### 3. Generate Report from Existing Results
+#### 5. Generate Report from Existing Results
 
 ```bash
 python main.py --report results/evaluation_results_20250101_120000.json
 ```
 
-#### 4. Batch Experiment Runner
+#### 6. Batch Experiment Runner
 
 Run multiple configurations sequentially:
 ```bash
@@ -207,7 +232,7 @@ leetcode-evaluator/
 
 ## Workflow
 
-1. **Fetch Problems**: Query LeetCode API for problems
+1. **Load Problems**: Reuse the fixed local dataset JSON by default, or fetch problems explicitly when needed
 2. **Generate Solutions**: 
    - With detailed prompt (optimization hints)
    - Without detailed prompt (minimal guidance)

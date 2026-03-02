@@ -115,6 +115,8 @@ Provide ONLY the complete Python code solution, no explanations or markdown form
 
     # Consolidated Output Directory
     OUTPUT_ROOT = "output"
+    DATASET_DIR = "dataset"
+    DEFAULT_DATASET_FILE = os.path.join(DATASET_DIR, "main-dataset.json")
     RESULTS_DIR = os.path.join(OUTPUT_ROOT, "results")
     REPORTS_DIR = os.path.join(OUTPUT_ROOT, "reports")
     EXPERIMENTS_DIR = os.path.join(OUTPUT_ROOT, "experiments")
@@ -126,6 +128,18 @@ Provide ONLY the complete Python code solution, no explanations or markdown form
     RESULTS_FIGURES = os.path.join(RESULTS_DIR, "figures")
     RESULTS_EVALUATIONS = os.path.join(RESULTS_DIR, "evaluations")
     RESULTS_PROBLEMS = os.path.join(RESULTS_DIR, "problems")
+
+    @classmethod
+    def resolve_dataset_file(cls, dataset: str = "main") -> str:
+        """Resolve a dataset selector to a concrete JSON file path."""
+        if not dataset:
+            return cls.DEFAULT_DATASET_FILE
+
+        if os.path.sep in dataset or dataset.endswith(".json"):
+            return dataset
+
+        return os.path.join(cls.DATASET_DIR, f"{dataset}-dataset.json")
+    
 
     @classmethod
     def set_run_id(cls, run_id: str):
