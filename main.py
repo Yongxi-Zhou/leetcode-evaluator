@@ -238,7 +238,10 @@ Examples:
                     exp_dir_name = os.path.basename(exp_evaluator.experiment_manager.experiment_dir)
                     report_dir = os.path.join(Config.REPORT_DIR, exp_dir_name)
                     
-                    generator = ReportGenerator(results_file, output_dir=report_dir)
+                    generator = ReportGenerator(
+                        results_file, output_dir=report_dir,
+                        model_name=exp_evaluator.llm_client.model_id,
+                        provider=args.provider)
                     report_file = generator.generate_full_report()
                     print(f"✓ Report generated: {report_file}")
                     
@@ -294,7 +297,10 @@ Examples:
             exp_dir_name = os.path.basename(evaluator.experiment_manager.experiment_dir)
             report_dir = os.path.join(Config.REPORT_DIR, exp_dir_name)
             
-            generator = ReportGenerator(results_file, output_dir=report_dir)
+            generator = ReportGenerator(
+                results_file, output_dir=report_dir,
+                model_name=evaluator.llm_client.model_id,
+                provider=args.provider)
             report_file = generator.generate_full_report()
             report_dir = os.path.dirname(report_file)
             
