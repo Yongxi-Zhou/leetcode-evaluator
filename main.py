@@ -347,14 +347,15 @@ Examples:
                 return 1
             
             # Archive for paper publication and report generation
+            exp_name_base = os.path.basename(evaluator.experiment_manager.experiment_dir)
             agg_manager = AggregationManager()
             analyzer = StabilityAnalyzer(detailed_jsonl_path=evaluator.experiment_manager.jsonl_path)
             metrics = analyzer.compute_metrics()
             
             config_data = {
-                'experiment_name': exp_name,
+                'experiment_name': exp_name_base,
                 'model_name': evaluator.llm_client.model_id,
-                'prompt_type': 'standard', # Default prompt type
+                'prompt_type': 'standard',
                 'temperature': args.temperature or Config.MODEL_TEMPERATURE,
                 'top_p': args.top_p or Config.MODEL_TOP_P,
                 'max_tokens': args.max_tokens or Config.MODEL_MAX_TOKENS,
@@ -364,7 +365,6 @@ Examples:
                 'workers': args.workers,
                 'selection': args.selection
             }
-            exp_name_base = os.path.basename(evaluator.experiment_manager.experiment_dir)
             agg_manager.save_experiment_summary(exp_name_base, metrics, config_data)
             agg_manager.copy_raw_data(evaluator.experiment_manager)
 
