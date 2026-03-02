@@ -5,6 +5,7 @@ import argparse
 import sys
 import os
 import json
+from datetime import datetime
 from leetcode_evaluator.core.evaluator import LeetCodeEvaluator
 from leetcode_evaluator.core.report_generator import ReportGenerator
 from leetcode_evaluator.core.config import Config
@@ -140,6 +141,14 @@ Examples:
     
     args = parser.parse_args()
     
+    # Generate run ID for new experiments
+    # For --report or --generate-report, we might want to skip this or handle it differently
+    if not args.report and not args.generate_report:
+        run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+        if args.model:
+            run_id += f"_{args.model}"
+        Config.set_run_id(run_id)
+
     try:
         # Report generation mode
         if args.report:
@@ -211,12 +220,15 @@ Examples:
                 
             print(f"Found {len(experiments)} experiments to run.")
             
-            for i, exp in enumerate(experiments):
+            import concurrent.futures
+            import time
+            
+            def run_single_experiment(exp, i, args, base_params):
                 name = exp.get('name', f"exp_{i}")
                 params = exp.get('params', {})
                 
                 print(f"\n{'-'*60}")
-                print(f"RUNNING EXPERIMENT {i+1}/{len(experiments)}: {name}")
+                print(f"STARTING EXPERIMENT {i+1}/{len(experiments)}: {name}")
                 print(f"Parameters: {params}")
                 print(f"{'-'*60}")
                 
@@ -236,7 +248,32 @@ Examples:
                     print(f"✓ Experiment {name} completed. Results: {results_file}")
                     # Use the same directory name for reports as for experiments
                     exp_dir_name = os.path.basename(exp_evaluator.experiment_manager.experiment_dir)
-                    report_dir = os.path.join(Config.REPORT_DIR, exp_dir_name)
+                    report_dir = os.path.join(Config.REPORTS_DIR, exp_dir_name)
+                    
+                    # Save summary data for report generator and global aggregation
+                    agg_manager = AggregationManager()
+                    analyzer = StabilityAnalyzer(detailed_jsonl_path=exp_evaluator.experiment_manager.jsonl_path)
+                    metrics = analyzer.compute_metrics()
+                    
+                    config_data = {
+                        'experiment_name': name,
+                        'model_name': exp_evaluator.llm_client.model_id,
+                        'prompt_type': name, # Use experiment name as prompt type for batch
+                        'temperature': params.get('temperature', Config.MODEL_TEMPERATURE),
+                        'top_p': params.get('top_p', Config.MODEL_TOP_P),
+                        'max_tokens': params.get('max_tokens', Config.MODEL_MAX_TOKENS),
+                        'num_problems': base_params.get('num_problems'),
+                        'attempts': base_params.get('attempts'),
+                        'stability_runs': base_params.get('stability_runs'),
+                        'workers': base_params.get('workers'),
+                        'selection': base_params.get('selection')
+                    }
+                    agg_manager.save_experiment_summary(exp_dir_name, metrics, config_data)
+                    agg_manager.copy_raw_data(exp_evaluator.experiment_manager)
+
+                    # Set matplotlib backend to non-interactive for thread safety
+                    import matplotlib
+                    matplotlib.use('Agg')
                     
                     generator = ReportGenerator(
                         results_file, output_dir=report_dir,
@@ -245,26 +282,44 @@ Examples:
                     report_file = generator.generate_full_report()
                     print(f"✓ Report generated: {report_file}")
                     
-                    # Archive for paper publication
-                    agg_manager = AggregationManager()
-                    analyzer = StabilityAnalyzer(detailed_jsonl_path=exp_evaluator.experiment_manager.jsonl_path)
-                    metrics = analyzer.compute_metrics()
-                    
-                    config_data = {
-                        'model_name': exp_evaluator.llm_client.model_id,
-                        'prompt_type': name, # Use experiment name as prompt type for batch
-                        'temperature': params.get('temperature', Config.MODEL_TEMPERATURE),
-                        'top_p': params.get('top_p', Config.MODEL_TOP_P)
-                    }
-                    agg_manager.save_experiment_summary(name, metrics, config_data)
-                    agg_manager.copy_raw_data(exp_evaluator.experiment_manager)
+                    return name, True
                 else:
                     print(f"✗ Experiment {name} failed.")
+                    return name, False
+            
+            # Run experiments in parallel with staggered start to avoid rate limits
+            max_workers = min(len(experiments), Config.WORKER_THREADS)
+            print(f"\n🚀 Running {len(experiments)} experiments in parallel with {max_workers} workers...")
+            
+            with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+                futures = []
+                for i, exp in enumerate(experiments):
+                    # Stagger start times to avoid rate limits
+                    if i > 0:
+                        time.sleep(5)
+                    future = executor.submit(run_single_experiment, exp, i, args, base_params)
+                    futures.append(future)
+                
+                # Collect results
+                results = []
+                for future in concurrent.futures.as_completed(futures):
+                    try:
+                        name, success = future.result()
+                        results.append((name, success))
+                    except Exception as e:
+                        print(f"✗ Experiment failed with error: {str(e)}")
+                        results.append(("unknown", False))
+            
+            # Summary
+            successful = sum(1 for _, success in results if success)
+            failed = len(results) - successful
             
             print(f"\n{'='*60}")
-            print("✓ All batch experiments completed!")
+            print(f"✓ Batch experiments completed!")
+            print(f"  Successful: {successful}")
+            print(f"  Failed: {failed}")
             print(f"{'='*60}")
-            return 0
+            return 0 if failed == 0 else 1
             
         else:
             # Single Evaluation Mode
@@ -291,11 +346,32 @@ Examples:
                 print("✗ Evaluation failed")
                 return 1
             
+            # Archive for paper publication and report generation
+            agg_manager = AggregationManager()
+            analyzer = StabilityAnalyzer(detailed_jsonl_path=evaluator.experiment_manager.jsonl_path)
+            metrics = analyzer.compute_metrics()
+            
+            config_data = {
+                'experiment_name': exp_name,
+                'model_name': evaluator.llm_client.model_id,
+                'prompt_type': 'standard', # Default prompt type
+                'temperature': args.temperature or Config.MODEL_TEMPERATURE,
+                'top_p': args.top_p or Config.MODEL_TOP_P,
+                'max_tokens': args.max_tokens or Config.MODEL_MAX_TOKENS,
+                'num_problems': args.num_problems,
+                'attempts': args.attempts,
+                'stability_runs': args.stability_runs,
+                'workers': args.workers,
+                'selection': args.selection
+            }
+            exp_name_base = os.path.basename(evaluator.experiment_manager.experiment_dir)
+            agg_manager.save_experiment_summary(exp_name_base, metrics, config_data)
+            agg_manager.copy_raw_data(evaluator.experiment_manager)
+
             # Generate report
             print("\nGenerating comprehensive report...")
             # Use the same directory name for reports as for experiments
-            exp_dir_name = os.path.basename(evaluator.experiment_manager.experiment_dir)
-            report_dir = os.path.join(Config.REPORT_DIR, exp_dir_name)
+            report_dir = os.path.join(Config.REPORTS_DIR, exp_name_base)
             
             generator = ReportGenerator(
                 results_file, output_dir=report_dir,
@@ -311,21 +387,6 @@ Examples:
             print(f"Report: {report_file}")
             print(f"Visualizations: {report_dir}/")
             print(f"{'='*60}")
-            
-            # Archive for paper publication
-            agg_manager = AggregationManager()
-            analyzer = StabilityAnalyzer(detailed_jsonl_path=evaluator.experiment_manager.jsonl_path)
-            metrics = analyzer.compute_metrics()
-            
-            config_data = {
-                'model_name': evaluator.llm_client.model_id,
-                'prompt_type': 'standard', # Default prompt type
-                'temperature': args.temperature or Config.MODEL_TEMPERATURE,
-                'top_p': args.top_p or Config.MODEL_TOP_P
-            }
-            exp_name = os.path.basename(evaluator.experiment_manager.experiment_dir)
-            agg_manager.save_experiment_summary(exp_name, metrics, config_data)
-            agg_manager.copy_raw_data(evaluator.experiment_manager)
             
             return 0
         
