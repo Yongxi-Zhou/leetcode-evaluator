@@ -315,7 +315,7 @@ class ReportGenerator:
     def generate_visualizations(self, output_dir: str = None):
         """Generate all visualization plots"""
         if output_dir is None:
-            output_dir = self.output_dir or Config.REPORT_DIR
+            output_dir = self.output_dir or Config.REPORTS_DIR
         
         os.makedirs(output_dir, exist_ok=True)
         
@@ -665,7 +665,7 @@ class ReportGenerator:
                 output_dir = self.output_dir
             else:
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                output_dir = os.path.join(Config.REPORT_DIR, timestamp)
+                output_dir = os.path.join(Config.REPORTS_DIR, timestamp)
         
         os.makedirs(output_dir, exist_ok=True)
         self.output_dir = output_dir
