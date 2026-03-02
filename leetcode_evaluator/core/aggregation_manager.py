@@ -16,24 +16,48 @@ class AggregationManager:
         os.makedirs(self.summary_dir, exist_ok=True)
         os.makedirs(self.tables_dir, exist_ok=True)
 
+    def _load_single_summary(self, path: str) -> Dict:
+        """Helper to load a single summary file with error handling."""
+        try:
+            with open(path, 'r') as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"Error loading {path}: {e}")
+            return None
+
     def aggregate_leaderboard(self) -> str:
         """Scan results/summary and generate leaderboard tables."""
         all_summaries = []
         
-        if not os.path.exists(self.summary_dir):
-            return "Summary directory not found."
+        # 1. Scan default/legacy location
+        if os.path.exists(self.summary_dir):
+            for filename in os.listdir(self.summary_dir):
+                if filename.endswith(".json"):
+                    all_summaries.append(self._load_single_summary(os.path.join(self.summary_dir, filename)))
+        
+        # 2. Scan run-specific nested locations
+        output_root = Config.OUTPUT_ROOT  # Usually "output" or "output/<run_id>"
+        # If we are in a run-specific root, also look at the literal "output" folder if we are one level down
+        scan_roots = ["output"]
+        if Config.OUTPUT_ROOT != "output" and os.path.dirname(Config.OUTPUT_ROOT):
+            scan_roots.append("output") # redundant but safe
 
-        for filename in os.listdir(self.summary_dir):
-            if filename.endswith(".json"):
-                path = os.path.join(self.summary_dir, filename)
-                try:
-                    with open(path, 'r') as f:
-                        data = json.load(f)
-                        # We expect the summary to contain model/prompt config info
-                        all_summaries.append(data)
-                except Exception as e:
-                    print(f"Error loading {filename}: {e}")
+        scanned_paths = set()
+        for root in scan_roots:
+            if not os.path.exists(root): continue
+            for run_id in os.listdir(root):
+                run_path = os.path.join(root, run_id)
+                if not os.path.isdir(run_path): continue
+                summary_dir = os.path.join(run_path, "results", "summary")
+                if os.path.isdir(summary_dir):
+                    for filename in os.listdir(summary_dir):
+                        if filename.endswith(".json"):
+                            path = os.path.join(summary_dir, filename)
+                            if path not in scanned_paths:
+                                all_summaries.append(self._load_single_summary(path))
+                                scanned_paths.add(path)
 
+        all_summaries = [s for s in all_summaries if s]
         if not all_summaries:
             return "No summary data found to aggregate."
 
