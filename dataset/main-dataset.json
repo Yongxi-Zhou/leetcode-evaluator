@@ -1,0 +1,591 @@
+[
+  {
+    "question_id": "3859",
+    "title": "Count Subarrays With K Distinct Integers",
+    "title_slug": "count-subarrays-with-k-distinct-integers",
+    "difficulty": "Hard",
+    "description": "<p>You are given an integer array <code>nums</code> and two integers <code>k</code> and <code>m</code>.</p>\n\n<p>Return an integer denoting the count of <strong><span data-keyword=\"subarray-nonempty\">subarrays</span></strong> of <code>nums</code> such that:</p>\n\n<ul>\n\t<li>The subarray contains <strong>exactly</strong> <code>k</code> <strong>distinct</strong> integers.</li>\n\t<li>Within the subarray, each <strong>distinct</strong> integer appears <strong>at least</strong> <code>m</code> times.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,1,2,2], k = 2, m = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The possible subarrays with <code>k = 2</code> distinct integers, each appearing at least <code>m = 2</code> times are:</p>\n\n<table style=\"border: 1px solid black;\">\n\t<thead>\n\t\t<tr>\n\t\t\t<th style=\"border: 1px solid black;\">Subarray</th>\n\t\t\t<th style=\"border: 1px solid black;\">Distinct<br />\n\t\t\tnumbers</th>\n\t\t\t<th style=\"border: 1px solid black;\">Frequency</th>\n\t\t</tr>\n\t</thead>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">[1, 2, 1, 2]</td>\n\t\t\t<td style=\"border: 1px solid black;\">{1, 2} &rarr; 2</td>\n\t\t\t<td style=\"border: 1px solid black;\">{1: 2, 2: 2}</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">[1, 2, 1, 2, 2]</td>\n\t\t\t<td style=\"border: 1px solid black;\">{1, 2} &rarr; 2</td>\n\t\t\t<td style=\"border: 1px solid black;\">{1: 2, 2: 3}</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p>Thus, the answer is 2.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [3,1,2,4], k = 2, m = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The possible subarrays with <code>k = 2</code> distinct integers, each appearing at least <code>m = 1</code> times are:</p>\n\n<table style=\"border: 1px solid black;\">\n\t<thead>\n\t\t<tr>\n\t\t\t<th style=\"border: 1px solid black;\">Subarray</th>\n\t\t\t<th style=\"border: 1px solid black;\">Distinct<br />\n\t\t\tnumbers</th>\n\t\t\t<th style=\"border: 1px solid black;\">Frequency</th>\n\t\t</tr>\n\t</thead>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">[3, 1]</td>\n\t\t\t<td style=\"border: 1px solid black;\">{3, 1} &rarr; 2</td>\n\t\t\t<td style=\"border: 1px solid black;\">{3: 1, 1: 1}</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">[1, 2]</td>\n\t\t\t<td style=\"border: 1px solid black;\">{1, 2} &rarr; 2</td>\n\t\t\t<td style=\"border: 1px solid black;\">{1: 1, 2: 1}</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">[2, 4]</td>\n\t\t\t<td style=\"border: 1px solid black;\">{2, 4} &rarr; 2</td>\n\t\t\t<td style=\"border: 1px solid black;\">{2: 1, 4: 1}</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p>Thus, the answer is 3.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= k, m &lt;= nums.length</code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def countSubarrays(self, nums: list[int], k: int, m: int) -> int:\n        ",
+    "topics": [],
+    "sample_test": "[1,2,1,2,2]\n2\n2",
+    "hints": [
+      "Use sliding window.",
+      "Use the reduction: <code>answer = at_most(k) - at_most(k-1)</code>. <code>at_most(K)</code> = number of subarrays with <code><= K</code> distinct values where every present value appears <code>>= m</code> times."
+    ],
+    "likes": 36,
+    "dislikes": 1
+  },
+  {
+    "question_id": "3858",
+    "title": "Minimum Bitwise OR From Grid",
+    "title_slug": "minimum-bitwise-or-from-grid",
+    "difficulty": "Medium",
+    "description": "<p>You are given a 2D integer array <code>grid</code> of size <code>m x n</code>.</p>\n\n<p>You must select <strong>exactly one</strong> integer from each row of the grid.</p>\n\n<p>Return an integer denoting the <strong>minimum possible bitwise OR</strong> of the selected integers from each row.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">grid = [[1,5],[2,4]]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Choose 1 from the first row and 2 from the second row.</li>\n\t<li>The bitwise OR of <code>1 | 2 = 3</code>\u200b\u200b\u200b\u200b\u200b\u200b\u200b, which is the minimum possible.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">grid = [[3,5],[6,4]]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">5</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Choose 5 from the first row and 4 from the second row.</li>\n\t<li>The bitwise OR of <code>5 | 4 = 5</code>\u200b\u200b\u200b\u200b\u200b\u200b\u200b, which is the minimum possible.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">grid = [[7,9,8]]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">7</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Choosing 7 gives the minimum bitwise OR.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= m == grid.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= n == grid[i].length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>m * n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= grid[i][j] &lt;= 10<sup>5</sup>\u200b\u200b\u200b\u200b\u200b\u200b\u200b</code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def minimumOR(self, grid: List[List[int]]) -> int:\n        ",
+    "topics": [],
+    "sample_test": "[[1,5],[2,4]]",
+    "hints": [
+      "Solve greedily, bit by bit from the most significant to the least significant",
+      "For a bit, check whether it is possible to exclude it from the OR by choosing, in every row, at least one number with that bit unset",
+      "Accumulate all bits that cannot be excluded; the final value is the minimum possible bitwise OR"
+    ],
+    "likes": 50,
+    "dislikes": 1
+  },
+  {
+    "question_id": "3857",
+    "title": "Minimum Cost to Split into Ones",
+    "title_slug": "minimum-cost-to-split-into-ones",
+    "difficulty": "Medium",
+    "description": "<p>You are given an integer <code>n</code>.</p>\n\n<p>In one operation, you may split an integer <code>x</code> into two positive integers <code>a</code> and <code>b</code> such that <code>a + b = x</code>.</p>\n\n<p>The cost of this operation is <code>a * b</code>.</p>\n\n<p>Return an integer denoting the <strong>minimum</strong> total cost required to split the integer <code>n</code> into <code>n</code> ones.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>One optimal set of operations is:</p>\n\n<table style=\"border: 1px solid black;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<th style=\"border: 1px solid black;\"><code>x</code></th>\n\t\t\t<th style=\"border: 1px solid black;\"><code>a</code></th>\n\t\t\t<th style=\"border: 1px solid black;\"><code>b</code></th>\n\t\t\t<th style=\"border: 1px solid black;\"><code>a + b</code></th>\n\t\t\t<th style=\"border: 1px solid black;\"><code>a * b</code></th>\n\t\t\t<th style=\"border: 1px solid black;\">Cost</th>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">3</td>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t\t<td style=\"border: 1px solid black;\">2</td>\n\t\t\t<td style=\"border: 1px solid black;\">3</td>\n\t\t\t<td style=\"border: 1px solid black;\">2</td>\n\t\t\t<td style=\"border: 1px solid black;\">2</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">2</td>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t\t<td style=\"border: 1px solid black;\">2</td>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p>Thus, the minimum total cost is <code>2 + 1 = 3</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 4</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">6</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<div class=\"example-block\">\n<p>One optimal set of operations is:</p>\n\n<table style=\"border: 1px solid black;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<th style=\"border: 1px solid black;\"><code>x</code></th>\n\t\t\t<th style=\"border: 1px solid black;\"><code>a</code></th>\n\t\t\t<th style=\"border: 1px solid black;\"><code>b</code></th>\n\t\t\t<th style=\"border: 1px solid black;\"><code>a + b</code></th>\n\t\t\t<th style=\"border: 1px solid black;\"><code>a * b</code></th>\n\t\t\t<th style=\"border: 1px solid black;\">Cost</th>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">4</td>\n\t\t\t<td style=\"border: 1px solid black;\">2</td>\n\t\t\t<td style=\"border: 1px solid black;\">2</td>\n\t\t\t<td style=\"border: 1px solid black;\">4</td>\n\t\t\t<td style=\"border: 1px solid black;\">4</td>\n\t\t\t<td style=\"border: 1px solid black;\">4</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">2</td>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t\t<td style=\"border: 1px solid black;\">2</td>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">2</td>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t\t<td style=\"border: 1px solid black;\">2</td>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p>Thus, the minimum total cost is <code>4 + 1 + 1 = 6</code>.</p>\n</div>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 500</code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def minCost(self, n: int) -> int:\n        ",
+    "topics": [],
+    "sample_test": "3",
+    "hints": [
+      "Use dynamic programming or math.",
+      "It is always optimal to split the current integer <code>x</code> into <code>1</code> and <code>x - 1</code>."
+    ],
+    "likes": 26,
+    "dislikes": 4
+  },
+  {
+    "question_id": "3856",
+    "title": "Trim Trailing Vowels",
+    "title_slug": "trim-trailing-vowels",
+    "difficulty": "Easy",
+    "description": "<p>You are given a string <code>s</code> that consists of lowercase English letters.</p>\n\n<p>Return the string obtained by removing <strong>all</strong> trailing <strong>vowels</strong> from <code>s</code>.</p>\n\n<p>The <strong>vowels</strong> consist of the characters <code>&#39;a&#39;</code>, <code>&#39;e&#39;</code>, <code>&#39;i&#39;</code>, <code>&#39;o&#39;</code>, and <code>&#39;u&#39;</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;idea&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;id&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Removing <code>&quot;id<u><strong>ea</strong></u>&quot;</code>, we obtain the string <code>&quot;id&quot;</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;day&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;day&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>There are no trailing vowels in the string <code>&quot;day&quot;</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;aeiou&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Removing <code>&quot;<u><strong>aeiou</strong></u>&quot;</code>, we obtain the string <code>&quot;&quot;</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 100</code></li>\n\t<li><code>s</code> consists of only lowercase English letters.</li>\n</ul>\n",
+    "code_template": "class Solution:\n    def trimTrailingVowels(self, s: str) -> str:\n        ",
+    "topics": [],
+    "sample_test": "\"idea\"",
+    "hints": [
+      "Simulate; pop the last character as long as it is a vowel."
+    ],
+    "likes": 11,
+    "dislikes": 0
+  },
+  {
+    "question_id": "3855",
+    "title": "Sum of K-Digit Numbers in a Range",
+    "title_slug": "sum-of-k-digit-numbers-in-a-range",
+    "difficulty": "Hard",
+    "description": "<p>You are given three integers <code>l</code>, <code>r</code>, and <code>k</code>.</p>\n\n<p>Consider all possible integers consisting of <strong>exactly</strong> <code>k</code> digits, where each digit is chosen independently from the integer range <code>[l, r]</code> (inclusive). If 0 is included in the range, leading zeros are allowed.</p>\n\n<p>Return an integer representing the <b>sum of all such numbers.</b>\u200b\u200b\u200b\u200b\u200b\u200b\u200b Since the answer may be very large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">l = 1, r = 2, k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">66</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>All numbers formed using <code>k = 2</code> digits in the range <code>[1, 2]</code> are <code>11, 12, 21, 22</code>.</li>\n\t<li>The total sum is <code>11 + 12 + 21 + 22 = 66</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">l = 0, r = 1, k = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">444</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>All numbers formed using <code>k = 3</code> digits in the range <code>[0, 1]</code> are <code>000, 001, 010, 011, 100, 101, 110, 111</code>\u200b\u200b\u200b\u200b\u200b\u200b\u200b.</li>\n\t<li>These numbers without leading zeros are <code>0, 1, 10, 11, 100, 101, 110, 111</code>.</li>\n\t<li>The total sum is 444.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">l = 5, r = 5, k = 10</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">555555520</span></p>\n\n<p><strong>Explanation:</strong>\u200b\u200b\u200b\u200b\u200b\u200b\u200b</p>\n\n<ul>\n\t<li>5555555555 is the only valid number consisting of <code>k = 10</code> digits in the range <code>[5, 5]</code>.</li>\n\t<li>The total sum is <code>5555555555 % (10<sup>9</sup> + 7) = 555555520</code>.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>0 &lt;= l &lt;= r &lt;= 9</code></li>\n\t<li><code>1 &lt;= k &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def sumOfNumbers(self, l: int, r: int, k: int) -> int:\n        ",
+    "topics": [],
+    "sample_test": "1\n2\n2",
+    "hints": [
+      "Use combinatorics.",
+      "For some position <code>p</code> among the <code>k</code> digits, the sum is <code>10^p * (l + (l+1) + ... + r) * (r - l + 1)^(k-1)</code>.",
+      "Summing <code>p</code> over <code>[0, k-1]</code> gives <code>(l + (l+1) + ... + r) * (r - l + 1)^(k-1) * (10^k - 1) / 9</code>."
+    ],
+    "likes": 20,
+    "dislikes": 1
+  },
+  {
+    "question_id": "3854",
+    "title": "Minimum Operations to Make Array Parity Alternating",
+    "title_slug": "minimum-operations-to-make-array-parity-alternating",
+    "difficulty": "Medium",
+    "description": "<p>You are given an integer array <code>nums</code>.</p>\n\n<p>An array is called <strong>parity alternating</strong> if for every index <code>i</code> where <code>0 &lt;= i &lt; n - 1</code>, <code>nums[i]</code> and <code>nums[i + 1]</code> have different parity (one is even and the other is odd).</p>\n\n<p>In one operation, you may choose any index <code>i</code> and either increase <code>nums[i]</code> by 1 or decrease <code>nums[i]</code> by 1.</p>\n\n<p>Return an integer array <code>answer</code> of length 2 where:</p>\n\n<ul>\n\t<li><code>answer[0]</code> is the <strong>minimum</strong> number of operations required to make the array parity alternating.</li>\n\t<li><code>answer[1]</code> is the <strong>minimum</strong> possible value of <code>max(nums) - min(nums)</code> taken over all arrays that are parity alternating and can be obtained by performing <strong>exactly</strong> <code>answer[0]</code> operations.</li>\n</ul>\n\n<p>An array of length 1 is considered parity alternating.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [-2,-3,1,4]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[2,6]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Applying the following operations:</p>\n\n<ul>\n\t<li>Increase <code>nums[2]</code> by 1, resulting in <code>nums = [-2, -3, 2, 4]</code>.</li>\n\t<li>Decrease <code>nums[3]</code> by 1, resulting in <code>nums = [-2, -3, 2, 3]</code>.</li>\n</ul>\n\n<p>The resulting array is parity alternating, and the value of <code>max(nums) - min(nums) = 3 - (-3) = 6</code> is the minimum possible among all parity alternating arrays obtainable using exactly 2 operations.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [0,2,-2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[1,3]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Applying the following operation:</p>\n\n<ul>\n\t<li>Decrease <code>nums[1]</code> by 1, resulting in <code>nums = [0, 1, -2]</code>.</li>\n</ul>\n\n<p>The resulting array is parity alternating, and the value of <code>max(nums) - min(nums) = 1 - (-2) = 3</code> is the minimum possible among all parity alternating arrays obtainable using exactly 1 operation.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [7]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[0,0]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>No operations are required. The array is already parity alternating, and the value of <code>max(nums) - min(nums) = 7 - 7 = 0</code>, which is the minimum possible.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>-10<sup>9</sup> &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def makeParityAlternating(self, nums: List[int]) -> List[int]:\n        ",
+    "topics": [],
+    "sample_test": "[-2,-3,1,4]",
+    "hints": [
+      "A parity alternating array must follow one of two patterns: <code>even, odd, even, ...</code> or <code>odd, even, odd, ...</code>.",
+      "If a position has the wrong parity, its value must be changed by exactly <code>+/-1</code> (one operation) to fix the parity.",
+      "For each pattern, count the minimum operations needed to make all positions match the required parity.",
+      "Among patterns with minimum operations, choose adjustments that minimize <code>max(nums) - min(nums)</code> while preserving parity."
+    ],
+    "likes": 40,
+    "dislikes": 10
+  },
+  {
+    "question_id": "3853",
+    "title": "Merge Close Characters",
+    "title_slug": "merge-close-characters",
+    "difficulty": "Medium",
+    "description": "<p>You are given a string <code>s</code> consisting of lowercase English letters and an integer <code>k</code>.</p>\n\n<p>Two <strong>equal</strong> characters in the <strong>current</strong> string <code>s</code> are considered <strong>close</strong> if the distance between their indices is <strong>at most</strong> <code>k</code>.</p>\n\n<p>When two characters are <strong>close</strong>, the right one merges into the left. Merges happen <strong>one at a time</strong>, and after each merge, the string updates until no more merges are possible.</p>\n\n<p>Return the resulting string after performing all possible merges.</p>\n\n<p><strong>Note</strong>: If multiple merges are possible, always merge the pair with the <strong>smallest left</strong> index. If multiple pairs share the smallest left index, choose the pair with the <strong>smallest right</strong> index.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;abca&quot;, k = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;abc&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li><strong>\u200b\u200b\u200b\u200b\u200b\u200b\u200b</strong>Characters <code>&#39;a&#39;</code> at indices <code>i = 0</code> and <code>i = 3</code> are close as <code>3 - 0 = 3 &lt;= k</code>.</li>\n\t<li>Merge them into the left <code>&#39;a&#39;</code> and <code>s = &quot;abc&quot;</code>.</li>\n\t<li>No other equal characters are close, so no further merges occur.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;aabca&quot;, k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;abca&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Characters <code>&#39;a&#39;</code> at indices <code>i = 0</code> and <code>i = 1</code> are close as <code>1 - 0 = 1 &lt;= k</code>.</li>\n\t<li>Merge them into the left <code>&#39;a&#39;</code> and <code>s = &quot;abca&quot;</code>.</li>\n\t<li>Now the remaining <code>&#39;a&#39;</code> characters at indices <code>i = 0</code> and <code>i = 3</code> are not close as <code>k &lt; 3</code>, so no further merges occur.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;yybyzybz&quot;, k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;ybzybz&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Characters <code>&#39;y&#39;</code> at indices <code>i = 0</code> and <code>i = 1</code> are close as <code>1 - 0 = 1 &lt;= k</code>.</li>\n\t<li>Merge them into the left <code>&#39;y&#39;</code> and <code>s = &quot;ybyzybz&quot;</code>.</li>\n\t<li>Now the characters <code>&#39;y&#39;</code> at indices <code>i = 0</code> and <code>i = 2</code> are close as <code>2 - 0 = 2 &lt;= k</code>.</li>\n\t<li>Merge them into the left <code>&#39;y&#39;</code> and <code>s = &quot;ybzybz&quot;</code>.</li>\n\t<li>No other equal characters are close, so no further merges occur.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= k &lt;= s.length</code></li>\n\t<li><code>s</code> consists of lowercase English letters.</li>\n</ul>\n",
+    "code_template": "class Solution:\n    def mergeCharacters(self, s: str, k: int) -> str:\n        ",
+    "topics": [],
+    "sample_test": "\"abca\"\n3",
+    "hints": [
+      "Simulate as described"
+    ],
+    "likes": 35,
+    "dislikes": 8
+  },
+  {
+    "question_id": "3852",
+    "title": "Smallest Pair With Different Frequencies",
+    "title_slug": "smallest-pair-with-different-frequencies",
+    "difficulty": "Easy",
+    "description": "<p>You are given an integer array <code>nums</code>.</p>\n\n<p>Consider all pairs of <strong>distinct</strong> values <code>x</code> and <code>y</code> from <code>nums</code> such that:</p>\n\n<ul>\n\t<li><code>x &lt; y</code></li>\n\t<li><code>x</code> and <code>y</code> have different <span data-keyword=\"frequency-array\">frequencies</span> in <code>nums</code>.</li>\n</ul>\n\n<p>Among all such pairs:</p>\n\n<ul>\n\t<li>Choose the pair with the smallest possible value of <code>x</code>.</li>\n\t<li>If multiple pairs have the same <code>x</code>, choose the one with the smallest possible value of <code>y</code>.</li>\n</ul>\n\n<p>Return an integer array <code>[x, y]</code>. If no valid pair exists, return <code>[-1, -1]</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,1,2,2,3,4]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[1,3]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The smallest value is 1 with a frequency of 2, and the smallest value greater than 1 that has a different frequency from 1 is 3 with a frequency of 1. Thus, the answer is <code>[1, 3]</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,5]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[-1,-1]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Both values have the same frequency, so no valid pair exists. Return <code>[-1, -1]</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [7]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[-1,-1]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>There is only one value in the array, so no valid pair exists. Return <code>[-1, -1]</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 100</code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def minDistinctFreqPair(self, nums: list[int]) -> list[int]:\n        ",
+    "topics": [],
+    "sample_test": "[1,1,2,2,3,4]",
+    "hints": [
+      "Calculate the frequency of each element in the array using a hash map or frequency array.",
+      "Find the smallest element that has a different frequency from the smallest element."
+    ],
+    "likes": 12,
+    "dislikes": 2
+  },
+  {
+    "question_id": "3850",
+    "title": "Count Sequences to K",
+    "title_slug": "count-sequences-to-k",
+    "difficulty": "Hard",
+    "description": "<p>You are given an integer array <code>nums</code>, and an integer <code>k</code>.</p>\n\n<p>Start with an initial value <code>val = 1</code> and process <code>nums</code> from left to right. At each index <code>i</code>, you must choose <strong>exactly one</strong> of the following actions:</p>\n\n<ul>\n\t<li>Multiply <code>val</code> by <code>nums[i]</code>.</li>\n\t<li>Divide <code>val</code> by <code>nums[i]</code>.</li>\n\t<li>Leave <code>val</code> unchanged.</li>\n</ul>\n\n<p>After processing all elements, <code>val</code> is considered <strong>equal</strong> to <code>k</code> only if its final rational value <strong>exactly</strong> equals <code>k</code>.</p>\n\n<p>Return the count of <strong>distinct</strong> sequences of choices that result in <code>val == k</code>.</p>\n\n<p><strong>Note:</strong> Division is rational (exact), not integer division. For example, <code>2 / 4 = 1 / 2</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,3,2], k = 6</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The following 2 distinct sequences of choices result in <code>val == k</code>:</p>\n\n<table style=\"border: 1px solid black;\">\n\t<thead>\n\t\t<tr>\n\t\t\t<th style=\"border: 1px solid black;\">Sequence</th>\n\t\t\t<th style=\"border: 1px solid black;\">Operation on <code>nums[0]</code></th>\n\t\t\t<th style=\"border: 1px solid black;\">Operation on <code>nums[1]</code></th>\n\t\t\t<th style=\"border: 1px solid black;\">Operation on <code>nums[2]</code></th>\n\t\t\t<th style=\"border: 1px solid black;\">Final <code>val</code></th>\n\t\t</tr>\n\t</thead>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t\t<td style=\"border: 1px solid black;\">Multiply: <code>val = 1 * 2 = 2</code></td>\n\t\t\t<td style=\"border: 1px solid black;\">Multiply: <code>val = 2 * 3 = 6</code></td>\n\t\t\t<td style=\"border: 1px solid black;\">Leave <code>val</code> unchanged</td>\n\t\t\t<td style=\"border: 1px solid black;\">6</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">2</td>\n\t\t\t<td style=\"border: 1px solid black;\">Leave <code>val</code> unchanged</td>\n\t\t\t<td style=\"border: 1px solid black;\">Multiply: <code>val = 1 * 3 = 3</code></td>\n\t\t\t<td style=\"border: 1px solid black;\">Multiply: <code>val = 3 * 2 = 6</code></td>\n\t\t\t<td style=\"border: 1px solid black;\">6</td>\n\t\t</tr>\n\t</tbody>\n</table>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [4,6,3], k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The following 2 distinct sequences of choices result in <code>val == k</code>:</p>\n\n<table style=\"border: 1px solid black;\">\n\t<thead>\n\t\t<tr>\n\t\t\t<th style=\"border: 1px solid black;\">Sequence</th>\n\t\t\t<th style=\"border: 1px solid black;\">Operation on <code>nums[0]</code></th>\n\t\t\t<th style=\"border: 1px solid black;\">Operation on <code>nums[1]</code></th>\n\t\t\t<th style=\"border: 1px solid black;\">Operation on <code>nums[2]</code></th>\n\t\t\t<th style=\"border: 1px solid black;\">Final <code>val</code></th>\n\t\t</tr>\n\t</thead>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t\t<td style=\"border: 1px solid black;\">Multiply: <code>val = 1 * 4 = 4</code></td>\n\t\t\t<td style=\"border: 1px solid black;\">Divide: <code>val = 4 / 6 = 2 / 3</code></td>\n\t\t\t<td style=\"border: 1px solid black;\">Multiply: <code>val = (2 / 3) * 3 = 2</code></td>\n\t\t\t<td style=\"border: 1px solid black;\">2</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">2</td>\n\t\t\t<td style=\"border: 1px solid black;\">Leave <code>val</code> unchanged</td>\n\t\t\t<td style=\"border: 1px solid black;\">Multiply: <code>val = 1 * 6 = 6</code></td>\n\t\t\t<td style=\"border: 1px solid black;\">Divide: <code>val = 6 / 3 = 2</code></td>\n\t\t\t<td style=\"border: 1px solid black;\">2</td>\n\t\t</tr>\n\t</tbody>\n</table>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,5], k = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The following 3 distinct sequences of choices result in <code>val == k</code>:</p>\n\n<table style=\"border: 1px solid black;\">\n\t<thead>\n\t\t<tr>\n\t\t\t<th style=\"border: 1px solid black;\">Sequence</th>\n\t\t\t<th style=\"border: 1px solid black;\">Operation on <code>nums[0]</code></th>\n\t\t\t<th style=\"border: 1px solid black;\">Operation on <code>nums[1]</code></th>\n\t\t\t<th style=\"border: 1px solid black;\">Final <code>val</code></th>\n\t\t</tr>\n\t</thead>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t\t<td style=\"border: 1px solid black;\">Multiply: <code>val = 1 * 1 = 1</code></td>\n\t\t\t<td style=\"border: 1px solid black;\">Leave <code>val</code> unchanged</td>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">2</td>\n\t\t\t<td style=\"border: 1px solid black;\">Divide: <code>val = 1 / 1 = 1</code></td>\n\t\t\t<td style=\"border: 1px solid black;\">Leave <code>val</code> unchanged</td>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">3</td>\n\t\t\t<td style=\"border: 1px solid black;\">Leave <code>val</code> unchanged</td>\n\t\t\t<td style=\"border: 1px solid black;\">Leave <code>val</code> unchanged</td>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t</tr>\n\t</tbody>\n</table>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 19</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 6</code></li>\n\t<li><code>1 &lt;= k &lt;= 10<sup>15</sup></code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def countSequences(self, nums: List[int], k: int) -> int:\n        ",
+    "topics": [
+      "Array",
+      "Math",
+      "Dynamic Programming",
+      "Memoization",
+      "Number Theory"
+    ],
+    "sample_test": "[2,3,2]\n6",
+    "hints": [
+      "Represent numbers by their prime exponents as <code>(2^x, 3^y, 5^z)</code>.",
+      "Use Dynamic Programming on the prime exponents: let <code>dp(idx, x, y, z)</code> be the number of ways to reach exponents <code>(x,y,z)</code> after processing index <code>idx</code>.",
+      "When <code>idx == nums.length</code>, compare <code>(x, y, z)</code> to the prime exponent decomposition of <code>k</code> and count matches."
+    ],
+    "likes": 79,
+    "dislikes": 6
+  },
+  {
+    "question_id": "3849",
+    "title": "Maximum Bitwise XOR After Rearrangement",
+    "title_slug": "maximum-bitwise-xor-after-rearrangement",
+    "difficulty": "Medium",
+    "description": "<p>You are given two binary strings <code>s</code> and <code>t</code>\u200b\u200b\u200b\u200b\u200b\u200b\u200b, each of length <code>n</code>.</p>\n\n<p>You may <strong>rearrange</strong> the characters of <code>t</code> in any order, but <code>s</code> <strong>must remain unchanged</strong>.</p>\n\n<p>Return a <strong>binary string</strong> of length <code>n</code> representing the <strong>maximum</strong> integer value obtainable by taking the bitwise <strong>XOR</strong> of <code>s</code> and rearranged <code>t</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;101&quot;, t = &quot;011&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;110&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>One optimal rearrangement of <code>t</code> is <code>&quot;011&quot;</code>.</li>\n\t<li>The bitwise XOR of <code>s</code> and rearranged <code>t</code> is <code>&quot;101&quot; XOR &quot;011&quot; = &quot;110&quot;</code>, which is the maximum possible.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;0110&quot;, t = &quot;1110&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;1101&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>One optimal rearrangement of <code>t</code> is <code>&quot;1011&quot;</code>.</li>\n\t<li>The bitwise XOR of <code>s</code> and rearranged <code>t</code> is <code>&quot;0110&quot; XOR &quot;1011&quot; = &quot;1101&quot;</code>, which is the maximum possible.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;0101&quot;, t = &quot;1001&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;1111&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>One optimal rearrangement of <code>t</code> is <code>&quot;1010&quot;</code>.</li>\n\t<li>The bitwise XOR of <code>s</code> and rearranged <code>t</code> is <code>&quot;0101&quot; XOR &quot;1010&quot; = &quot;1111&quot;</code>, which is the maximum possible.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n == s.length == t.length &lt;= 2 * 10<sup>5</sup></code></li>\n\t<li><code>s[i]</code> and <code>t[i]</code> are either <code>&#39;0&#39;</code> or <code>&#39;1&#39;</code>.</li>\n</ul>\n",
+    "code_template": "class Solution:\n    def maximumXor(self, s: str, t: str) -> str:\n        ",
+    "topics": [
+      "String",
+      "Greedy",
+      "Bit Manipulation"
+    ],
+    "sample_test": "\"101\"\n\"011\"",
+    "hints": [
+      "Count how many <code>'0'</code> and <code>'1'</code> characters exist in <code>t</code>.",
+      "To maximize XOR, try to place opposite bits: match <code>'1'</code> in <code>s</code> with <code>'0'</code> from <code>t</code>, and <code>'0'</code> in <code>s</code> with <code>'1'</code>.",
+      "Greedily build the result from left to right, using available counts while maximizing each XOR bit."
+    ],
+    "likes": 41,
+    "dislikes": 2
+  },
+  {
+    "question_id": "3848",
+    "title": "Check Digitorial Permutation",
+    "title_slug": "check-digitorial-permutation",
+    "difficulty": "Medium",
+    "description": "<p>You are given an integer <code>n</code>.</p>\n\n<p>A number is called <strong>digitorial</strong> if the sum of the <strong>factorials</strong> of its digits is <strong>equal</strong> to the number itself.</p>\n\n<p>Determine whether <strong>any permutation</strong> of <code>n</code> (including the original order) forms a <strong>digitorial</strong> number.</p>\n\n<p>Return <code>true</code> if such a <strong>permutation</strong> exists, otherwise return <code>false</code>.</p>\n\n<p><strong>Note</strong>:</p>\n\n<ul>\n\t<li>The <strong>factorial</strong> of a non-negative integer <code>x</code>, denoted as <code>x!</code>, is the <strong>product</strong> of all positive integers <strong>less than or equal</strong> to <code>x</code>, and <code>0! = 1</code>.</li>\n\t<li>A <strong>permutation</strong> is a rearrangement of all the digits of a number that does <strong>not</strong> start with zero. Any arrangement starting with zero is invalid.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 145</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">true</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The number 145 itself is digitorial since <code>1! + 4! + 5! = 1 + 24 + 120 = 145</code>. Thus, the answer is <code>true</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 10</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">false</span></p>\n\n<p><strong>Explanation:</strong>\u200b\u200b\u200b\u200b\u200b\u200b\u200b</p>\n\n<p>10 is not digitorial since <code>1! + 0! = 2</code> is not equal to 10, and the permutation <code>&quot;01&quot;</code> is invalid because it starts with zero.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def isDigitorialPermutation(self, n: int) -> bool:\n        ",
+    "topics": [
+      "Math",
+      "Counting"
+    ],
+    "sample_test": "145",
+    "hints": [
+      "Precompute the factorial of digits <code>0</code> to <code>9</code> and compute the sum of factorials of the digits.",
+      "Check whether the digits of this sum can be formed using exactly the digits of <code>n</code> (no leading zero allowed)."
+    ],
+    "likes": 49,
+    "dislikes": 2
+  },
+  {
+    "question_id": "3847",
+    "title": "Find the Score Difference in a Game",
+    "title_slug": "find-the-score-difference-in-a-game",
+    "difficulty": "Medium",
+    "description": "<p>You are given an integer array <code>nums</code>, where <code>nums[i]</code> represents the points scored in the <code>i<sup>th</sup></code> game.</p>\n\n<p>There are <strong>exactly </strong>two players. Initially, the first player is <strong>active</strong> and the second player is <strong>inactive</strong>.</p>\n\n<p>The following rules apply <strong>sequentially</strong> for each game <code>i</code>:</p>\n\n<ul>\n\t<li>If <code>nums[i]</code> is odd, the active and inactive players swap roles.</li>\n\t<li>In every 6th game (that is, game indices <code>5, 11, 17, ...</code>), the active and inactive players swap roles.</li>\n\t<li>The active player plays the <code>i<sup>th</sup></code> game and gains <code>nums[i]</code> points.</li>\n</ul>\n\n<p>Return the <strong>score difference</strong>, defined as the first player&#39;s <strong>total</strong> score <strong>minus</strong> the second player&#39;s <strong>total</strong> score.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,3]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">0</span></p>\n\n<p><strong>Explanation:</strong>\u200b\u200b\u200b\u200b\u200b\u200b\u200b</p>\n\n<ul>\n\t<li>Game 0: Since the points are odd, the second player becomes active and gains <code>nums[0] = 1</code> point.</li>\n\t<li>Game 1: No swap occurs. The second player gains <code>nums[1] = 2</code> points.</li>\n\t<li>Game 2: Since the points are odd, the first player becomes active and gains <code>nums[2] = 3</code> points.</li>\n\t<li>The score difference is <code>3 - 3 = 0</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,4,2,1,2,1]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Games 0 to 2: The first player gains <code>2 + 4 + 2 = 8</code> points.</li>\n\t<li>Game 3: Since the points are odd, the second player is now active and gains <code>nums[3] = 1</code> point.</li>\n\t<li>Game 4: The second player gains <code>nums[4] = 2</code> points.</li>\n\t<li>Game 5: Since the points are odd, the players swap roles. Then, because this is the 6th game, the players swap again. The second player gains <code>nums[5] = 1</code> point.</li>\n\t<li>The score difference is <code>8 - 4 = 4</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">-1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Game 0: Since the points are odd, the second player is now active and gains <code>nums[0] = 1</code> point.</li>\n\t<li>The score difference is <code>0 - 1 = -1</code>.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 1000</code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def scoreDifference(self, nums: List[int]) -> int:\n        ",
+    "topics": [
+      "Array",
+      "Simulation"
+    ],
+    "sample_test": "[1,2,3]",
+    "hints": [
+      "Simulate as described"
+    ],
+    "likes": 39,
+    "dislikes": 4
+  },
+  {
+    "question_id": "3845",
+    "title": "Maximum Subarray XOR with Bounded Range",
+    "title_slug": "maximum-subarray-xor-with-bounded-range",
+    "difficulty": "Hard",
+    "description": "<p>You are given a non-negative integer array <code>nums</code> and an integer <code>k</code>.</p>\n\n<p>You must select a <strong><span data-keyword=\"subarray-nonempty\">subarray</span></strong> of <code>nums</code> such that the <strong>difference</strong> between its <strong>maximum</strong> and <strong>minimum</strong> elements is at most <code>k</code>. The <strong>value</strong> of this subarray is the bitwise XOR of all elements in the subarray.</p>\n\n<p>Return an integer denoting the <strong>maximum</strong> possible <strong>value</strong> of the selected subarray.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [5,4,5,6], k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">7</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Select the subarray <code>[5, <u><strong>4, 5, 6</strong></u>]</code>.</li>\n\t<li>The difference between its maximum and minimum elements is <code>6 - 4 = 2 &lt;= k</code>.</li>\n\t<li>The value is <code>4 XOR 5 XOR 6 = 7</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [5,4,5,6], k = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">6</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Select the subarray <code>[5, 4, 5, <u><strong>6</strong></u>]</code>.</li>\n\t<li>The difference between its maximum and minimum elements is <code>6 - 6 = 0 &lt;= k</code>.</li>\n\t<li>The value is 6.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 4 * 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= nums[i] &lt; 2<sup>15</sup></code></li>\n\t<li><code>0 &lt;= k &lt; 2<sup>15</sup></code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def maxXor(self, nums: list[int], k: int) -> int:\n        ",
+    "topics": [
+      "Array",
+      "Bit Manipulation",
+      "Trie",
+      "Queue",
+      "Sliding Window",
+      "Prefix Sum",
+      "Monotonic Queue"
+    ],
+    "sample_test": "[5,4,5,6]\n2",
+    "hints": [
+      "Maintain an active window such that the difference between its maximum and minimum is at most <code>k</code>",
+      "For all valid subarray-start indices <code>i</code>, insert their prefix xors <code>pref[i]</code> into a trie (use <code>pref[0] = 0</code>, <code>pref[i + 1] = pref[i] ^ nums[i]</code>); keep counts per node to support deletions as <code>L</code> moves",
+      "For each right index <code>r</code>, query the trie with <code>pref[r + 1]</code> to get the maximum <code>pref[r + 1] ^ pref[l]</code> for <code>l in [L, r]</code>"
+    ],
+    "likes": 58,
+    "dislikes": 1
+  },
+  {
+    "question_id": "3844",
+    "title": "Longest Almost-Palindromic Substring",
+    "title_slug": "longest-almost-palindromic-substring",
+    "difficulty": "Medium",
+    "description": "<p>You are given a string <code>s</code> consisting of lowercase English letters.</p>\n\n<p>A <span data-keyword=\"substring-nonempty\">substring</span> is <strong>almost-palindromic</strong> if it becomes a <span data-keyword=\"palindrome-string\">palindrome</span> after removing <strong>exactly</strong> one character from it.</p>\n\n<p>Return an integer denoting the length of the <strong>longest</strong> <strong>almost-palindromic</strong> substring in <code>s</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;abca&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Choose the substring <code>&quot;<u><strong>abca</strong></u>&quot;</code>.</p>\n\n<ul>\n\t<li>Remove <code>&quot;ab<u><strong>c</strong></u>a&quot;</code>.</li>\n\t<li>The string becomes <code>&quot;aba&quot;</code>, which is a palindrome.</li>\n\t<li>Therefore, <code>&quot;abca&quot;</code> is almost-palindromic.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;abba&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Choose the substring <code>&quot;<u><strong>abba</strong></u>&quot;</code>.</p>\n\n<ul>\n\t<li>Remove <code>&quot;a<u><strong>b</strong></u>ba&quot;</code>.</li>\n\t<li>The string becomes <code>&quot;aba&quot;</code>, which is a palindrome.</li>\n\t<li>Therefore, <code>&quot;abba&quot;</code> is almost-palindromic.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;zzabba&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">5</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Choose the substring <code>&quot;z<u><strong>zabba</strong></u>&quot;</code>.</p>\n\n<ul>\n\t<li>Remove <code>&quot;<u><strong>z</strong></u>abba&quot;</code>.</li>\n\t<li>The string becomes <code>&quot;abba&quot;</code>, which is a palindrome.</li>\n\t<li>Therefore, <code>&quot;zabba&quot;</code> is almost-palindromic.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= s.length &lt;= 2500</code></li>\n\t<li><code>s</code> consists of only lowercase English letters.</li>\n</ul>\n",
+    "code_template": "class Solution:\n    def almostPalindromic(self, s: str) -> int:\n        ",
+    "topics": [
+      "Two Pointers",
+      "String",
+      "Dynamic Programming"
+    ],
+    "sample_test": "\"abca\"",
+    "hints": [
+      "Solve greedily",
+      "Fix the center (consider both odd and even centers) and expand outwards",
+      "On the first mismatch, try skipping the left character and continue expanding, and also try skipping the right character; take the longer result",
+      "Track the maximum length found across all centers"
+    ],
+    "likes": 134,
+    "dislikes": 11
+  },
+  {
+    "question_id": "3843",
+    "title": "First Element with Unique Frequency",
+    "title_slug": "first-element-with-unique-frequency",
+    "difficulty": "Medium",
+    "description": "<p>You are given an integer array <code>nums</code>.</p>\n\n<p>Return an integer denoting the <strong>first</strong> element (scanning from left to right) in <code>nums</code> whose <strong>frequency</strong> is <strong>unique</strong>. That is, no other integer appears the same number of times in <code>nums</code>. If there is no such element, return -1.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [20,10,30,30]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">30</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>20 appears once.</li>\n\t<li>10 appears once.</li>\n\t<li>30 appears twice.</li>\n\t<li>The frequency of 30 is unique because no other integer appears exactly twice.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [20,20,10,30,30,30]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">20</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>20 appears twice.</li>\n\t<li>10 appears once.</li>\n\t<li>30 appears 3 times.</li>\n\t<li>The frequency of 20, 10, and 30 are unique. The first element that has unique frequency is 20.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [10,10,20,20]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">-1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>10 appears twice.</li>\n\t<li>20 appears twice.</li>\n\t<li>No element has a unique frequency.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def firstUniqueFreq(self, nums: List[int]) -> int:\n        ",
+    "topics": [
+      "Array",
+      "Hash Table",
+      "Counting"
+    ],
+    "sample_test": "[20,10,30,30]",
+    "hints": [
+      "Use two hash maps: one <code>freq</code> and one <code>freqCount</code>",
+      "First pass: for each <code>x</code> in <code>nums</code> do <code>freq[x] += 1</code>",
+      "Build counts of frequencies: for each <code>f</code> in values of <code>freq</code> do <code>freqCount[f] += 1</code>",
+      "Scan <code>nums</code> from left to right and return the first <code>x</code> with <code>freqCount[freq[x]] == 1</code>; return <code>-1</code> if none"
+    ],
+    "likes": 73,
+    "dislikes": 6
+  },
+  {
+    "question_id": "3842",
+    "title": "Toggle Light Bulbs",
+    "title_slug": "toggle-light-bulbs",
+    "difficulty": "Easy",
+    "description": "<p>You are given an array <code>bulbs</code> of integers between 1 and 100.</p>\n\n<p>There are 100 light bulbs numbered from 1 to 100. All of them are switched off initially.</p>\n\n<p>For each element <code>bulbs[i]</code> in the array <code>bulbs</code>:</p>\n\n<ul>\n\t<li>If the <code>bulbs[i]<sup>th</sup></code> light bulb is currently off, switch it on.</li>\n\t<li>Otherwise, switch it off.</li>\n</ul>\n\n<p>Return the list of integers denoting the light bulbs that are on in the end, <strong>sorted</strong> in <strong>ascending</strong> order. If no bulb is on, return an empty list.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> bulbs<span class=\"example-io\"> = [10,30,20,10]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[20,30]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>The <code>bulbs[0] = 10<sup>th</sup></code> light bulb is currently off. We switch it on.</li>\n\t<li>The <code>bulbs[1] = 30<sup>th</sup></code> light bulb is currently off. We switch it on.</li>\n\t<li>The <code>bulbs[2] = 20<sup>th</sup></code> light bulb is currently off. We switch it on.</li>\n\t<li>The <code>bulbs[3] = 10<sup>th</sup></code> light bulb is currently on. We switch it off.</li>\n\t<li>In the end, the 20<sup>th</sup> and the 30<sup>th</sup> light bulbs are on.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> bulbs<span class=\"example-io\"> = [100,100]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>The <code>bulbs[0] = 100<sup>th</sup></code> light bulb is currently off. We switch it on.</li>\n\t<li>The <code>bulbs[1] = 100<sup>th</sup></code> light bulb is currently on. We switch it off.</li>\n\t<li>In the end, no light bulb is on.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= bulbs.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= bulbs[i] &lt;= 100</code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def toggleLightBulbs(self, bulbs: list[int]) -> list[int]:\n        ",
+    "topics": [
+      "Array",
+      "Hash Table",
+      "Sorting",
+      "Simulation"
+    ],
+    "sample_test": "[10,30,20,10]",
+    "hints": [
+      "Simulate as described"
+    ],
+    "likes": 52,
+    "dislikes": 2
+  },
+  {
+    "question_id": "3841",
+    "title": "Palindromic Path Queries in a Tree",
+    "title_slug": "palindromic-path-queries-in-a-tree",
+    "difficulty": "Hard",
+    "description": "<p>You are given an undirected tree with <code>n</code> nodes labeled 0 to <code>n - 1</code>. This is represented by a 2D array <code>edges</code> of length <code>n - 1</code>, where <code>edges[i] = [u<sub>i</sub>, v<sub>i</sub>]</code> indicates an undirected edge between nodes <code>u<sub>i</sub></code> and <code>v<sub>i</sub></code>.</p>\n\n<p>You are also given a string <code>s</code> of length <code>n</code> consisting of lowercase English letters, where <code>s[i]</code> represents the character assigned to node <code>i</code>.</p>\n\n<p>You are also given a string array <code>queries</code>, where each <code>queries[i]</code> is either:</p>\n\n<ul>\n\t<li><code>&quot;update u<sub>i</sub> c&quot;</code>: Change the character at node <code>u<sub>i</sub></code> to <code>c</code>. Formally, update <code>s[u<sub>i</sub>] = c</code>.</li>\n\t<li><code>&quot;query u<sub>i</sub> v<sub>i</sub>&quot;</code>: Determine whether the string formed by the characters on the <strong>unique</strong> path from <code>u<sub>i</sub></code> to <code>v<sub>i</sub></code> (inclusive) can be <strong>rearranged</strong> into a <strong><span data-keyword=\"palindrome-string\">palindrome</span></strong>.</li>\n</ul>\n\n<p>Return a boolean array <code>answer</code>, where <code>answer[j]</code> is <code>true</code> if the <code>j<sup>th</sup></code> query of type <code>&quot;query u<sub>i</sub> v<sub>i</sub>&quot;\u200b\u200b\u200b\u200b\u200b\u200b\u200b</code> can be rearranged into a <strong>palindrome</strong>, and <code>false</code> otherwise.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 3, edges = [[0,1],[1,2]], s = &quot;aac&quot;, queries = [&quot;query 0 2&quot;,&quot;update 1 b&quot;,&quot;query 0 2&quot;]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[true,false]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li><code>&quot;query 0 2&quot;</code>: Path <code>0 &rarr; 1 &rarr; 2</code> gives <code>&quot;aac&quot;</code>, which can be rearranged to form <code>&quot;aca&quot;</code>, a palindrome. Thus, <code>answer[0] = true</code>.</li>\n\t<li><code>&quot;update 1 b&quot;</code>: Update node 1 to <code>&#39;b&#39;</code>, now <code>s = &quot;abc&quot;</code>.</li>\n\t<li><code>&quot;query 0 2&quot;</code>: Path characters are <code>&quot;abc&quot;</code>, which cannot be rearranged to form a palindrome. Thus, <code>answer[1] = false</code>.</li>\n</ul>\n\n<p>Thus, <code>answer = [true, false]</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 4, edges = [[0,1],[0,2],[0,3]], s = &quot;abca&quot;, queries = [&quot;query 1 2&quot;,&quot;update 0 b&quot;,&quot;query 2 3&quot;,&quot;update 3 a&quot;,&quot;query 1 3&quot;]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[false,false,true]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li><code>&quot;query 1 2&quot;</code>: Path <code>1 &rarr; 0 &rarr; 2</code> gives <code>&quot;bac&quot;</code>, which cannot be rearranged to form a palindrome. Thus, <code>answer[0] = false</code>.</li>\n\t<li><code>&quot;update 0 b&quot;</code>: Update node 0 to <code>&#39;b&#39;</code>, now <code>s = &quot;bbca&quot;</code>.</li>\n\t<li><code>&quot;query 2 3&quot;</code>: Path <code>2 &rarr; 0 &rarr; 3</code> gives <code>&quot;cba&quot;</code>, which cannot be rearranged to form a palindrome. Thus, <code>answer[1] = false</code>.</li>\n\t<li><code>&quot;update 3 a&quot;</code>: Update node 3 to <code>&#39;a&#39;</code>, <code>s = &quot;bbca&quot;</code>.</li>\n\t<li><code>&quot;query 1 3&quot;</code>: Path <code>1 &rarr; 0 &rarr; 3</code> gives <code>&quot;bba&quot;</code>, which can be rearranged to form <code>&quot;bab&quot;</code>, a palindrome. Thus, <code>answer[2] = true</code>.</li>\n</ul>\n\n<p>Thus, <code>answer = [false, false, true]</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n == s.length &lt;= 5 * 10<sup>4</sup></code></li>\n\t<li><code>edges.length == n - 1</code></li>\n\t<li><code>edges[i] = [u<sub>i</sub>, v<sub>i</sub>]</code></li>\n\t<li><code>0 &lt;= u<sub>i</sub>, v<sub>i</sub> &lt;= n - 1</code></li>\n\t<li><code>s</code> consists of lowercase English letters.</li>\n\t<li>The input is generated such that <code>edges</code> represents a valid tree.</li>\n\t<li><code>1 &lt;= queries.length &lt;= 5 * 10<sup>4</sup></code>\u200b\u200b\u200b\u200b\u200b\u200b\u200b\n\t<ul>\n\t\t<li><code>queries[i] = &quot;update u<sub>i</sub> c&quot;</code> or</li>\n\t\t<li><code>queries[i] = &quot;query u<sub>i</sub> v<sub>i</sub>&quot;</code></li>\n\t\t<li><code>0 &lt;= u<sub>i</sub>, v<sub>i</sub> &lt;= n - 1</code></li>\n\t\t<li><code>c</code> is a lowercase English letter.</li>\n\t</ul>\n\t</li>\n</ul>\n",
+    "code_template": "class Solution:\n    def palindromePath(self, n: int, edges: list[list[int]], s: str, queries: list[str]) -> list[bool]:\n        ",
+    "topics": [
+      "Array",
+      "String",
+      "Divide and Conquer",
+      "Tree",
+      "Segment Tree"
+    ],
+    "sample_test": "3\n[[0,1],[1,2]]\n\"aac\"\n[\"query 0 2\",\"update 1 b\",\"query 0 2\"]",
+    "hints": [
+      "Use heavy light decomposition to break each path query into <code>O(log n)</code> segments.",
+      "Represent characters as a 26-bit mask and maintain segment data with XOR. A path can form a palindrome if the resulting mask has at most one bit set."
+    ],
+    "likes": 51,
+    "dislikes": 2
+  },
+  {
+    "question_id": "3840",
+    "title": "House Robber V",
+    "title_slug": "house-robber-v",
+    "difficulty": "Medium",
+    "description": "<p>You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed and is protected by a security system with a color code.</p>\n\n<p>You are given two integer arrays <code>nums</code> and <code>colors</code>, both of length <code>n</code>, where <code>nums[i]</code> is the amount of money in the <code>i<sup>th</sup></code> house and <code>colors[i]</code> is the color code of that house.</p>\n\n<p>You <strong>cannot rob two adjacent</strong> houses if they share the <strong>same color</strong> code.</p>\n\n<p>Return the <strong>maximum</strong> amount of money you can rob.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,4,3,5], colors = [1,1,2,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">9</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Choose houses <code>i = 1</code> with <code>nums[1] = 4</code> and <code>i = 3</code> with <code>nums[3] = 5</code> because they are non-adjacent.</li>\n\t<li>Thus, the total amount robbed is <code>4 + 5 = 9</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [3,1,2,4], colors = [2,3,2,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">8</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Choose houses <code>i = 0</code> with <code>nums[0] = 3</code>, <code>i = 1</code> with <code>nums[1] = 1</code>, and <code>i = 3</code> with <code>nums[3] = 4</code>.</li>\n\t<li>This selection is valid because houses <code>i = 0</code> and <code>i = 1</code> have different colors, and house <code>i = 3</code> is non-adjacent to <code>i = 1</code>.</li>\n\t<li>Thus, the total amount robbed is <code>3 + 1 + 4 = 8</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [10,1,3,9], colors = [1,1,1,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">22</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Choose houses <code>i = 0</code> with <code>nums[0] = 10</code>, <code>i = 2</code> with <code>nums[2] = 3</code>, and <code>i = 3</code> with <code>nums[3] = 9</code>.</li>\n\t<li>This selection is valid because houses <code>i = 0</code> and <code>i = 2</code> are non-adjacent, and houses <code>i = 2</code> and <code>i = 3</code> have different colors.</li>\n\t<li>Thus, the total amount robbed is <code>10 + 3 + 9 = 22</code>.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n == nums.length == colors.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i], colors[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def rob(self, nums: List[int], colors: List[int]) -> int:\n        ",
+    "topics": [
+      "Array",
+      "Dynamic Programming"
+    ],
+    "sample_test": "[1,4,3,5]\n[1,1,2,2]",
+    "hints": [
+      "Use dynamic programming",
+      "Let <code>dp[i]</code> be the maximum money robbable considering houses up to index <code>i</code>",
+      "Initialize <code>dp[i]</code> with <code>nums[i]</code>, then compare with skipping the house: <code>dp[i - 1]</code>",
+      "If <code>colors[i] != colors[i - 1]</code>, allow taking adjacent house: <code>nums[i] + dp[i - 1]</code>",
+      "Always allow non-adjacent take: <code>nums[i] + dp[i - 2]</code>",
+      "Answer is <code>dp[n - 1]</code>"
+    ],
+    "likes": 70,
+    "dislikes": 2
+  },
+  {
+    "question_id": "3839",
+    "title": "Number of Prefix Connected Groups",
+    "title_slug": "number-of-prefix-connected-groups",
+    "difficulty": "Medium",
+    "description": "<p>You are given an array of strings <code>words</code> and an integer <code>k</code>.</p>\n\n<p>Two words <code>a</code> and <code>b</code> at <strong>distinct indices</strong> are <strong><span data-keyword=\"string-prefix\">prefix</span>-connected</strong> if <code>a[0..k-1] == b[0..k-1]</code>.</p>\n\n<p>A <strong>connected group</strong> is a set of words such that each pair of words is prefix-connected.</p>\n\n<p>Return the <strong>number of connected groups</strong> that contain <strong>at least</strong> two words, formed from the given words.</p>\n\n<p><strong>Note:</strong></p>\n\n<ul>\n\t<li>Words with length less than <code>k</code> cannot join any group and are ignored.</li>\n\t<li>Duplicate strings are treated as separate words.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">words = [&quot;apple&quot;,&quot;apply&quot;,&quot;banana&quot;,&quot;bandit&quot;], k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Words sharing the same first <code>k = 2</code> letters are grouped together:</p>\n\n<ul>\n\t<li><code>words[0] = &quot;apple&quot;</code> and <code>words[1] = &quot;apply&quot;</code> share prefix <code>&quot;ap&quot;</code>.</li>\n\t<li><code>words[2] = &quot;banana&quot;</code> and <code>words[3] = &quot;bandit&quot;</code> share prefix <code>&quot;ba&quot;</code>.</li>\n</ul>\n\n<p>Thus, there are 2 connected groups, each containing at least two words.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">words = [&quot;car&quot;,&quot;cat&quot;,&quot;cartoon&quot;], k = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Words are evaluated for a prefix of length <code>k = 3</code>:</p>\n\n<ul>\n\t<li><code>words[0] = &quot;car&quot;</code> and <code>words[2] = &quot;cartoon&quot;</code> share prefix <code>&quot;car&quot;</code>.</li>\n\t<li><code>words[1] = &quot;cat&quot;</code> does not share a 3-length prefix with any other word.</li>\n</ul>\n\n<p>Thus, there is 1 connected group.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">words = </span>[&quot;bat&quot;,&quot;dog&quot;,&quot;dog&quot;,&quot;doggy&quot;,&quot;bat&quot;]<span class=\"example-io\">, k = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Words are evaluated for a prefix of length <code>k = 3</code>:</p>\n\n<ul>\n\t<li><code>words[0] = &quot;bat&quot;</code> and <code>words[4] = &quot;bat&quot;</code> form a group.</li>\n\t<li><code>words[1] = &quot;dog&quot;</code>, <code>words[2] = &quot;dog&quot;</code> and <code>words[3] = &quot;doggy&quot;</code> share prefix <code>&quot;dog&quot;</code>.</li>\n</ul>\n\n<p>Thus, there are 2 connected groups, each containing at least two words.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= words.length &lt;= 5000</code></li>\n\t<li><code>1 &lt;= words[i].length &lt;= 100</code></li>\n\t<li><code>1 &lt;= k &lt;= 100</code></li>\n\t<li>All strings in <code>words</code> consist of lowercase English letters.</li>\n</ul>\n",
+    "code_template": "class Solution:\n    def prefixConnected(self, words: List[str], k: int) -> int:\n        ",
+    "topics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Counting"
+    ],
+    "sample_test": "[\"apple\",\"apply\",\"banana\",\"bandit\"]\n2",
+    "hints": [
+      "Filter out words with length < <code>k</code>; they can never participate in any valid group.",
+      "Two words are connected exactly when their first <code>k</code> characters are identical; this reduces the problem to grouping by prefix."
+    ],
+    "likes": 44,
+    "dislikes": 3
+  },
+  {
+    "question_id": "3838",
+    "title": "Weighted Word Mapping",
+    "title_slug": "weighted-word-mapping",
+    "difficulty": "Easy",
+    "description": "<p>You are given an array of strings <code>words</code>, where each string represents a word containing lowercase English letters.</p>\n\n<p>You are also given an integer array <code>weights</code> of length 26, where <code>weights[i]</code> represents the weight of the <code>i<sup>th</sup></code> lowercase English letter.</p>\n\n<p>The <strong>weight</strong> of a word is defined as the <strong>sum</strong> of the weights of its characters.</p>\n\n<p>For each word, take its weight modulo 26 and map the result to a lowercase English letter using reverse alphabetical order (<code>0 -&gt; &#39;z&#39;, 1 -&gt; &#39;y&#39;, ..., 25 -&gt; &#39;a&#39;</code>).</p>\n\n<p>Return a string formed by concatenating the mapped characters for all words in order.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">words = [&quot;abcd&quot;,&quot;def&quot;,&quot;xyz&quot;], weights = [5,3,12,14,1,2,3,2,10,6,6,9,7,8,7,10,8,9,6,9,9,8,3,7,7,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;rij&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>The weight of <code>&quot;abcd&quot;</code> is <code>5 + 3 + 12 + 14 = 34</code>. The result modulo 26 is <code>34 % 26 = 8</code>, which maps to <code>&#39;r&#39;</code>.</li>\n\t<li>The weight of <code>&quot;def&quot;</code> is <code>14 + 1 + 2 = 17</code>. The result modulo 26 is <code>17 % 26 = 17</code>, which maps to <code>&#39;i&#39;</code>.</li>\n\t<li>The weight of <code>&quot;xyz&quot;</code> is <code>7 + 7 + 2 = 16</code>. The result modulo 26 is <code>16 % 26 = 16</code>, which maps to <code>&#39;j&#39;</code>.</li>\n</ul>\n\n<p>Thus, the string formed by concatenating the mapped characters is <code>&quot;rij&quot;</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">words = [&quot;a&quot;,&quot;b&quot;,&quot;c&quot;], weights = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;yyy&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Each word has weight 1. The result modulo 26 is <code>1 % 26 = 1</code>, which maps to <code>&#39;y&#39;</code>.</p>\n\n<p>Thus, the string formed by concatenating the mapped characters is <code>&quot;yyy&quot;</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">words = [&quot;abcd&quot;], weights = [7,5,3,4,3,5,4,9,4,2,2,7,10,2,5,10,6,1,2,2,4,1,3,4,4,5]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;g&quot;</span></p>\n\n<p><strong>Explanation:\u200b\u200b\u200b\u200b\u200b\u200b\u200b</strong></p>\n\n<p>The weight of <code>&quot;abcd&quot;</code> is <code>7 + 5 + 3 + 4 = 19</code>. The result modulo 26 is <code>19 % 26 = 19</code>, which maps to <code>&#39;g&#39;</code>.</p>\n\n<p>Thus, the string formed by concatenating the mapped characters is <code>&quot;g&quot;</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= words.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= words[i].length &lt;= 10</code></li>\n\t<li><code>weights.length == 26</code></li>\n\t<li><code>1 &lt;= weights[i] &lt;= 100</code></li>\n\t<li><code>words[i]</code> consists of lowercase English letters.</li>\n</ul>\n",
+    "code_template": "class Solution:\n    def mapWordWeights(self, words: List[str], weights: List[int]) -> str:\n        ",
+    "topics": [
+      "Array",
+      "String",
+      "Simulation"
+    ],
+    "sample_test": "[\"abcd\",\"def\",\"xyz\"]\n[5,3,12,14,1,2,3,2,10,6,6,9,7,8,7,10,8,9,6,9,9,8,3,7,7,2]",
+    "hints": [
+      "For each word, sum character weights using <code>weights[c - 'a']</code>",
+      "Take the sum modulo <code>26</code>",
+      "Map the value to a character using reverse order: <code>char = 'z' - value</code>",
+      "Append all mapped characters in order to form the result string"
+    ],
+    "likes": 31,
+    "dislikes": 2
+  },
+  {
+    "question_id": "3836",
+    "title": "Maximum Score Using Exactly K Pairs",
+    "title_slug": "maximum-score-using-exactly-k-pairs",
+    "difficulty": "Hard",
+    "description": "<p>You are given two integer arrays <code>nums1</code> and <code>nums2</code> of lengths <code>n</code> and <code>m</code> respectively, and an integer <code>k</code>.</p>\n\n<p>You must choose <strong>exactly</strong> <code>k</code> pairs of indices <code>(i<sub>1</sub>, j<sub>1</sub>), (i<sub>2</sub>, j<sub>2</sub>), ..., (i<sub>k</sub>, j<sub>k</sub>)</code> such that:</p>\n\n<ul>\n\t<li><code>0 &lt;= i<sub>1</sub> &lt; i<sub>2</sub> &lt; ... &lt; i<sub>k</sub> &lt; n</code></li>\n\t<li><code>0 &lt;= j<sub>1</sub> &lt; j<sub>2</sub> &lt; ... &lt; j<sub>k</sub> &lt; m</code></li>\n</ul>\n\n<p>For each chosen pair <code>(i, j)</code>, you gain a score of <code>nums1[i] * nums2[j]</code>.</p>\n\n<p>The total <strong>score</strong> is the <strong>sum</strong> of the products of all selected pairs.</p>\n\n<p>Return an integer representing the <strong>maximum</strong> achievable total score.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums1 = [1,3,2], nums2 = [4,5,1], k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">22</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>One optimal choice of index pairs is:</p>\n\n<ul>\n\t<li><code>(i<sub>1</sub>, j<sub>1</sub>) = (1, 0)</code> which scores <code>3 * 4 = 12</code></li>\n\t<li><code>(i<sub>2</sub>, j<sub>2</sub>) = (2, 1)</code> which scores <code>2 * 5 = 10</code></li>\n</ul>\n\n<p>This gives a total score of <code>12 + 10 = 22</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums1 = [-2,0,5], nums2 = [-3,4,-1,2], k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">26</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>One optimal choice of index pairs is:</p>\n\n<ul>\n\t<li><code>(i<sub>1</sub>, j<sub>1</sub>) = (0, 0)</code> which scores <code>-2 * -3 = 6</code></li>\n\t<li><code>(i<sub>2</sub>, j<sub>2</sub>) = (2, 1)</code> which scores <code>5 * 4 = 20</code></li>\n</ul>\n\n<p>The total score is <code>6 + 20 = 26</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums1 = [-3,-2], nums2 = [1,2], k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">-7</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The optimal choice of index pairs is:</p>\n\n<ul>\n\t<li><code>(i<sub>1</sub>, j<sub>1</sub>) = (0, 0)</code> which scores <code>-3 * 1 = -3</code></li>\n\t<li><code>(i<sub>2</sub>, j<sub>2</sub>) = (1, 1)</code> which scores <code>-2 * 2 = -4</code></li>\n</ul>\n\n<p>The total score is <code>-3 + (-4) = -7</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n == nums1.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= m == nums2.length &lt;= 100</code></li>\n\t<li><code>-10<sup>6</sup> &lt;= nums1[i], nums2[i] &lt;= 10<sup>6</sup></code></li>\n\t<li><code>1 &lt;= k &lt;= min(n, m)</code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def maxScore(self, nums1: List[int], nums2: List[int], k: int) -> int:\n        ",
+    "topics": [
+      "Array",
+      "Dynamic Programming"
+    ],
+    "sample_test": "[1,3,2]\n[4,5,1]\n2",
+    "hints": [
+      "Use dynamic programming",
+      "Let dynamic programming states <code>dp(i, j, k)</code>, denote the maximum <code>k-th</code> pair sum you can get from the first <code>nums1[0..i]</code> and <code>nums2[0..j]</code>",
+      "Transition: <code>dp(i, j, t) = max(dp(i - 1, j, t), dp(i, j - 1, t), dp(i - 1, j - 1, t - 1) + nums1[i] * nums2[j])</code>"
+    ],
+    "likes": 63,
+    "dislikes": 4
+  },
+  {
+    "question_id": "3835",
+    "title": "Count Subarrays With Cost Less Than or Equal to K",
+    "title_slug": "count-subarrays-with-cost-less-than-or-equal-to-k",
+    "difficulty": "Medium",
+    "description": "<p>You are given an integer array <code>nums</code>, and an integer <code>k</code>.</p>\n\n<p>For any <span data-keyword=\"subarray-nonempty\">subarray</span> <code>nums[l..r]</code>, define its <strong>cost</strong> as:</p>\n\n<p><code>cost = (max(nums[l..r]) - min(nums[l..r])) * (r - l + 1)</code>.</p>\n\n<p>Return an integer denoting the number of subarrays of <code>nums</code> whose cost is <strong>less than or equal</strong> to <code>k</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,3,2], k = 4</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">5</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>We consider all subarrays of <code>nums</code>:</p>\n\n<ul>\n\t<li><code>nums[0..0]</code>: <code>cost = (1 - 1) * 1 = 0</code></li>\n\t<li><code>nums[0..1]</code>: <code>cost = (3 - 1) * 2 = 4</code></li>\n\t<li><code>nums[0..2]</code>: <code>cost = (3 - 1) * 3 = 6</code></li>\n\t<li><code>nums[1..1]</code>: <code>cost = (3 - 3) * 1 = 0</code></li>\n\t<li><code>nums[1..2]</code>: <code>cost = (3 - 2) * 2 = 2</code></li>\n\t<li><code>nums[2..2]</code>: <code>cost = (2 - 2) * 1 = 0</code></li>\n</ul>\n\n<p>There are 5 subarrays whose cost is less than or equal to 4.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [5,5,5,5], k = 0</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">10</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>For any subarray of <code>nums</code>, the maximum and minimum values are the same, so the cost is always 0.</p>\n\n<p>As a result, every subarray of <code>nums</code> has cost less than or equal to 0.</p>\n\n<p>For an array of length 4, the total number of subarrays is <code>(4 * 5) / 2 = 10</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,3], k = 0</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The only subarrays of <code>nums</code> with cost 0 are the single-element subarrays, and there are 3 of them.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n\t<li><code>0 &lt;= k &lt;= 10<sup>15</sup></code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def countSubarrays(self, nums: List[int], k: int) -> int:\n        ",
+    "topics": [
+      "Array",
+      "Queue",
+      "Monotonic Queue"
+    ],
+    "sample_test": "[1,3,2]\n4",
+    "hints": [
+      "Use sliding window.",
+      "A monotonic deque is useful for maintaining the maximum or minimum in <code>O(1)</code> time per operation.",
+      "When the current window's cost exceeds <code>k</code>, move the left boundary forward until the window becomes valid again. Count all subarrays ending at the current right boundary."
+    ],
+    "likes": 144,
+    "dislikes": 5
+  },
+  {
+    "question_id": "3834",
+    "title": "Merge Adjacent Equal Elements",
+    "title_slug": "merge-adjacent-equal-elements",
+    "difficulty": "Medium",
+    "description": "<p>You are given an integer array <code>nums</code>.</p>\n\n<p>You must <strong>repeatedly</strong> apply the following merge operation until no more changes can be made:</p>\n\n<ul>\n\t<li>If any <strong>two adjacent elements are equal</strong>, choose the <strong>leftmost</strong> such adjacent pair in the current array and replace them with a single element equal to their <strong>sum</strong>.</li>\n</ul>\n\n<p>After each merge operation, the array size <strong>decreases</strong> by 1. Repeat the process on the updated array until no more changes can be made.</p>\n\n<p>Return the final array after all possible merge operations.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [3,1,1,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[3,4]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>The middle two elements are equal and merged into <code>1 + 1 = 2</code>, resulting in <code>[3, 2, 2]</code>.</li>\n\t<li>The last two elements are equal and merged into <code>2 + 2 = 4</code>, resulting in <code>[3, 4]</code>.</li>\n\t<li>No adjacent equal elements remain. Thus, the answer is <code>[3, 4]</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,2,4]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[8]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>The first two elements are equal and merged into <code>2 + 2 = 4</code>, resulting in <code>[4, 4]</code>.</li>\n\t<li>The first two elements are equal and merged into <code>4 + 4 = 8</code>, resulting in <code>[8]</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [3,7,5]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[3,7,5]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>There are no adjacent equal elements in the array, so no operations are performed.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code>\u200b\u200b\u200b\u200b\u200b\u200b\u200b</li>\n</ul>\n",
+    "code_template": "class Solution:\n    def mergeAdjacent(self, nums: List[int]) -> List[int]:\n        ",
+    "topics": [
+      "Array",
+      "Stack",
+      "Simulation"
+    ],
+    "sample_test": "[3,1,1,2]",
+    "hints": [
+      "Process the array from left to right using a stack-like structure",
+      "When the current value equals the top of the stack, merge them by replacing with their sum and continue checking",
+      "The remaining stack elements form the final array"
+    ],
+    "likes": 86,
+    "dislikes": 2
+  },
+  {
+    "question_id": "3833",
+    "title": "Count Dominant Indices",
+    "title_slug": "count-dominant-indices",
+    "difficulty": "Easy",
+    "description": "<p>You are given an integer array <code>nums</code> of length <code>n</code>.</p>\n\n<p>An element at index <code>i</code> is called <strong>dominant</strong> if: <code>nums[i] &gt; average(nums[i + 1], nums[i + 2], ..., nums[n - 1])</code></p>\n\n<p>Your task is to count the number of indices <code>i</code> that are <strong>dominant</strong>.</p>\n\n<p>The <strong>average</strong> of a set of numbers is the value obtained by adding all the numbers together and dividing the sum by the total number of numbers.</p>\n\n<p><strong>Note</strong>: The <strong>rightmost</strong> element of any array is <strong>not</strong> <strong>dominant</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [5,4,3]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>At index <code>i = 0</code>, the value 5 is dominant as <code>5 &gt; average(4, 3) = 3.5</code>.</li>\n\t<li>At index <code>i = 1</code>, the value 4 is dominant over the subarray <code>[3]</code>.</li>\n\t<li>Index <code>i = 2</code> is not dominant as there are no elements to its right. Thus, the answer is 2.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [4,1,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>At index <code>i = 0</code>, the value 4 is dominant over the subarray <code>[1, 2]</code>.</li>\n\t<li>At index <code>i = 1</code>, the value 1 is not dominant.</li>\n\t<li>Index <code>i = 2</code> is not dominant as there are no elements to its right. Thus, the answer is 1.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 100</code>\u200b\u200b\u200b\u200b\u200b\u200b\u200b</li>\n</ul>\n",
+    "code_template": "class Solution:\n    def dominantIndices(self, nums: List[int]) -> int:\n        ",
+    "topics": [
+      "Array",
+      "Enumeration"
+    ],
+    "sample_test": "[5,4,3]",
+    "hints": [
+      "Simulate as described"
+    ],
+    "likes": 46,
+    "dislikes": 1
+  },
+  {
+    "question_id": "3832",
+    "title": "Find Users with Persistent Behavior Patterns",
+    "title_slug": "find-users-with-persistent-behavior-patterns",
+    "difficulty": "Hard",
+    "description": "<p>Table: <code>activity</code></p>\n\n<pre>\n+--------------+---------+\n| Column Name  | Type    |\n+--------------+---------+\n| user_id      | int     |\n| action_date  | date    |\n| action       | varchar |\n+--------------+---------+\n(user_id, action_date, action) is the primary key (unique value) for this table.\nEach row represents a user performing a specific action on a given date.\n</pre>\n\n<p>Write a solution to identify <strong>behaviorally stable users</strong> based on the following definition:</p>\n\n<ul>\n\t<li>A user is considered <strong>behaviorally stable</strong> if there exists a sequence of <strong>at least </strong><code>5</code><strong> consecutive days</strong> such that:\n\n\t<ul>\n\t\t<li>The user performed <strong>exactly one action per day</strong> during that period.</li>\n\t\t<li>The <strong>action is the same</strong> on all those consecutive days.</li>\n\t</ul>\n\t</li>\n\t<li>If a user has multiple qualifying sequences, only consider the sequence with the <strong>maximum length</strong>.</li>\n</ul>\n\n<p>Return <em>the result table ordered by</em> <code>streak_length</code> <em>in <strong>descending</strong> order</em>,<em> then by </em><code>user_id</code> <em>in <strong>ascending</strong> order</em>.</p>\n\n<p>The result format is in the following example.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong></p>\n\n<p>activity table:</p>\n\n<pre class=\"example-io\">\n+---------+-------------+--------+\n| user_id | action_date | action |\n+---------+-------------+--------+\n| 1       | 2024-01-01  | login  |\n| 1       | 2024-01-02  | login  |\n| 1       | 2024-01-03  | login  |\n| 1       | 2024-01-04  | login  |\n| 1       | 2024-01-05  | login  |\n| 1       | 2024-01-06  | logout |\n| 2       | 2024-01-01  | click  |\n| 2       | 2024-01-02  | click  |\n| 2       | 2024-01-03  | click  |\n| 2       | 2024-01-04  | click  |\n| 3       | 2024-01-01  | view   |\n| 3       | 2024-01-02  | view   |\n| 3       | 2024-01-03  | view   |\n| 3       | 2024-01-04  | view   |\n| 3       | 2024-01-05  | view   |\n| 3       | 2024-01-06  | view   |\n| 3       | 2024-01-07  | view   |\n+---------+-------------+--------+\n</pre>\n\n<p><strong>Output:</strong></p>\n\n<pre class=\"example-io\">\n+---------+--------+---------------+------------+------------+\n| user_id | action | streak_length | start_date | end_date   |\n+---------+--------+---------------+------------+------------+\n| 3       | view   | 7             | 2024-01-01 | 2024-01-07 |\n| 1       | login  | 5             | 2024-01-01 | 2024-01-05 |\n+---------+--------+---------------+------------+------------+\n</pre>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li><strong>User 1</strong>:\n\n\t<ul>\n\t\t<li>Performed <code>login</code> from 2024-01-01 to 2024-01-05 on consecutive days</li>\n\t\t<li>Each day has exactly one action, and the action is the same</li>\n\t\t<li>Streak length = 5 (meets minimum requirement)</li>\n\t\t<li>The action changes on 2024-01-06, ending the streak</li>\n\t</ul>\n\t</li>\n\t<li><strong>User 2</strong>:\n\t<ul>\n\t\t<li>Performed <code>click</code> for only 4 consecutive days</li>\n\t\t<li>Does not meet the minimum streak length of 5</li>\n\t\t<li>Excluded from the result</li>\n\t</ul>\n\t</li>\n\t<li><strong>User 3</strong>:\n\t<ul>\n\t\t<li>Performed <code>view</code> for 7 consecutive days</li>\n\t\t<li>This is the longest valid sequence for this user</li>\n\t\t<li>Included in the result</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>The Results table is ordered by streak_length in descending order, then by user_id in ascending order</p>\n</div>\n",
+    "code_template": null,
+    "topics": [],
+    "sample_test": "{\"headers\":{\"activity\":[\"user_id\",\"action_date\",\"action\"]},\"rows\":{\"activity\":[[1,\"2024-01-01\",\"login\"],[1,\"2024-01-02\",\"login\"],[1,\"2024-01-03\",\"login\"],[1,\"2024-01-04\",\"login\"],[1,\"2024-01-05\",\"login\"],[1,\"2024-01-06\",\"logout\"],[2,\"2024-01-01\",\"click\"],[2,\"2024-01-02\",\"click\"],[2,\"2024-01-03\",\"click\"],[2,\"2024-01-04\",\"click\"],[3,\"2024-01-01\",\"view\"],[3,\"2024-01-02\",\"view\"],[3,\"2024-01-03\",\"view\"],[3,\"2024-01-04\",\"view\"],[3,\"2024-01-05\",\"view\"],[3,\"2024-01-06\",\"view\"],[3,\"2024-01-07\",\"view\"]]}}",
+    "hints": [],
+    "likes": 21,
+    "dislikes": 0
+  },
+  {
+    "question_id": "3830",
+    "title": "Longest Alternating Subarray After Removing At Most One Element",
+    "title_slug": "longest-alternating-subarray-after-removing-at-most-one-element",
+    "difficulty": "Hard",
+    "description": "<p>You are given an integer array <code>nums</code>.</p>\n\n<p>A <span data-keyword=\"subarray\">subarray</span> <code>nums[l..r]</code> is <strong>alternating</strong> if one of the following holds:</p>\n\n<ul>\n\t<li><code>nums[l] &lt; nums[l + 1] &gt; nums[l + 2] &lt; nums[l + 3] &gt; ...</code></li>\n\t<li><code>nums[l] &gt; nums[l + 1] &lt; nums[l + 2] &gt; nums[l + 3] &lt; ...</code></li>\n</ul>\n\n<p>In other words, if we compare adjacent elements in the subarray, then the comparisons alternate between <strong>strictly</strong> greater and <strong>strictly</strong> smaller.</p>\n\n<p>You can remove <strong>at most one</strong> element from <code>nums</code>. Then, you select an alternating subarray from <code>nums</code>.</p>\n\n<p>Return an integer denoting the <strong>maximum</strong> <strong>length</strong> of the alternating subarray you can select.</p>\n\n<p>A subarray of length 1 is considered alternating.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,1,3,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Choose not to remove elements.</li>\n\t<li>Select the entire array <code>[<u><strong>2, 1, 3, 2</strong></u>]</code>, which is alternating because <code>2 &gt; 1 &lt; 3 &gt; 2</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [3,2,1,2,3,2,1]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Choose to remove <code>nums[3]</code> i.e., <code>[3, 2, 1, <u><strong>2</strong></u>, 3, 2, 1]</code>. The array becomes <code>[3, 2, 1, 3, 2, 1]</code>.</li>\n\t<li>Select the subarray <code>[3, <strong><u>2, 1, 3, 2</u></strong>, 1]</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [100000,100000]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Choose not to remove elements.</li>\n\t<li>Select the subarray <code>[100000, <u><strong>100000</strong></u>]</code>.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def longestAlternating(self, nums: List[int]) -> int:\n        ",
+    "topics": [
+      "Array",
+      "Dynamic Programming",
+      "Enumeration"
+    ],
+    "sample_test": "[2,1,3,2]",
+    "hints": [
+      "Define <code>left[i][d]</code> as the maximum length of an alternating subarray ending at index <code>i</code>, where <code>d = 0</code> means the last comparison is <code><</code> and <code>d = 1</code> means the last comparison is <code>></code>. Define <code>right[i][d]</code> similarly for subarrays starting at <code>i</code>.",
+      "Fill <code>left</code> from left to right and <code>right</code> from right to left; if adjacent values are equal, the alternating chain must restart since <code>==</code> is invalid.",
+      "Try removing each index <code>r</code>: if <code>nums[r - 1] < nums[r + 1]</code>, the two sides can connect with pattern <code>< ></code>, giving length <code>left[r - 1][0] + right[r + 1][1]</code>; if <code>nums[r - 1] > nums[r + 1]</code>, connect with pattern <code>> <</code>, giving <code>left[r - 1][1] + right[r + 1][0]</code>.",
+      "Also consider not removing any element by taking the maximum value over all <code>left[i][d]</code>."
+    ],
+    "likes": 67,
+    "dislikes": 1
+  },
+  {
+    "question_id": "3829",
+    "title": "Design Ride Sharing System",
+    "title_slug": "design-ride-sharing-system",
+    "difficulty": "Medium",
+    "description": "<p>A ride sharing system manages ride requests from riders and availability from drivers. Riders request rides, and drivers become available over time. The system should match riders and drivers in the order they arrive.</p>\n\n<p>Implement the <code>RideSharingSystem</code> class:</p>\n\n<ul>\n\t<li><code>RideSharingSystem()</code> Initializes the system.</li>\n\t<li><code>void addRider(int riderId)</code> Adds a new rider with the given <code>riderId</code>.</li>\n\t<li><code>void addDriver(int driverId)</code> Adds a new driver with the given <code>driverId</code>.</li>\n\t<li><code>int[] matchDriverWithRider()</code> Matches the <strong>earliest</strong> available driver with the <strong>earliest</strong> waiting rider and removes both of them from the system. Returns an integer array of size 2 where <code>result = [driverId, riderId]</code> if a match is made. If no match is available, returns <code>[-1, -1]</code>.</li>\n\t<li><code>void cancelRider(int riderId)</code> Cancels the ride request of the rider with the given <code>riderId</code> <strong>if the rider exists</strong> and has <strong>not</strong> yet been matched.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong><br />\n<span class=\"example-io\">[&quot;RideSharingSystem&quot;, &quot;addRider&quot;, &quot;addDriver&quot;, &quot;addRider&quot;, &quot;matchDriverWithRider&quot;, &quot;addDriver&quot;, &quot;cancelRider&quot;, &quot;matchDriverWithRider&quot;, &quot;matchDriverWithRider&quot;]<br />\n[[], [3], [2], [1], [], [5], [3], [], []]</span></p>\n\n<p><strong>Output:</strong><br />\n<span class=\"example-io\">[null, null, null, null, [2, 3], null, null, [5, 1], [-1, -1]] </span></p>\n\n<p><strong>Explanation</strong></p>\nRideSharingSystem rideSharingSystem = new RideSharingSystem(); // Initializes the system<br />\nrideSharingSystem.addRider(3); // rider 3 joins the queue<br />\nrideSharingSystem.addDriver(2); // driver 2 joins the queue<br />\nrideSharingSystem.addRider(1); // rider 1 joins the queue<br />\nrideSharingSystem.matchDriverWithRider(); // returns [2, 3]<br />\nrideSharingSystem.addDriver(5); // driver 5 becomes available<br />\nrideSharingSystem.cancelRider(3); // rider 3 is already matched, cancel has no effect<br />\nrideSharingSystem.matchDriverWithRider(); // returns [5, 1]<br />\nrideSharingSystem.matchDriverWithRider(); // returns [-1, -1]</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong><br />\n<span class=\"example-io\">[&quot;RideSharingSystem&quot;, &quot;addRider&quot;, &quot;addDriver&quot;, &quot;addDriver&quot;, &quot;matchDriverWithRider&quot;, &quot;addRider&quot;, &quot;cancelRider&quot;, &quot;matchDriverWithRider&quot;]<br />\n[[], [8], [8], [6], [], [2], [2], []]</span></p>\n\n<p><strong>Output:</strong><br />\n<span class=\"example-io\">[null, null, null, null, [8, 8], null, null, [-1, -1]] </span></p>\n\n<p><strong>Explanation</strong></p>\nRideSharingSystem rideSharingSystem = new RideSharingSystem(); // Initializes the system<br />\nrideSharingSystem.addRider(8); // rider 8 joins the queue<br />\nrideSharingSystem.addDriver(8); // driver 8 joins the queue<br />\nrideSharingSystem.addDriver(6); // driver 6 joins the queue<br />\nrideSharingSystem.matchDriverWithRider(); // returns [8, 8]<br />\nrideSharingSystem.addRider(2); // rider 2 joins the queue<br />\nrideSharingSystem.cancelRider(2); // rider 2 cancels<br />\nrideSharingSystem.matchDriverWithRider(); // returns [-1, -1]</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= riderId, driverId &lt;= 1000</code></li>\n\t<li>Each <code>riderId</code> is <strong>unique</strong> among riders and is added at most <strong>once</strong>.</li>\n\t<li>Each <code>driverId</code> is <strong>unique</strong> among drivers and is added at most <strong>once</strong>.</li>\n\t<li>At most 1000 calls will be made in <strong>total</strong> to <code>addRider</code>\u200b\u200b\u200b\u200b\u200b\u200b\u200b, <code>addDriver</code>, <code>matchDriverWithRider</code>, and <code>cancelRider</code>.</li>\n</ul>\n",
+    "code_template": "class RideSharingSystem:\n\n    def __init__(self):\n        \n\n    def addRider(self, riderId: int) -> None:\n        \n\n    def addDriver(self, driverId: int) -> None:\n        \n\n    def matchDriverWithRider(self) -> List[int]:\n        \n\n    def cancelRider(self, riderId: int) -> None:\n        \n\n\n# Your RideSharingSystem object will be instantiated and called as such:\n# obj = RideSharingSystem()\n# obj.addRider(riderId)\n# obj.addDriver(driverId)\n# param_3 = obj.matchDriverWithRider()\n# obj.cancelRider(riderId)",
+    "topics": [
+      "Hash Table",
+      "Design",
+      "Queue",
+      "Data Stream"
+    ],
+    "sample_test": "[\"RideSharingSystem\",\"addRider\",\"addDriver\",\"addRider\",\"matchDriverWithRider\",\"addDriver\",\"cancelRider\",\"matchDriverWithRider\",\"matchDriverWithRider\"]\n[[],[3],[2],[1],[],[5],[3],[],[]]",
+    "hints": [
+      "Use queues to preserve FIFO order for riders and drivers.",
+      "Track waiting riders with a structure that supports efficient removal on cancel (for example, a list plus a map).",
+      "Before matching, skip or remove canceled riders to ensure the earliest valid rider is paired with the earliest driver."
+    ],
+    "likes": 45,
+    "dislikes": 5
+  },
+  {
+    "question_id": "3828",
+    "title": "Final Element After Subarray Deletions",
+    "title_slug": "final-element-after-subarray-deletions",
+    "difficulty": "Medium",
+    "description": "<p>You are given an integer array <code>nums</code>.</p>\n\n<p>Two players, Alice and Bob, play a game in turns, with Alice playing first.</p>\n\n<ul>\n\t<li>In each turn, the current player chooses any <strong><span data-keyword=\"subarray-nonempty\">subarray</span></strong> <code>nums[l..r]</code> such that <code>r - l + 1 &lt; m</code>, where <code>m</code> is the <strong>current length</strong> of the array.</li>\n\t<li>The selected <strong>subarray is removed</strong>, and the remaining elements are <strong>concatenated</strong> to form the new array.</li>\n\t<li>The game continues until <strong>only one</strong> element remains.</li>\n</ul>\n\n<p>Alice aims to <strong>maximize</strong> the final element, while Bob aims to <strong>minimize</strong> it. Assuming both play optimally, return the value of the final remaining element.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,5,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>One valid optimal strategy:</p>\n\n<ul>\n\t<li>Alice removes <code>[1]</code>, array becomes <code>[5, 2]</code>.</li>\n\t<li>Bob removes <code>[5]</code>, array becomes <code>[2]</code>\u200b\u200b\u200b\u200b\u200b\u200b\u200b. Thus, the answer is 2.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [3,7]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">7</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Alice removes <code>[3]</code>, leaving the array <code>[7]</code>. Since Bob cannot play a turn now, the answer is 7.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def finalElement(self, nums: List[int]) -> int:\n        ",
+    "topics": [
+      "Array",
+      "Math",
+      "Brainteaser",
+      "Game Theory"
+    ],
+    "sample_test": "[1,5,2]",
+    "hints": [
+      "Observe which positions Alice can force to survive her first move so that Bob cannot remove them afterward.",
+      "Any middle element can always be removed by Bob, so only the endpoints can be protected.",
+      "Alice chooses the better endpoint: the answer is <code>max(nums[0], nums[len(nums) - 1])</code>."
+    ],
+    "likes": 107,
+    "dislikes": 20
+  },
+  {
+    "question_id": "3827",
+    "title": "Count Monobit Integers",
+    "title_slug": "count-monobit-integers",
+    "difficulty": "Easy",
+    "description": "<p>You are given an integer <code>n</code>.</p>\n\n<p>An integer is called <strong>Monobit</strong> if all bits in its binary representation are the same.</p>\n\n<p>Return the count of <strong>Monobit</strong> integers in the range <code>[0, n]</code> (inclusive).</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>The integers in the range <code>[0, 1]</code> have binary representations <code>&quot;0&quot;</code> and <code>&quot;1&quot;</code>.</li>\n\t<li>Each representation consists of identical bits. Thus, the answer is 2.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 4</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>The integers in the range <code>[0, 4]</code> include binaries <code>&quot;0&quot;</code>, <code>&quot;1&quot;</code>, <code>&quot;10&quot;</code>, <code>&quot;11&quot;</code>, and <code>&quot;100&quot;</code>.</li>\n\t<li>Only 0, 1 and 3 satisfy the Monobit condition. Thus, the answer is 3.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>0 &lt;= n &lt;= 1000</code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def countMonobit(self, n: int) -> int:\n        ",
+    "topics": [
+      "Bit Manipulation",
+      "Enumeration"
+    ],
+    "sample_test": "1",
+    "hints": [
+      "Go through all the integers in the range <code>[0, n]</code> and count the monobit integers"
+    ],
+    "likes": 50,
+    "dislikes": 1
+  },
+  {
+    "question_id": "3826",
+    "title": "Minimum Partition Score",
+    "title_slug": "minimum-partition-score",
+    "difficulty": "Hard",
+    "description": "<p>You are given an integer array <code>nums</code> and an integer <code>k</code>.</p>\n\n<p>Your task is to partition <code>nums</code> into <strong>exactly</strong> <code>k</code> <span data-keyword=\"subarray-nonempty\">subarrays</span> and return an integer denoting the <strong>minimum possible score</strong> among all valid partitions.</p>\n\n<p>The <strong>score</strong> of a partition is the <strong>sum</strong> of the <strong>values</strong> of all its subarrays.</p>\n\n<p>The <strong>value</strong> of a subarray is defined as <code>sumArr * (sumArr + 1) / 2</code>, where <code>sumArr</code> is the sum of its elements.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [5,1,2,1], k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">25</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>We must partition the array into <code>k = 2</code> subarrays. One optimal partition is <code>[5]</code> and <code>[1, 2, 1]</code>.</li>\n\t<li>The first subarray has <code>sumArr = 5</code> and <code>value = 5 &times; 6 / 2 = 15</code>.</li>\n\t<li>The second subarray has <code>sumArr = 1 + 2 + 1 = 4</code> and <code>value = 4 &times; 5 / 2 = 10</code>.</li>\n\t<li>The score of this partition is <code>15 + 10 = 25</code>, which is the minimum possible score.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,3,4], k = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">55</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Since we must partition the array into <code>k = 1</code> subarray, all elements belong to the same subarray: <code>[1, 2, 3, 4]</code>.</li>\n\t<li>This subarray has <code>sumArr = 1 + 2 + 3 + 4 = 10</code> and <code>value = 10 &times; 11 / 2 = 55</code>.\u200b\u200b\u200b\u200b\u200b\u200b\u200b</li>\n\t<li>The score of this partition is 55, which is the minimum possible score.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,1,1], k = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>We must partition the array into <code>k = 3</code> subarrays. The only valid partition is <code>[1], [1], [1]</code>.</li>\n\t<li>Each subarray has <code>sumArr = 1</code> and <code>value = 1 &times; 2 / 2 = 1</code>.</li>\n\t<li>The score of this partition is <code>1 + 1 + 1 = 3</code>, which is the minimum possible score.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= k &lt;= nums.length </code></li>\n</ul>\n",
+    "code_template": "class Solution:\n    def minPartitionScore(self, nums: List[int], k: int) -> int:\n        ",
+    "topics": [
+      "Array",
+      "Divide and Conquer",
+      "Dynamic Programming",
+      "Queue",
+      "Prefix Sum",
+      "Monotonic Queue"
+    ],
+    "sample_test": "[5,1,2,1]\n2",
+    "hints": [
+      "Let <code>dp[k][i]</code> be the minimum score to partition the first <code>i</code> elements into <code>k</code> subarrays. The transition is <code>dp[k][i] = min(dp[k-1][j] + value(subarray nums[j...i-1]))</code> for <code>j < i</code>.",
+      "The naive DP approach takes <code>O(K*N<sup>2</sup>)</code>, which is too slow. Look for optimizations applicable to partitioning problems.",
+      "The cost function is convex. This suggests that the optimal splitting point satisfies the Quadrangle Inequality, enabling Divide and Conquer Optimization to reduce the complexity."
+    ],
+    "likes": 42,
+    "dislikes": 2
+  }
+]
