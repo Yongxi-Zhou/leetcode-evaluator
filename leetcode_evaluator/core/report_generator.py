@@ -19,11 +19,14 @@ from leetcode_evaluator.core.stability_metrics import StabilityAnalyzer
 class ReportGenerator:
     """Generate comprehensive analysis reports"""
     
-    def __init__(self, results_file: str, output_dir: str = None):
+    def __init__(self, results_file: str, output_dir: str = None,
+                 model_name: str = None, provider: str = None):
         self.results_file = results_file
         self.results = self._load_results()
         self.df = self._create_dataframe()
         self.output_dir = output_dir
+        self.model_name = model_name
+        self.provider = provider
         self.experiment_metadata = {}
         
     def _load_results(self) -> List[Dict]:
@@ -713,9 +716,16 @@ class ReportGenerator:
         """Generate markdown formatted report"""
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
+        model_line = ""
+        if self.model_name:
+            if self.provider:
+                model_line = f"\n**Model:** {self.model_name} (provider: {self.provider})  "
+            else:
+                model_line = f"\n**Model:** {self.model_name}  "
+
         report = f"""# LeetCode AI Solution Evaluation Report
 
-**Generated:** {timestamp}  
+**Generated:** {timestamp}  {model_line}
 **Results File:** {self.results_file}  
 **Total Problems Evaluated:** {len(self.results)}
 
