@@ -110,7 +110,22 @@ class ReportGenerator:
         if not experiment_name:
             return {}
 
+        # 1. Try finding in Config.RESULTS_SUMMARY (current run)
         summary_path = os.path.join(Config.RESULTS_SUMMARY, f"{experiment_name}.json")
+        
+        # 2. Try sibling path (portable/independent report mode)
+        # self.output_dir = 'output/<run_id>/reports/<exp_id>'
+        # Try: 'output/<run_id>/results/summary/<exp_id>.json'
+        if not os.path.exists(summary_path):
+            try:
+                # If output_dir is 'output/run_id/reports/exp_id', then base_run_dir is 'output/run_id'
+                base_run_dir = os.path.dirname(os.path.dirname(os.path.abspath(self.output_dir)))
+                alt_path = os.path.join(base_run_dir, "results", "summary", f"{experiment_name}.json")
+                if os.path.exists(alt_path):
+                    summary_path = alt_path
+            except:
+                pass
+                
         if not os.path.exists(summary_path):
             return {}
 
@@ -738,8 +753,11 @@ class ReportGenerator:
                 ("Temperature", self.experiment_metadata.get('temperature')),
                 ("Top-p", self.experiment_metadata.get('top_p')),
                 ("Max Tokens", self.experiment_metadata.get('max_tokens')),
-                ("Total Problems", self.experiment_metadata.get('total_problems')),
-                ("Total Runs", self.experiment_metadata.get('total_runs')),
+                ("Total Problems", self.experiment_metadata.get('num_problems') or self.experiment_metadata.get('total_problems')),
+                ("Attempts", self.experiment_metadata.get('attempts')),
+                ("Stability Runs", self.experiment_metadata.get('stability_runs')),
+                ("Workers", self.experiment_metadata.get('workers')),
+                ("Selection", self.experiment_metadata.get('selection')),
             ]
             for key, value in config_rows:
                 if value is not None:

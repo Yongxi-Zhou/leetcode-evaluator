@@ -126,6 +126,26 @@ Provide ONLY the complete Python code solution, no explanations or markdown form
     RESULTS_FIGURES = os.path.join(RESULTS_DIR, "figures")
     RESULTS_EVALUATIONS = os.path.join(RESULTS_DIR, "evaluations")
     RESULTS_PROBLEMS = os.path.join(RESULTS_DIR, "problems")
+
+    @classmethod
+    def set_run_id(cls, run_id: str):
+        """Update output directories to be nested under a run-specific folder"""
+        cls.OUTPUT_ROOT = os.path.join("output", run_id)
+        cls.RESULTS_DIR = os.path.join(cls.OUTPUT_ROOT, "results")
+        cls.REPORTS_DIR = os.path.join(cls.OUTPUT_ROOT, "reports")
+        cls.EXPERIMENTS_DIR = os.path.join(cls.OUTPUT_ROOT, "experiments")
+        
+        # Update nested result paths
+        cls.RESULTS_RAW = os.path.join(cls.RESULTS_DIR, "raw")
+        cls.RESULTS_SUMMARY = os.path.join(cls.RESULTS_DIR, "summary")
+        cls.RESULTS_TABLES = os.path.join(cls.RESULTS_DIR, "tables")
+        cls.RESULTS_FIGURES = os.path.join(cls.RESULTS_DIR, "figures")
+        cls.RESULTS_EVALUATIONS = os.path.join(cls.RESULTS_DIR, "evaluations")
+        cls.RESULTS_PROBLEMS = os.path.join(cls.RESULTS_DIR, "problems")
+        
+        # Create directories
+        for d in [cls.OUTPUT_ROOT, cls.RESULTS_DIR, cls.REPORTS_DIR, cls.EXPERIMENTS_DIR]:
+            os.makedirs(d, exist_ok=True)
     
     # Model Pricing (per 1k tokens)
     MODEL_PRICING = {
