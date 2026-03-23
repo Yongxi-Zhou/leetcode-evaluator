@@ -36,10 +36,21 @@ class LeetCodeClient:
             self._set_session_cookies()
         
     def _set_session_cookies(self):
-        """Set cookies from browser session"""
-        self.session.cookies.set('LEETCODE_SESSION', self.session_cookie, domain='.leetcode.com')
-        self.session.cookies.set('csrftoken', self.csrf_token, domain='.leetcode.com')
-        print(f"✓ Session cookies configured")
+        """Set all cookies from the full browser cookie string, including cf_clearance."""
+        # Strip surrounding quotes in case Docker Compose env_file preserves them
+        cookie_str = self.session_cookie.strip().strip("'\"")
+        for part in cookie_str.split(';'):
+            part = part.strip()
+            if '=' in part:
+                name, _, value = part.partition('=')
+                name = name.strip()
+                if name == 'csrftoken':
+                    continue  # set separately below to avoid duplicates
+                self.session.cookies.set(name, value.strip(), domain='.leetcode.com')
+        if self.csrf_token:
+            self.session.cookies.set('csrftoken', self.csrf_token, domain='.leetcode.com')
+        cookie_names = [c.name for c in self.session.cookies]
+        print(f"✓ Session cookies configured: {cookie_names}")
     
     def login(self) -> bool:
         """
@@ -292,7 +303,8 @@ class LeetCodeClient:
                     break
             
             return {
-                'question_id': problem['questionFrontendId'],
+                'question_id': str(problem['questionId']),
+                'frontend_question_id': str(problem['questionFrontendId']),
                 'title': problem['title'],
                 'title_slug': problem['titleSlug'],
                 'difficulty': problem['difficulty'],
@@ -359,6 +371,8 @@ class LeetCodeClient:
             
             if response.status_code != 200:
                 print(f"Submission Error: {response.status_code}")
+                print(f"[DEBUG] URL: {url}")
+                print(f"[DEBUG] Cookies: { {c.name: c.value[:20]+'...' for c in self.session.cookies} }")
                 try:
                     error_data = response.json()
                     print(f"Error details: {json.dumps(error_data, indent=2)}")

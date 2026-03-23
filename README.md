@@ -1,312 +1,321 @@
-# LeetCode AI Solution Evaluator
+# LeetCode LLM Evaluator
 
-A comprehensive evaluation framework for comparing AI-generated LeetCode solutions with and without detailed prompts. This tool evaluates solutions using AWS Bedrock models and provides detailed performance analysis.
+A research evaluation framework for benchmarking LLM performance on LeetCode problems. Supports large-scale batch generation (Qwen/DashScope, AWS Bedrock, and Google Vertex AI) followed by automated LeetCode submission, with paper-quality metrics (RLPR, FPA, PSR, AV + 95% CI).
 
 ## Features
 
-- **Experiment Archiving**: Every run is saved in a timestamped folder with full metrics and code solutions
-- **Batch Experiment Runner**: Run multiple configurations (temp, top-p, etc.) sequentially via JSON config
-- **Model Parameters**: Fine-grained control over Temperature, Top-P, and Max Tokens
-- **Multi-Provider Support**: AWS Bedrock, OpenAI, Google Gemini, and xAI Grok
-- **Problem Fetching**: Automatically fetch LeetCode problems by difficulty
-- **Dual Evaluation**: Compare solutions generated with detailed vs minimal prompts
-- **Comprehensive Metrics**: 
-  - Token usage & cost estimation
-  - Pass@k success rates
-  - Runtime & Memory percentile rankings
-- **Rich Visualizations**: Charts, graphs, and performance heatmaps
+- **Multi-provider support**: OpenRouter, OpenAI, Gemini, AWS Bedrock, Qwen/DashScope
+- **Batch inference**: Async batch generation via DashScope, AWS Bedrock, and Google Vertex AI batch APIs
+- **Dual-prompt evaluation**: Compares `detailed` vs `minimal` prompts on every problem
+- **Stability runs**: Multiple trials per problem for PSR and variance metrics
+- **Resumable pipeline**: Submit → Collect → Resume across machines/sessions
+- **Aggregated reporting**: Cross-model leaderboard tables and paper-ready figures
 
-## Installation
-
-### 1. Install Dependencies
+## Setup
 
 ```bash
 cd leetcode_evaluator
 pip install -r requirements.txt
+cp .env.example .env   # fill in credentials
 ```
 
-### 2. Configure Environment
-
-Create a `.env` file with your credentials:
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env` and add your credentials:
+Key `.env` variables:
 
 ```env
-# LeetCode Credentials
-LEETCODE_USERNAME=your_username
-LEETCODE_PASSWORD=your_password
+# LeetCode (get from browser DevTools → Application → Cookies → leetcode.com)
+LEETCODE_SESSION_COOKIE=<full cookie string>
+LEETCODE_CSRF_TOKEN=<csrftoken value>
 
-# LLM Provider Configuration
-LLM_PROVIDER=bedrock  # bedrock, openai, gemini, grok
+# Provider (pick one)
+LLM_PROVIDER=openrouter        # recommended for multi-model
+OPENROUTER_API_KEY=sk-or-...
+OPENROUTER_MODEL_ID=openai/gpt-4o-mini
 
-# AWS Bedrock
+# Qwen batch
+DASHSCOPE_API_KEY=sk-...
+OPENAI_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+
+# AWS Bedrock batch
+AWS_ACCESS_KEY_ID=...
+AWS_SECRET_ACCESS_KEY=...
 AWS_REGION=us-east-1
-BEDROCK_MODEL_ID=anthropic.claude-3-5-sonnet-20241022-v2:0
+BEDROCK_BATCH_S3_BUCKET=your-bucket
+BEDROCK_BATCH_ROLE_ARN=arn:aws:iam::ACCOUNT:role/BedrockBatchRole
 
-# OpenAI
-OPENAI_API_KEY=sk-...
-OPENAI_MODEL_ID=gpt-4o
+# Gemini batch (Vertex AI)
+GCP_PROJECT=your-gcp-project-id
+GCP_LOCATION=us-central1
+GEMINI_BATCH_GCS_BUCKET=your-gcs-bucket
 
-# Model Parameters (Defaults)
-MODEL_TEMPERATURE=0.3
-MODEL_TOP_P=0.9
-MODEL_MAX_TOKENS=4096
-
-# Concurrency & Throttling
-WORKER_THREADS=4
-LEETCODE_SUBMISSION_DELAY_S=10
-LEETCODE_RATE_LIMIT_COOLDOWN_S=60
+# Throttling
+LEETCODE_SUBMISSION_DELAY_S=10   # seconds between submissions
 ```
 
-## Usage
-
-### Quick Start
-
-Evaluate 5 fixed-dataset problems from the local paper dataset:
+## Quick Start
 
 ```bash
-python main.py --num-problems 5 --attempts 1
+# Sanity check: 1 problem, 1 trial
+python main.py --provider openrouter --model openai/gpt-4o-mini --num-problems 1
+
+# Standard run: 10 problems, 3 stability runs
+python main.py --num-problems 10 --stability-runs 3 --workers 2
+
+# Generate aggregated leaderboard from all finished runs
+python main.py --generate-report
 ```
 
-By default, evaluations now reuse the local dataset file:
+## Batch Experiment Workflow
 
-```text
-dataset/main-dataset.json
+Large-scale paper experiments use async batch APIs to generate solutions offline, then submit to LeetCode separately. The pipeline has three phases:
+
+```
+submit  →  collect  →  resume
+ (batch API)   (download)   (LeetCode submission)
 ```
 
-To switch datasets, use `--dataset`. For example:
+### Qwen Batch (DashScope)
+
+Config file: `experiments/paper_qwen_batch.json`
+
+```json
+{
+  "dataset": "main",
+  "num_problems": 100,
+  "stability_runs": 5,
+  "prompt_types": ["detailed", "minimal"],
+  "models": ["qwen-max", "qwq-plus", "qwen-plus", "qwen-turbo"],
+  "temperature": 0.3,
+  "top_p": 0.9,
+  "max_tokens": 4096
+}
+```
 
 ```bash
-python main.py --dataset test --num-problems 5 --attempts 1
+# Phase 1: Submit all batch jobs (exits immediately, does not wait)
+python main.py --qwen-batch-config experiments/paper_qwen_batch.json --qwen-batch-mode submit
+
+# Phase 2: Download completed outputs and normalize (run after jobs finish)
+python main.py --qwen-batch-config experiments/paper_qwen_batch.json --qwen-batch-mode collect
+
+# Check local status without calling the API
+python main.py --qwen-batch-config experiments/paper_qwen_batch.json --qwen-batch-mode status
+
+# Phase 3: Submit normalized solutions to LeetCode and generate reports
+python main.py --qwen-batch-config experiments/paper_qwen_batch.json --qwen-batch-mode resume
 ```
 
-### Command Line Options
+### AWS Bedrock Batch
+
+Config file: `experiments/paper_bedrock_batch.json`
 
 ```bash
+python main.py --bedrock-batch-config experiments/paper_bedrock_batch.json --bedrock-batch-mode submit
+python main.py --bedrock-batch-config experiments/paper_bedrock_batch.json --bedrock-batch-mode collect
+python main.py --bedrock-batch-config experiments/paper_bedrock_batch.json --bedrock-batch-mode resume
+```
+
+### Gemini Batch (Vertex AI)
+
+Config file: `experiments/paper_gemini_batch.json`
+
+```json
+{
+  "dataset": "main",
+  "num_problems": 100,
+  "stability_runs": 5,
+  "prompt_types": ["detailed", "minimal"],
+  "models": [
+    "gemini-2.5-flash-preview-05-20",
+    "gemini-2.5-pro-preview-06-05",
+    "gemini-2.0-flash-001"
+  ],
+  "temperature": 0.3,
+  "top_p": 0.9,
+  "max_tokens": 4096
+}
+```
+
+Requires GCP setup: a project with Vertex AI API enabled, a GCS bucket, and `gcloud` auth (`gcloud auth application-default login` or a service account key).
+
+```bash
+# Phase 1: Submit batch prediction jobs to Vertex AI
+python main.py --gemini-batch-config experiments/paper_gemini_batch.json --gemini-batch-mode submit
+
+# Phase 2: Download completed outputs from GCS
+python main.py --gemini-batch-config experiments/paper_gemini_batch.json --gemini-batch-mode collect
+
+# Check local status
+python main.py --gemini-batch-config experiments/paper_gemini_batch.json --gemini-batch-mode status
+
+# Phase 3: Submit to LeetCode and generate reports
+python main.py --gemini-batch-config experiments/paper_gemini_batch.json --gemini-batch-mode resume
+```
+
+### Filtering by Model
+
+Use `--batch-models` to process only a subset of models:
+
+```bash
+# Resume only qwen-max
+python main.py --qwen-batch-config experiments/paper_qwen_batch.json \
+  --qwen-batch-mode resume --batch-models qwen-max
+
+# Resume multiple models
+python main.py --qwen-batch-config experiments/paper_qwen_batch.json \
+  --qwen-batch-mode resume --batch-models qwen-plus qwen-turbo
+```
+
+> **Do not use `--batch-prompts` to split by prompt type.** Each model's `detailed` and `minimal` results are paired together during LeetCode submission — splitting them would leave `with_prompt` or `without_prompt` empty, breaking all comparison metrics (RLPR, FPA, etc.) and producing incomplete result files.
+
+### Multi-Person Distribution
+
+To distribute LeetCode submission work across multiple people (each with their own account), each person runs `resume` with `--batch-models` pointing to their assigned models. The `output/batch_jobs/` directory must be synced to each machine first (e.g. via `rsync` or shared network drive):
+
+```bash
+# Person A — qwen-max (~3h, 1000 submissions)
+python main.py --qwen-batch-config experiments/paper_qwen_batch.json \
+  --qwen-batch-mode resume --batch-models qwen-max
+
+# Person B — qwq-plus (~3h, 1000 submissions)
+python main.py --qwen-batch-config experiments/paper_qwen_batch.json \
+  --qwen-batch-mode resume --batch-models qwq-plus
+
+# Person C — qwen-plus (~3h, 1000 submissions)
+python main.py --qwen-batch-config experiments/paper_qwen_batch.json \
+  --qwen-batch-mode resume --batch-models qwen-plus
+
+# Person D — qwen-turbo (~3h, 1000 submissions)
+python main.py --qwen-batch-config experiments/paper_qwen_batch.json \
+  --qwen-batch-mode resume --batch-models qwen-turbo
+```
+
+After all runs complete, sync `output/aggregate/` back to one machine and generate the combined report:
+
+```bash
+python main.py --generate-report
+```
+
+### Running in Background
+
+```bash
+nohup caffeinate -i python3 main.py \
+  --qwen-batch-config experiments/paper_qwen_batch.json \
+  --qwen-batch-mode resume \
+  --batch-models qwen-max \
+  > qwen_resume_qwen_max.log 2>&1 &
+
+tail -f qwen_resume_qwen_max.log
+```
+
+> Note: `caffeinate -i` prevents idle sleep but closing the laptop lid can still suspend the machine.
+
+### Pipeline Notes
+
+- `collect` is the only phase that calls the batch API after `submit`
+- `status` reads local artifacts only — no API calls
+- `resume` automatically runs `collect` first, then submits ready models
+- A model is "ready" only when both `detailed` and `minimal` normalized outputs exist
+- Re-running any phase is safe — results are cached and skipped if already done
+- The `run_id` is derived from the config file path + content hash, so the same config always maps to the same output directory
+
+## Output Structure
+
+```
+output/
+├── batch_jobs/{run_id}/       # Batch artifacts per run
+│   └── {model_id}/
+│       ├── evaluation_state.json      # Model-level state machine
+│       ├── detailed/
+│       │   ├── input.jsonl            # Batch requests sent to API
+│       │   ├── requests_manifest.json # custom_id → problem metadata
+│       │   ├── batch_job.json         # API job metadata (job_id/arn)
+│       │   ├── output.jsonl           # Raw batch responses
+│       │   └── normalized_generations.json  # Extracted + validated code
+│       └── minimal/
+│           └── (same structure)
+├── aggregate/                 # Cross-run, cross-model results
+│   ├── summary/               # Per-run JSON summaries
+│   ├── tables/leaderboard.md  # Paper-ready leaderboard
+│   └── figures/               # Paper-ready plots
+├── results/                   # Per-run evaluation JSONs
+├── reports/                   # Per-run markdown reports
+└── experiments/               # Per-run JSONL trial data
+```
+
+## CLI Reference
+
+```
 python main.py [OPTIONS]
 
-Options:
-  --num-problems INT       Number of problems to evaluate (default: 5)
-  --dataset NAME|FILE      Dataset selector, e.g. main, test, or a JSON path
+Core options:
+  --num-problems INT        Problems to evaluate (default: 5)
+  --dataset NAME|FILE       Dataset: main, test, or a JSON path
   --difficulty EASY|MEDIUM|HARD
-  --attempts INT          Number of attempts per approach (default: 1)
-  --temperature FLOAT     LLM temperature override
-  --max-tokens INT        LLM max tokens override
-  --workers INT           Number of concurrent LLM generative workers (default: 4)
-  --experiment-config FILE Run multiple experiments defined in a JSON file
-  --report FILE           Generate report from existing results
-  --provider PROVIDER     bedrock|openai|gemini|grok
-  --model MODEL_ID        Override model ID
+  --stability-runs INT      Trials per problem (default: 1)
+  --workers INT             Concurrent LLM workers (default: 4)
+  --provider PROVIDER       openrouter|openai|gemini|bedrock|qwen
+  --model MODEL_ID          Override model ID
+
+Batch options:
+  --qwen-batch-config FILE      Qwen batch experiment config JSON
+  --qwen-batch-mode MODE        submit|collect|resume|status (default: resume)
+  --bedrock-batch-config FILE   Bedrock batch experiment config JSON
+  --bedrock-batch-mode MODE     submit|collect|resume|status (default: resume)
+  --gemini-batch-config FILE    Gemini (Vertex AI) batch experiment config JSON
+  --gemini-batch-mode MODE      submit|collect|resume|status (default: resume)
+  --batch-models MODEL [...]    Filter: only process these model IDs
+
+Reporting:
+  --generate-report             Aggregate all finished runs into leaderboard
+  --report FILE                 Generate report from a specific results JSON
 ```
-
-### Examples
-
-#### 1. Evaluate 10 Problems from the Local Dataset
-
-```bash
-python main.py --num-problems 10 --attempts 2
-```
-
-#### 2. Evaluate the First 30 Problems from the Local Dataset
-
-```bash
-python main.py --num-problems 30 --attempts 3
-```
-
-#### 3. Evaluate the Test Dataset
-
-```bash
-python main.py --dataset test --num-problems 5 --attempts 1
-```
-
-#### 4. Fetch Problems Only
-
-```bash
-python main.py --fetch-only --num-problems 20 --difficulty HARD
-```
-
-#### 5. Generate Report from Existing Results
-
-```bash
-python main.py --report results/evaluation_results_20250101_120000.json
-```
-
-#### 6. Batch Experiment Runner
-
-Run multiple configurations sequentially:
-```bash
-python main.py --experiment-config experiments.json
-```
-
-**experiments.json example:**
-```json
-[
-  { "name": "baseline", "params": { "temperature": 0.1 } },
-  { "name": "creative", "params": { "temperature": 0.8 } }
-]
-```
-
-## Output Files
-
-The tool generates several output files:
-
-### Experiment Directory (`experiments/YYYYMMDD_HHMMSS/`)
-- `detailed.jsonl` - Raw LLM responses, tokens, and metadata
-- `summary.csv` - High-level metrics (Pass Rate, Cost, Latency)
-- `solutions.md` - Formatted code blocks of all generated solutions
-- `execution.log` - Application logs for the run
-
-### Reports Directory (`reports/`)
-- `analysis_report_TIMESTAMP.md` - Comprehensive performance breakdown
-- `*.png` - Visualizations (Success rates, Runtime/Memory distributions)
-
-## Metrics Explained
-
-### Correctness Metrics
-
-- **Pass@1**: Success rate on first attempt
-- **Pass@k**: Success rate within k attempts
-- **Pass Rate by Difficulty**: Success rates for Easy/Medium/Hard problems
-- **Error Breakdown**: Distribution of syntax, runtime, and logical errors
-
-### Performance Metrics
-
-- **Runtime Percentile**: How fast your solution is compared to all submissions (higher is better)
-- **Memory Percentile**: How memory-efficient your solution is (higher is better)
-- **Top 25% Rate**: Percentage of solutions in the top performance quartile
-
-### Comparison Metrics
-
-- **Pass Rate Improvement**: Percentage improvement with detailed prompts
-- **Runtime Improvement**: Performance difference between approaches
-- **Statistical Significance**: T-test results for statistical validity
-
-## Understanding the Results
-
-### Sample Report Summary
-
-```
-Overall Pass Rate (With Prompt): 68.0%
-Overall Pass Rate (Without Prompt): 42.0%
-Improvement: +26.0 percentage points
-
-Mean Runtime Percentile (With Prompt): 63.5%
-Mean Runtime Percentile (Without Prompt): 48.2%
-```
-
-### Interpretation
-
-- **Positive Pass Rate Improvement**: Detailed prompts help the model solve more problems
-- **Higher Runtime Percentile**: Solutions are faster than average
-- **Top 25% Rate**: Indicates production-ready performance level
 
 ## Architecture
 
-The project has been reorganized into a structured package for better maintainability:
-
 ```
-leetcode-evaluator/
-├── main.py                    # CLI entry point
-├── leetcode_evaluator/        # Main package
-│   ├── core/                  # Core logic and configuration
-│   │   ├── config.py          # Settings and environment variables
-│   │   ├── evaluator.py       # Main evaluation logic
-│   │   └── report_generator.py # Metrics and visualizations
-│   └── clients/               # External service clients
-│       ├── leetcode.py        # LeetCode API client
-│       └── llm/               # LLM provider clients
-│           ├── base.py        # Abstract base client
-│           ├── bedrock.py     # AWS Bedrock client
-│           ├── gemini.py      # Google Gemini client
-│           ├── grok.py        # xAI Grok client
-│           └── openai.py      # OpenAI client
-├── tests/                     # Unit and integration tests
-├── requirements.txt           # Python dependencies
-├── .env                       # Environment variables (not in git)
-└── .env.example               # Example environment file
+leetcode_evaluator/
+├── main.py                         # CLI entry point
+└── leetcode_evaluator/
+    ├── core/
+    │   ├── config.py               # All settings (env vars, prompts, pricing)
+    │   ├── evaluator.py            # LLM generation + LeetCode submission
+    │   ├── qwen_batch_runner.py    # Qwen batch pipeline (submit/collect/resume)
+    │   ├── bedrock_batch_runner.py # Bedrock batch pipeline
+    │   ├── gemini_batch_runner.py  # Gemini/Vertex AI batch pipeline
+    │   ├── experiment_manager.py   # Per-run JSONL/CSV logging
+    │   ├── aggregation_manager.py  # Cross-run aggregation
+    │   ├── report_generator.py     # Metrics, tables, figures
+    │   └── stability_metrics.py    # PSR, AV, 95% CI computation
+    └── clients/
+        ├── leetcode.py             # LeetCode GraphQL API
+        └── llm/
+            ├── base.py             # Factory + abstract base (code extraction)
+            ├── openrouter.py       # OpenRouter
+            ├── openai.py           # OpenAI
+            ├── gemini.py           # Google Gemini
+            ├── bedrock.py          # AWS Bedrock (real-time)
+            ├── bedrock_batch.py    # AWS Bedrock batch client
+            ├── gemini_batch.py     # Google Vertex AI batch client
+            ├── qwen.py             # Qwen/DashScope (real-time)
+            └── qwen_batch.py       # Qwen/DashScope batch client
 ```
-
-## Workflow
-
-1. **Load Problems**: Reuse the fixed local dataset JSON by default, or fetch problems explicitly when needed
-2. **Generate Solutions**: 
-   - With detailed prompt (optimization hints)
-   - Without detailed prompt (minimal guidance)
-3. **Submit & Verify**: Submit to LeetCode and poll for results
-4. **Analyze Results**: Calculate metrics and generate visualizations
-5. **Generate Report**: Create comprehensive markdown report
-
-## Limitations
-
-- **Rate Limiting**: LeetCode may rate limit frequent submissions
-- **Premium Problems**: Only free problems are evaluated
-- **Language**: Currently supports Python 3 only
-- **Authentication**: Requires valid LeetCode account
 
 ## Troubleshooting
 
-### Login Failed
+**LeetCode auth fails**: Session cookies expire — refresh from browser DevTools → Application → Cookies → leetcode.com. Copy the full cookie string into `LEETCODE_SESSION_COOKIE` and the `csrftoken` value into `LEETCODE_CSRF_TOKEN`.
 
-- Verify credentials in `.env` file
-- Check if LeetCode account is active
-- Try logging in manually on leetcode.com first
+**Rate limited (429)**: The client auto-retries after `LEETCODE_RATE_LIMIT_COOLDOWN_S` (default 60s). Increase `LEETCODE_SUBMISSION_DELAY_S` to 15-20s for safer operation.
 
-### AWS Bedrock Errors
+**Qwen batch "Arrearage" error**: DashScope account overdue. Top up balance, delete the `batch_job.json` for the affected model/prompt, and re-run `submit`.
 
-- Verify AWS credentials have Bedrock access
-- Check if model ID is available in your region
-- Ensure sufficient quota for API calls
+**Bedrock batch "account not authorized"**: Bedrock batch inference (`CreateModelInvocationJob`) requires account-level authorization. Submit an AWS support case to enable it.
 
-### Submission Timeout
+**Bedrock `iam:PassRole` denied**: The IAM user needs a `PassRole` policy to pass the batch role to Bedrock. Add an inline policy allowing `iam:PassRole` on the `BEDROCK_BATCH_ROLE_ARN`.
 
-- Increase `SUBMISSION_TIMEOUT` in config.py
-- Check network connectivity
-- Verify LeetCode API is accessible
+**Gemini batch "Permission denied"**: Ensure the Vertex AI API is enabled in your GCP project (`gcloud services enable aiplatform.googleapis.com`), and authenticate via `gcloud auth application-default login` or set `GOOGLE_APPLICATION_CREDENTIALS` to a service account key. The GCS bucket must be in the same project.
 
-## Research Use Case
-
-This tool is designed based on the methodology in the research paper on LLM performance for solving LeetCode problems. It enables:
-
-1. Reproducible experiments with controlled conditions
-2. Quantitative comparison of different prompt strategies
-3. Statistical validation of prompt engineering effectiveness
-4. Comprehensive performance benchmarking
-
-## Contributing
-
-Contributions are welcome! Areas for improvement:
-
-- Support for more programming languages
-- Additional metrics and visualizations
-- Integration with more LLM providers
-- Enhanced error handling and recovery
+**Gemini batch no output files**: Vertex AI writes output to a subdirectory of `output_uri_prefix`. If the download fails, check the GCS bucket at `gs://BUCKET/RUN_ID/MODEL/PROMPT_TYPE/output/` for the actual output path.
 
 ## License
 
-This project is intended for research and educational purposes.
-
-## Citation
-
-If you use this tool in your research, please cite the original paper:
-
-```
-Performance Review on LLM for solving leetcode problems
-Wang et al., 2025
-arXiv:2502.15770v2
-```
-
-## Support
-
-For issues and questions:
-- Check the troubleshooting section
-- Review LeetCode API documentation
-- Verify AWS Bedrock configuration
-- Check environment variable setup
-
----
-
-**Note**: This tool respects LeetCode's terms of service. Use responsibly and avoid excessive API calls that may impact the platform.
+Research and educational use only. Please respect LeetCode's terms of service — use conservative submission delays and avoid bulk automated usage.

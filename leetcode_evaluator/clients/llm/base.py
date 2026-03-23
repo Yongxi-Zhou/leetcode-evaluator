@@ -121,33 +121,42 @@ class LLMClient(ABC):
         """
         if not response:
             return None
-        
+
+        # Strip thinking-model reasoning blocks (<think>...</think> or <|thinking|>...</|thinking|>)
+        # before looking for code, so reasoning tokens don't pollute extraction.
+        clean = re.sub(r'<think>.*?</think>', '', response, flags=re.DOTALL | re.IGNORECASE)
+        clean = re.sub(r'<\|thinking\|>.*?<\|/thinking\|>', '', clean, flags=re.DOTALL | re.IGNORECASE)
+        # Also strip any leading/trailing whitespace left after removal
+        clean = clean.strip() or response  # fall back to full response if stripping left nothing
+
         # Try to find code in markdown blocks
         code_block_pattern = r'```(?:python|python3)?\s*\n(.*?)\n```'
-        matches = re.findall(code_block_pattern, response, re.DOTALL)
+        matches = re.findall(code_block_pattern, clean, re.DOTALL)
         
         if matches:
             return matches[0].strip()
-        
+
         # Look for class definitions (common in LeetCode)
-        class_pattern = r'(class\s+\w+.*?)(?=\n\n|\Z)'
-        class_matches = re.findall(class_pattern, response, re.DOTALL)
-        
+        # Stop at the next top-level class/def/non-indented block, or end of string.
+        # Do NOT stop at \n\n — blank lines are common inside class bodies.
+        class_pattern = r'(class\s+\w+.*?)(?=\n(?:class|def)\s|\Z)'
+        class_matches = re.findall(class_pattern, clean, re.DOTALL)
+
         if class_matches:
             return class_matches[0].strip()
-        
+
         # Final fallback check
-        lines = response.strip().split('\n')
+        lines = clean.split('\n')
         code_indicators = ['def ', 'class ', 'import ', 'from ', 'return ', '    ']
-        
-        if any(any(line.strip().startswith(indicator) for indicator in code_indicators) 
+
+        if any(any(line.strip().startswith(indicator) for indicator in code_indicators)
                for line in lines):
-            return response.strip()
-        
-        if 'class ' in response:
-            start_idx = response.find('class ')
-            return response[start_idx:].strip()
-            
+            return clean
+
+        if 'class ' in clean:
+            start_idx = clean.find('class ')
+            return clean[start_idx:].strip()
+
         return None
 
     def validate_code_syntax(self, code: str) -> bool:

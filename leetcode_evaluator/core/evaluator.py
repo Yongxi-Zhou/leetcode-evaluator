@@ -9,6 +9,13 @@ from datetime import datetime
 from tqdm import tqdm
 
 from leetcode_evaluator.clients.leetcode import LeetCodeClient
+
+
+class RateLimitExhaustedException(RuntimeError):
+    """Raised when consecutive LeetCode 429 failures exceed the configured threshold.
+
+    The calling process should exit so a different account can continue.
+    """
 from leetcode_evaluator.clients.llm.base import LLMClientFactory
 from leetcode_evaluator.core.config import Config
 from leetcode_evaluator.core.experiment_manager import ExperimentManager
@@ -34,6 +41,10 @@ class LeetCodeEvaluator:
             model_id=self.llm_client.model_id,
             experiment_name=experiment_name
         )
+        # Stable path for incremental saves and resume (set via run_generated_evaluation)
+        self._active_results_file = None
+        # Counter for consecutive submission API failures (null submission_id → likely 429)
+        self._consecutive_rate_limit_failures = 0
 
     def initialize(self) -> bool:
         """Initialize clients and authenticate"""
@@ -163,104 +174,126 @@ class LeetCodeEvaluator:
             if item is None: # Sentinel
                 submissions_queue.task_done()
                 break
-                
-            problem = item['problem']
-            aggregated_result = {
-                'problem_id': problem['question_id'],
-                'title': problem['title'],
-                'title_slug': problem['title_slug'],
-                'difficulty': problem['difficulty'],
-                'topics': problem['topics'],
-                'timestamp': datetime.now().isoformat(),
-                'with_prompt': [],
-                'without_prompt': []
-            }
-            
-            # Process submissions one by one with delay
-            for strategy in ['with_prompt', 'without_prompt']:
-                for attempt_idx, gen_data in enumerate(item[strategy]):
-                    # Check global rate limit pause
-                    self.global_rate_limit_pause.wait()
+            self._process_submission_item(item, results_list, results_lock, pbar)
+            submissions_queue.task_done()
 
-                    normalized_prompt = 'detailed' if strategy == 'with_prompt' else 'minimal'
-                    attempt_result = {
-                        'status': gen_data.get('status', 'Unknown'),
-                        'prompt_type': normalized_prompt,
-                        'input_tokens': gen_data.get('input_tokens', 0),
-                        'output_tokens': gen_data.get('output_tokens', 0),
-                        'latency_ms': gen_data.get('latency_ms', 0),
-                        'cost': gen_data.get('cost', 0),
-                        'gen_status': gen_data.get('gen_status', 'Unknown')
-                    }
+    def _process_submission_item(
+        self,
+        item: Dict,
+        results_list: List[Dict],
+        results_lock: Optional[threading.Lock] = None,
+        pbar: Optional[tqdm] = None
+    ):
+        problem = item['problem']
+        aggregated_result = {
+            'problem_id': problem.get('frontend_question_id') or problem['question_id'],
+            'backend_question_id': problem.get('question_id'),
+            'title': problem['title'],
+            'title_slug': problem['title_slug'],
+            'difficulty': problem['difficulty'],
+            'topics': problem['topics'],
+            'timestamp': datetime.now().isoformat(),
+            'with_prompt': [],
+            'without_prompt': []
+        }
 
-                    code = gen_data.get('code')
-                    if code:
-                        attempt_result['code'] = code
-                        # Submit to LeetCode
-                        submission_id = self.leetcode_client.submit_solution(
-                            title_slug=problem['title_slug'],
-                            code=code,
-                            question_id=problem['question_id']
-                        )
+        for strategy in ['with_prompt', 'without_prompt']:
+            for attempt_idx, gen_data in enumerate(item.get(strategy, [])):
+                self.global_rate_limit_pause.wait()
 
-                        if submission_id:
-                            # Check result
-                            res = self.leetcode_client.check_submission(submission_id)
-                            if res:
-                                attempt_result.update(res)
-                            else:
-                                attempt_result['status'] = 'Submission Result Missing'
+                normalized_prompt = 'detailed' if strategy == 'with_prompt' else 'minimal'
+                attempt_result = {
+                    'status': gen_data.get('status', 'Unknown'),
+                    'prompt_type': normalized_prompt,
+                    'input_tokens': gen_data.get('input_tokens', 0),
+                    'output_tokens': gen_data.get('output_tokens', 0),
+                    'latency_ms': gen_data.get('latency_ms', 0),
+                    'cost': gen_data.get('cost', 0),
+                    'gen_status': gen_data.get('gen_status', 'Unknown')
+                }
+
+                if gen_data.get('error'):
+                    attempt_result['error'] = gen_data.get('error')
+                if gen_data.get('raw_response'):
+                    attempt_result['raw_response'] = gen_data.get('raw_response')
+
+                code = gen_data.get('code')
+                if code:
+                    attempt_result['code'] = code
+                    submission_id = self.leetcode_client.submit_solution(
+                        title_slug=problem['title_slug'],
+                        code=code,
+                        question_id=problem['question_id']
+                    )
+
+                    if submission_id:
+                        self._consecutive_rate_limit_failures = 0  # reset on real submission
+                        res = self.leetcode_client.check_submission(submission_id)
+                        if res:
+                            attempt_result.update(res)
                         else:
-                            attempt_result['status'] = 'Submission Failed'
+                            attempt_result['status'] = 'Submission Result Missing'
+                    else:
+                        attempt_result['status'] = 'Submission Failed'
+                        self._consecutive_rate_limit_failures += 1
+                        threshold = Config.MAX_CONSECUTIVE_RATE_LIMIT_FAILURES
+                        if self._consecutive_rate_limit_failures >= threshold:
+                            raise RateLimitExhaustedException(
+                                f"LeetCode rate limit exhausted: {self._consecutive_rate_limit_failures} "
+                                f"consecutive submission failures (no submission_id). "
+                                f"Switch LeetCode account and re-run."
+                            )
 
-                    aggregated_result[strategy].append(attempt_result)
+                aggregated_result[strategy].append(attempt_result)
 
-                    status = attempt_result.get('status', 'Unknown')
-                    self.experiment_manager.log_attempt({
-                        'problem_id': problem.get('question_id'),
-                        'problem': problem['title'],
-                        'strategy': normalized_prompt,
-                        'trial_index': attempt_idx,
-                        'provider': self.provider,
-                        'model_name': self.llm_client.model_id,
-                        'temperature': (
-                            item.get('params', {}).get('temperature')
-                            if item.get('params', {}).get('temperature') is not None
-                            else Config.MODEL_TEMPERATURE
-                        ),
-                        'top_p': (
-                            item.get('params', {}).get('top_p')
-                            if item.get('params', {}).get('top_p') is not None
-                            else Config.MODEL_TOP_P
-                        ),
-                        'max_tokens': (
-                            item.get('params', {}).get('max_tokens')
-                            if item.get('params', {}).get('max_tokens') is not None
-                            else Config.MODEL_MAX_TOKENS
-                        ),
-                        'verdict': status,
-                        'accepted_bool': 1 if status == 'Accepted' else 0,
-                        'prompt_tokens': gen_data.get('input_tokens', 0),
-                        'completion_tokens': gen_data.get('output_tokens', 0),
-                        **attempt_result
-                    })
-                    if code:
-                        self.experiment_manager.log_solution(
-                            problem['title'],
-                            normalized_prompt,
-                            code
-                        )
+                status = attempt_result.get('status', 'Unknown')
+                self.experiment_manager.log_attempt({
+                    'problem_id': problem.get('frontend_question_id') or problem.get('question_id'),
+                    'backend_question_id': problem.get('question_id'),
+                    'problem': problem['title'],
+                    'strategy': normalized_prompt,
+                    'trial_index': attempt_idx,
+                    'provider': self.provider,
+                    'model_name': self.llm_client.model_id,
+                    'temperature': (
+                        item.get('params', {}).get('temperature')
+                        if item.get('params', {}).get('temperature') is not None
+                        else Config.MODEL_TEMPERATURE
+                    ),
+                    'top_p': (
+                        item.get('params', {}).get('top_p')
+                        if item.get('params', {}).get('top_p') is not None
+                        else Config.MODEL_TOP_P
+                    ),
+                    'max_tokens': (
+                        item.get('params', {}).get('max_tokens')
+                        if item.get('params', {}).get('max_tokens') is not None
+                        else Config.MODEL_MAX_TOKENS
+                    ),
+                    'verdict': status,
+                    'accepted_bool': 1 if status == 'Accepted' else 0,
+                    'prompt_tokens': gen_data.get('input_tokens', 0),
+                    'completion_tokens': gen_data.get('output_tokens', 0),
+                    **attempt_result
+                })
+                if code:
+                    self.experiment_manager.log_solution(
+                        problem['title'],
+                        normalized_prompt,
+                        code
+                    )
+                    time.sleep(Config.LEETCODE_SUBMISSION_DELAY_S)
 
-                    if code:
-                        # Mandatory delay only applies to actual submissions.
-                        time.sleep(Config.LEETCODE_SUBMISSION_DELAY_S)
-            
+        if results_lock:
             with results_lock:
                 results_list.append(aggregated_result)
                 self._save_results(results_list)
-            
+        else:
+            results_list.append(aggregated_result)
+            self._save_results(results_list)
+
+        if pbar:
             pbar.update(1)
-            submissions_queue.task_done()
 
     def evaluate_batch(self, problems: List[Dict], attempts: int = 1, **kwargs) -> List[Dict]:
         """
@@ -308,6 +341,80 @@ class LeetCodeEvaluator:
         pbar.close()
 
         # Save summary CSV
+        self._save_summary_csv(results)
+        return results
+
+    def evaluate_generated_batch(self, generated_items: List[Dict], results_file: str = None) -> List[Dict]:
+        """Submit a set of pre-generated attempts to LeetCode and reuse normal logging/reporting.
+
+        If results_file points to an existing file, problems whose every trial already has a real
+        submission_id (i.e. not a 429-caused Submission Failed) are skipped automatically — enabling
+        seamless account-switching resume.
+        """
+        results = []
+        completed_slugs: set = set()
+
+        # Resume: load existing results and skip already-submitted problems
+        if results_file and os.path.exists(results_file):
+            with open(results_file) as f:
+                existing = json.load(f)
+            for r in existing:
+                slug = r.get('title_slug')
+                # A problem needs retry if any trial has no submission_id (API-level failure)
+                needs_retry = any(
+                    attempt.get('submission_id') is None
+                    and attempt.get('status') == 'Submission Failed'
+                    for strategy in ['with_prompt', 'without_prompt']
+                    for attempt in r.get(strategy, [])
+                )
+                if not needs_retry:
+                    completed_slugs.add(slug)
+                    results.append(r)
+                    # Re-log to current JSONL so StabilityAnalyzer sees complete data
+                    for strategy in ['with_prompt', 'without_prompt']:
+                        prompt_type = 'detailed' if strategy == 'with_prompt' else 'minimal'
+                        for trial_idx, attempt in enumerate(r.get(strategy, [])):
+                            self.experiment_manager.log_attempt({
+                                'problem_id': r.get('problem_id'),
+                                'backend_question_id': r.get('backend_question_id'),
+                                'problem': r.get('title'),
+                                'strategy': attempt.get('prompt_type', prompt_type),
+                                'trial_index': trial_idx,
+                                'provider': self.provider,
+                                'model_name': self.llm_client.model_id,
+                                'temperature': Config.MODEL_TEMPERATURE,
+                                'top_p': Config.MODEL_TOP_P,
+                                'max_tokens': Config.MODEL_MAX_TOKENS,
+                                'verdict': attempt.get('status'),
+                                'accepted_bool': 1 if attempt.get('status') == 'Accepted' else 0,
+                                **{k: v for k, v in attempt.items()
+                                   if k not in ('prompt_type', 'gen_status')},
+                            })
+
+        pending = [item for item in generated_items
+                   if item['problem']['title_slug'] not in completed_slugs]
+
+        print(f"\n🚀 Starting generated-result submission batch:")
+        print(f"  - Total Problems: {len(generated_items)}")
+        if completed_slugs:
+            print(f"  - Already complete (resuming): {len(completed_slugs)}, remaining: {len(pending)}")
+        print(f"  - Submission Delay: {Config.LEETCODE_SUBMISSION_DELAY_S}s")
+        total_attempts = sum(
+            len(item.get('with_prompt', [])) + len(item.get('without_prompt', []))
+            for item in pending
+        )
+        print(f"  - Total Generated Attempts: {total_attempts}")
+
+        pbar = tqdm(total=len(pending), desc="Progress")
+        for item in pending:
+            self._process_submission_item(item, results, None, pbar)
+        pbar.close()
+
+        self._save_summary_csv(results)
+        return results
+
+    def _save_summary_csv(self, results: List[Dict]):
+        """Save summary CSV from aggregated evaluation results."""
         summary_data = []
         for res in results:
             for strategy_key, strategy_name in [('with_prompt', 'detailed'), ('without_prompt', 'minimal')]:
@@ -325,17 +432,19 @@ class LeetCodeEvaluator:
                         'Tokens(In/Out)': f"{attempt.get('input_tokens', 0)}/{attempt.get('output_tokens', 0)}",
                         'Est Cost($)': attempt.get('cost', 0)
                     })
-        
         self.experiment_manager.save_summary(summary_data)
-        return results
 
     def _save_results(self, results: List[Dict], filename: str = None):
         """Save results to JSON file"""
         if filename is None:
+            filename = self._active_results_file
+        if filename is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             os.makedirs(Config.RESULTS_EVALUATIONS, exist_ok=True)
             filename = f"{Config.RESULTS_EVALUATIONS}/evaluation_results_{timestamp}.json"
+            self._active_results_file = filename
 
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
         with open(filename, 'w') as f:
             json.dump(results, f, indent=2)
 
@@ -351,6 +460,42 @@ class LeetCodeEvaluator:
 
         if not isinstance(problems, list):
             raise ValueError(f"Problems file must contain a JSON list: {filename}")
+
+        missing_backend_ids = []
+        for problem in problems:
+            if 'frontend_question_id' not in problem and 'question_id' in problem:
+                problem['frontend_question_id'] = str(problem['question_id'])
+            if 'question_id' in problem:
+                problem['question_id'] = str(problem['question_id'])
+            if 'frontend_question_id' in problem:
+                problem['frontend_question_id'] = str(problem['frontend_question_id'])
+            if 'backend_question_id' in problem and not problem.get('question_id'):
+                problem['question_id'] = str(problem['backend_question_id'])
+            if 'backend_question_id' in problem:
+                problem['backend_question_id'] = str(problem['backend_question_id'])
+            elif 'question_id' not in problem or problem.get('question_id') == problem.get('frontend_question_id'):
+                problem['backend_question_id'] = None
+            if not problem.get('backend_question_id'):
+                missing_backend_ids.append(problem)
+
+        if missing_backend_ids:
+            print(f"⚠ Refreshing backend question IDs for {len(missing_backend_ids)} dataset problems")
+            refreshed = 0
+            for problem in missing_backend_ids:
+                details = self.leetcode_client.get_problem_details(problem['title_slug'])
+                if not details:
+                    continue
+                problem['backend_question_id'] = str(details['question_id'])
+                problem['question_id'] = str(details['question_id'])
+                problem['frontend_question_id'] = str(
+                    details.get('frontend_question_id') or problem.get('frontend_question_id')
+                )
+                refreshed += 1
+
+            if refreshed:
+                with open(filename, 'w') as f:
+                    json.dump(problems, f, indent=2)
+                print(f"✓ Updated dataset with backend question IDs: {filename}")
 
         print(f"✓ Loaded {len(problems)} problems from {filename}")
         return problems
@@ -445,6 +590,39 @@ class LeetCodeEvaluator:
                 self.experiment_manager.save_stability_summary(summary)
                 analyzer.print_report(summary)
  
+        print(f"\n{'='*60}")
+        print(f"✓ Evaluation complete!")
+        print(f"✓ Results saved to: {results_file}")
+        print(f"{'='*60}")
+
+        return results_file
+
+    def run_generated_evaluation(self, generated_items: List[Dict], stability_runs: int = 1,
+                                  results_file: str = None) -> str:
+        """Run evaluation using pre-generated attempts instead of live model generation.
+
+        Pass results_file to reuse an existing path across resume runs so that incremental saves
+        always go to the same file and the resume logic can load prior progress.
+        """
+        if not self.initialize():
+            return None
+
+        if results_file is None:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            os.makedirs(Config.RESULTS_EVALUATIONS, exist_ok=True)
+            results_file = f"{Config.RESULTS_EVALUATIONS}/evaluation_results_{timestamp}.json"
+
+        self._active_results_file = results_file
+        results = self.evaluate_generated_batch(generated_items, results_file=results_file)
+        self._save_results(results, results_file)
+
+        if stability_runs > 1:
+            analyzer = StabilityAnalyzer(self.experiment_manager.jsonl_path)
+            summary = analyzer.compute_metrics()
+            if summary:
+                self.experiment_manager.save_stability_summary(summary)
+                analyzer.print_report(summary)
+
         print(f"\n{'='*60}")
         print(f"✓ Evaluation complete!")
         print(f"✓ Results saved to: {results_file}")

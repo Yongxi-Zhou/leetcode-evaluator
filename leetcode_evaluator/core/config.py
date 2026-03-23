@@ -64,11 +64,26 @@ class Config:
     RETRY_DELAY = int(os.getenv('RETRY_DELAY', 2))  # initial delay in seconds
     RETRY_MAX_DELAY = int(os.getenv('RETRY_MAX_DELAY', 10))  # max delay for exponential backoff
     MAX_CONSECUTIVE_ERRORS = int(os.getenv('MAX_CONSECUTIVE_ERRORS', 3))  # circuit breaker threshold
+    MAX_CONSECUTIVE_RATE_LIMIT_FAILURES = int(os.getenv('MAX_CONSECUTIVE_RATE_LIMIT_FAILURES', 10))  # exit after N consecutive 429s
 
     # LLM Parameters
     MODEL_TEMPERATURE = float(os.getenv('MODEL_TEMPERATURE', 0.3))
     MODEL_TOP_P = float(os.getenv('MODEL_TOP_P', 0.9))
     MODEL_MAX_TOKENS = int(os.getenv('MODEL_MAX_TOKENS', 4096))
+    LLM_REQUEST_TIMEOUT_S = int(os.getenv('LLM_REQUEST_TIMEOUT_S', 60))
+    QWEN_BATCH_COMPLETION_WINDOW = os.getenv('QWEN_BATCH_COMPLETION_WINDOW', '24h')
+    QWEN_BATCH_POLL_INTERVAL_S = int(os.getenv('QWEN_BATCH_POLL_INTERVAL_S', 10))
+
+    # AWS Bedrock Batch Configuration
+    BEDROCK_BATCH_S3_BUCKET = os.getenv('BEDROCK_BATCH_S3_BUCKET', '')
+    BEDROCK_BATCH_ROLE_ARN = os.getenv('BEDROCK_BATCH_ROLE_ARN', '')
+    BEDROCK_BATCH_POLL_INTERVAL_S = int(os.getenv('BEDROCK_BATCH_POLL_INTERVAL_S', 30))
+
+    # Google Cloud / Vertex AI Batch Configuration
+    GCP_PROJECT = os.getenv('GCP_PROJECT')
+    GCP_LOCATION = os.getenv('GCP_LOCATION', 'us-central1')
+    GEMINI_BATCH_GCS_BUCKET = os.getenv('GEMINI_BATCH_GCS_BUCKET', '')
+    GEMINI_BATCH_POLL_INTERVAL_S = int(os.getenv('GEMINI_BATCH_POLL_INTERVAL_S', 30))
     
     # Concurrency and Throttling
     WORKER_THREADS = int(os.getenv('WORKER_THREADS', 4))
@@ -82,41 +97,83 @@ class Config:
     DEFAULT_STABILITY_RUNS = int(os.getenv('DEFAULT_STABILITY_RUNS', 1))
 
     # Prompts
-    DETAILED_PROMPT = """You are an expert algorithm and data structure engineer. 
-Solve the following LeetCode problem with optimal time and space complexity.
+    DETAILED_PROMPT = """<role>
+You are an expert Python algorithm engineer solving deterministic LeetCode-style problems.
+</role>
 
-Requirements:
-1. Analyze the problem carefully and identify the optimal approach
-2. Consider time complexity - aim for the most efficient solution
-3. Consider space complexity - optimize memory usage
-4. Write clean, readable Python code with proper variable names
-5. Add comments only for complex logic
-6. Ensure edge cases are handled
-7. The solution must pass all test cases
+<task>
+Produce a correct Python solution that fits the provided template and is optimized for the problem constraints.
+</task>
 
-Problem:
+<instructions>
+1. Read the full problem statement, constraints, and template before writing code.
+2. Produce the best practical algorithm for the stated constraints, aiming for the optimal time complexity when possible.
+3. Do not return a brute-force, quadratic, exponential, or placeholder solution when the constraints require a more efficient algorithm.
+4. Use the required method signature from the template exactly.
+5. Ensure the algorithm is complete and submission-ready, not a sketch or partial attempt.
+6. Handle edge cases implied by the statement and constraints.
+7. Return one complete Python solution that can be submitted directly.
+</instructions>
+
+<format_requirements>
+Return plain Python source code only.
+Start directly with the code.
+Do not include explanations, markdown fences, or surrounding commentary.
+The code must be valid, runnable Python 3 with no syntax errors.
+The code must fit the provided code template without requiring manual edits.
+The final code should be written for Accepted-style performance, not just sample-case correctness.
+Only include comments when they clarify non-obvious logic.
+</format_requirements>
+
+<problem>
 {problem_description}
+</problem>
 
-Code Template:
+<code_template>
 {code_template}
-
-Provide ONLY the complete Python code solution, no explanations or markdown formatting.
+</code_template>
 """
 
-    MINIMAL_PROMPT = """Solve this LeetCode problem in Python:
+    MINIMAL_PROMPT = """<role>
+You are a Python coding assistant solving a deterministic LeetCode-style problem.
+</role>
 
+<task>
+Write one correct and efficient Python solution that fits the provided template.
+</task>
+
+<instructions>
+1. Infer an algorithm that matches the constraints before writing code.
+2. Prefer the optimal or near-optimal solution for the input limits.
+3. Do not output brute-force code unless the constraints clearly make it acceptable.
+4. Use the exact method signature from the template.
+5. Return only final submission code.
+</instructions>
+
+<format_requirements>
+Return plain Python source code only.
+Start directly with the code.
+Do not include explanations, markdown fences, or extra text.
+The code must be valid, runnable Python 3 with no syntax errors.
+The code must fit the provided code template without requiring manual edits.
+The solution must be efficient enough to avoid obvious Time Limit Exceeded outcomes under the given constraints.
+</format_requirements>
+
+<problem>
 {problem_description}
+</problem>
 
-Code Template:
+<code_template>
 {code_template}
-
-Provide ONLY the complete Python code solution, no explanations or markdown formatting.
+</code_template>
 """
 
     # Consolidated Output Directory
     OUTPUT_ROOT = "output"
     DATASET_DIR = "dataset"
     DEFAULT_DATASET_FILE = os.path.join(DATASET_DIR, "main-dataset.json")
+    AGGREGATE_ROOT = os.path.join("output", "aggregate")
+    BATCH_JOBS_ROOT = os.path.join("output", "batch_jobs")
     RESULTS_DIR = os.path.join(OUTPUT_ROOT, "results")
     REPORTS_DIR = os.path.join(OUTPUT_ROOT, "reports")
     EXPERIMENTS_DIR = os.path.join(OUTPUT_ROOT, "experiments")
@@ -128,6 +185,10 @@ Provide ONLY the complete Python code solution, no explanations or markdown form
     RESULTS_FIGURES = os.path.join(RESULTS_DIR, "figures")
     RESULTS_EVALUATIONS = os.path.join(RESULTS_DIR, "evaluations")
     RESULTS_PROBLEMS = os.path.join(RESULTS_DIR, "problems")
+    AGGREGATE_SUMMARY = os.path.join(AGGREGATE_ROOT, "summary")
+    AGGREGATE_RAW = os.path.join(AGGREGATE_ROOT, "raw")
+    AGGREGATE_TABLES = os.path.join(AGGREGATE_ROOT, "tables")
+    AGGREGATE_FIGURES = os.path.join(AGGREGATE_ROOT, "figures")
 
     @classmethod
     def resolve_dataset_file(cls, dataset: str = "main") -> str:
@@ -156,9 +217,18 @@ Provide ONLY the complete Python code solution, no explanations or markdown form
         cls.RESULTS_FIGURES = os.path.join(cls.RESULTS_DIR, "figures")
         cls.RESULTS_EVALUATIONS = os.path.join(cls.RESULTS_DIR, "evaluations")
         cls.RESULTS_PROBLEMS = os.path.join(cls.RESULTS_DIR, "problems")
+        cls.AGGREGATE_ROOT = os.path.join("output", "aggregate")
+        cls.AGGREGATE_SUMMARY = os.path.join(cls.AGGREGATE_ROOT, "summary")
+        cls.AGGREGATE_RAW = os.path.join(cls.AGGREGATE_ROOT, "raw")
+        cls.AGGREGATE_TABLES = os.path.join(cls.AGGREGATE_ROOT, "tables")
+        cls.AGGREGATE_FIGURES = os.path.join(cls.AGGREGATE_ROOT, "figures")
         
         # Create directories
-        for d in [cls.OUTPUT_ROOT, cls.RESULTS_DIR, cls.REPORTS_DIR, cls.EXPERIMENTS_DIR]:
+        for d in [
+            cls.OUTPUT_ROOT, cls.RESULTS_DIR, cls.REPORTS_DIR, cls.EXPERIMENTS_DIR,
+            cls.AGGREGATE_ROOT, cls.BATCH_JOBS_ROOT, cls.AGGREGATE_SUMMARY, cls.AGGREGATE_RAW,
+            cls.AGGREGATE_TABLES, cls.AGGREGATE_FIGURES
+        ]:
             os.makedirs(d, exist_ok=True)
     
     # Model Pricing (per 1k tokens)

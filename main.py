@@ -5,15 +5,48 @@ import argparse
 import sys
 import os
 import json
+import hashlib
 from datetime import datetime
 from leetcode_evaluator.core.evaluator import LeetCodeEvaluator
 from leetcode_evaluator.core.report_generator import ReportGenerator
 from leetcode_evaluator.core.config import Config
 from leetcode_evaluator.core.aggregation_manager import AggregationManager
 from leetcode_evaluator.core.stability_metrics import StabilityAnalyzer
+from leetcode_evaluator.core.qwen_batch_runner import QwenBatchRunner
+from leetcode_evaluator.core.bedrock_batch_runner import BedrockBatchRunner
+from leetcode_evaluator.core.gemini_batch_runner import GeminiBatchRunner
 
 
 def main():
+    def build_bedrock_batch_run_id(config_path: str) -> str:
+        abs_path = os.path.abspath(config_path)
+        with open(abs_path, 'rb') as f:
+            content = f.read()
+        digest = hashlib.sha1(abs_path.encode('utf-8') + b'\0' + content).hexdigest()[:10]
+        stem = os.path.splitext(os.path.basename(abs_path))[0]
+        safe_stem = "".join(ch if ch.isalnum() or ch in "._-" else "_" for ch in stem)
+        return f"bedrock_batch_{safe_stem}_{digest}"
+
+    def build_gemini_batch_run_id(config_path: str) -> str:
+        abs_path = os.path.abspath(config_path)
+        with open(abs_path, 'rb') as f:
+            content = f.read()
+        digest = hashlib.sha1(content).hexdigest()[:10]
+        stem = os.path.splitext(os.path.basename(abs_path))[0]
+        safe_stem = "".join(ch if ch.isalnum() or ch in "._-" else "_" for ch in stem)
+        return f"gemini_batch_{safe_stem}_{digest}"
+
+    def build_qwen_batch_run_id(config_path: str) -> str:
+        abs_path = os.path.abspath(config_path)
+        with open(abs_path, 'rb') as f:
+            content = f.read()
+        # Hash only file content (not path) so the same config produces the same
+        # run_id regardless of working directory or environment (local vs Docker).
+        digest = hashlib.sha1(content).hexdigest()[:10]
+        stem = os.path.splitext(os.path.basename(abs_path))[0]
+        safe_stem = "".join(ch if ch.isalnum() or ch in "._-" else "_" for ch in stem)
+        return f"qwen_batch_{safe_stem}_{digest}"
+
     parser = argparse.ArgumentParser(
         description='LeetCode AI Solution Evaluator - Compare prompted vs non-prompted solutions',
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -30,6 +63,18 @@ Examples:
   
   # Fetch problems only (no evaluation)
   python main.py --fetch-only --num-problems 20 --difficulty HARD
+
+  # Create Qwen batch jobs only
+  python main.py --qwen-batch-config experiments/paper_qwen_batch.json --qwen-batch-mode submit
+
+  # Collect finished outputs without submitting to LeetCode
+  python main.py --qwen-batch-config experiments/paper_qwen_batch.json --qwen-batch-mode collect
+
+  # Check Qwen batch status later from local artifacts
+  python main.py --qwen-batch-config experiments/paper_qwen_batch.json --qwen-batch-mode status
+
+  # Resume from ready models only and submit sequentially
+  python main.py --qwen-batch-config experiments/paper_qwen_batch.json --qwen-batch-mode resume
         """
     )
     
@@ -91,7 +136,12 @@ Examples:
     parser.add_argument(
         '--generate-report',
         action='store_true',
-        help='Aggregate all results from results/summary and generate paper-ready tables and plots'
+        help='Generate aggregated tables and plots from archived summaries; combine with --qwen-batch-config or --summary-dir to scope the aggregation'
+    )
+    parser.add_argument(
+        '--summary-dir',
+        type=str,
+        help='Optional summary directory to aggregate instead of the global archive'
     )
     
     # LLM configuration
@@ -145,13 +195,116 @@ Examples:
         type=str,
         help='Path to a JSON file defining multiple experiments'
     )
-    
+
+    parser.add_argument(
+        '--qwen-batch-config',
+        type=str,
+        help='Path to a JSON file defining one or more Qwen batch-generation jobs'
+    )
+
+    parser.add_argument(
+        '--qwen-batch-mode',
+        choices=['submit', 'collect', 'resume', 'status'],
+        default='resume',
+        help='Qwen batch lifecycle mode: submit only, collect outputs only, resume ready models, or local status-only (default: resume)'
+    )
+
+    parser.add_argument(
+        '--batch-models',
+        type=str,
+        nargs='+',
+        help='Filter: only process these model IDs (e.g. --batch-models qwen-max qwq-plus)'
+    )
+
+    parser.add_argument(
+        '--batch-num-problems',
+        type=int,
+        default=None,
+        help='Limit number of problems submitted to LeetCode (for testing, e.g. --batch-num-problems 3)'
+    )
+
+    parser.add_argument(
+        '--batch-num-trials',
+        type=int,
+        default=None,
+        help='Limit number of stability trials per problem (for testing, e.g. --batch-num-trials 3)'
+    )
+
+    parser.add_argument(
+        '--batch-prompts',
+        type=str,
+        nargs='+',
+        choices=['detailed', 'minimal'],
+        help='Filter: only process these prompt types (e.g. --batch-prompts detailed)'
+    )
+
+    parser.add_argument(
+        '--batch-problem-offset',
+        type=int,
+        default=None,
+        help='Skip first N problems before submitting (for splitting 100 problems across accounts, e.g. --batch-problem-offset 50)'
+    )
+
+    parser.add_argument(
+        '--skip-premium',
+        action='store_true',
+        default=False,
+        help='Skip problems marked isPaidOnly=true in the dataset'
+    )
+
+    parser.add_argument(
+        '--qwen-batch-run-id',
+        type=str,
+        default=None,
+        help='Override the auto-generated run ID (useful when resuming across environments, e.g. --qwen-batch-run-id qwen_batch_paper_qwen_batch_608ffde791)'
+    )
+
+    parser.add_argument(
+        '--bedrock-batch-config',
+        type=str,
+        help='Path to a JSON file defining one or more AWS Bedrock batch-generation jobs'
+    )
+
+    parser.add_argument(
+        '--bedrock-batch-mode',
+        choices=['submit', 'collect', 'resume', 'status'],
+        default='resume',
+        help='Bedrock batch lifecycle mode: submit only, collect outputs only, resume ready models, or status-only (default: resume)'
+    )
+
+    parser.add_argument(
+        '--gemini-batch-config',
+        type=str,
+        help='Path to a JSON file defining one or more Gemini (Vertex AI) batch-generation jobs'
+    )
+
+    parser.add_argument(
+        '--gemini-batch-mode',
+        choices=['submit', 'collect', 'resume', 'status'],
+        default='resume',
+        help='Gemini batch lifecycle mode: submit only, collect outputs only, resume ready models, or status-only (default: resume)'
+    )
+
+    parser.add_argument(
+        '--gemini-batch-run-id',
+        type=str,
+        default=None,
+        help='Override the auto-generated Gemini batch run ID'
+    )
+
     args = parser.parse_args()
     
     # Generate run ID for new experiments
     # For --report or --generate-report, we might want to skip this or handle it differently
     if not args.report and not args.generate_report:
-        run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+        if args.qwen_batch_config:
+            run_id = args.qwen_batch_run_id or build_qwen_batch_run_id(args.qwen_batch_config)
+        elif args.bedrock_batch_config:
+            run_id = build_bedrock_batch_run_id(args.bedrock_batch_config)
+        elif args.gemini_batch_config:
+            run_id = args.gemini_batch_run_id or build_gemini_batch_run_id(args.gemini_batch_config)
+        else:
+            run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
         if args.model:
             run_id += f"_{args.model}"
         Config.set_run_id(run_id)
@@ -171,14 +324,156 @@ Examples:
         # Global aggregation mode
         if args.generate_report:
             print("🚀 Generating paper-ready aggregated report...")
-            agg_manager = AggregationManager()
+            summary_dirs = None
+            raw_dirs = None
+            tables_dir = None
+            figures_dir = None
+
+            if args.summary_dir:
+                summary_dirs = [args.summary_dir]
+
+            if args.qwen_batch_config:
+                batch_run_id = build_qwen_batch_run_id(args.qwen_batch_config)
+                batch_output_root = os.path.join("output", batch_run_id)
+                summary_dirs = [os.path.join(batch_output_root, "results", "summary")]
+                raw_dirs = [os.path.join(batch_output_root, "results", "raw")]
+                tables_dir = os.path.join(batch_output_root, "results", "tables")
+                print(f"  Scope: qwen batch run `{batch_run_id}`")
+                print(f"  Summary dir: {summary_dirs[0]}")
+                print(f"  Raw dir: {raw_dirs[0]}")
+            elif args.bedrock_batch_config:
+                batch_run_id = build_bedrock_batch_run_id(args.bedrock_batch_config)
+                batch_output_root = os.path.join("output", batch_run_id)
+                summary_dirs = [os.path.join(batch_output_root, "results", "summary")]
+                raw_dirs = [os.path.join(batch_output_root, "results", "raw")]
+                tables_dir = os.path.join(batch_output_root, "results", "tables")
+                print(f"  Scope: bedrock batch run `{batch_run_id}`")
+                print(f"  Summary dir: {summary_dirs[0]}")
+                print(f"  Raw dir: {raw_dirs[0]}")
+            elif args.gemini_batch_config:
+                batch_run_id = args.gemini_batch_run_id or build_gemini_batch_run_id(args.gemini_batch_config)
+                batch_output_root = os.path.join("output", batch_run_id)
+                summary_dirs = [os.path.join(batch_output_root, "results", "summary")]
+                raw_dirs = [os.path.join(batch_output_root, "results", "raw")]
+                tables_dir = os.path.join(batch_output_root, "results", "tables")
+                print(f"  Scope: gemini batch run `{batch_run_id}`")
+                print(f"  Summary dir: {summary_dirs[0]}")
+                print(f"  Raw dir: {raw_dirs[0]}")
+            elif summary_dirs:
+                print(f"  Scope: explicit summary dir `{summary_dirs[0]}`")
+
+            agg_manager = AggregationManager(
+                summary_dirs=summary_dirs,
+                raw_dirs=raw_dirs,
+                aggregate_tables_dir=tables_dir,
+                aggregate_figures_dir=figures_dir,
+            )
+            dataset_stats_path = agg_manager.generate_dataset_stats(args.dataset)
             leaderboard_path = agg_manager.aggregate_leaderboard()
             agg_manager.generate_plots()
             print(f"\n✓ Aggregation complete!")
+            print(f"✓ Dataset stats saved to: {dataset_stats_path}")
             print(f"✓ Leaderboard saved to: {leaderboard_path}")
-            print(f"✓ Figures saved to: {Config.RESULTS_FIGURES}/")
+            print(f"✓ Tables saved to: {agg_manager.aggregate_tables_dir}/")
+            print(f"✓ Figures saved to: {agg_manager.aggregate_figures_dir}/")
             return 0
-        
+
+        if args.qwen_batch_config:
+            print(f"🚀 Running Qwen batch generation from: {args.qwen_batch_config}")
+            print(f"Mode: {args.qwen_batch_mode}")
+            batch_runner = QwenBatchRunner(args.qwen_batch_config, run_id)
+            batch_results = batch_runner.run(
+                mode=args.qwen_batch_mode,
+                filter_models=args.batch_models,
+                filter_prompts=args.batch_prompts,
+                num_problems=args.batch_num_problems,
+                num_trials=args.batch_num_trials,
+                problem_offset=args.batch_problem_offset,
+                skip_premium=args.skip_premium,
+            )
+            print(f"\n{'='*60}")
+            if args.qwen_batch_mode == 'submit':
+                print("✓ Qwen batch jobs submitted!")
+                print("Use --qwen-batch-mode collect to download finished outputs later.")
+                print("Use --qwen-batch-mode status to inspect local artifacts and ready models.")
+                print("Use --qwen-batch-mode resume to submit ready models to LeetCode.")
+            elif args.qwen_batch_mode == 'collect':
+                print("✓ Qwen batch output collection completed!")
+            elif args.qwen_batch_mode == 'status':
+                print("✓ Qwen batch status check completed!")
+            else:
+                print("✓ Qwen batch resume completed!")
+            print(f"{'='*60}")
+            for result in batch_results:
+                print(f"Model: {result['model_id']}")
+                print(f"Results: {result['results_file']}")
+                print(f"Report: {result['report_file']}")
+                print("-" * 60)
+            return 0
+
+        if args.bedrock_batch_config:
+            print(f"🚀 Running Bedrock batch generation from: {args.bedrock_batch_config}")
+            print(f"Mode: {args.bedrock_batch_mode}")
+            batch_runner = BedrockBatchRunner(args.bedrock_batch_config, run_id)
+            batch_results = batch_runner.run(
+                mode=args.bedrock_batch_mode,
+                filter_models=args.batch_models,
+                filter_prompts=args.batch_prompts,
+                num_problems=args.batch_num_problems,
+            )
+            print(f"\n{'='*60}")
+            if args.bedrock_batch_mode == 'submit':
+                print("✓ Bedrock batch jobs submitted!")
+                print("Use --bedrock-batch-mode collect to download finished outputs later.")
+                print("Use --bedrock-batch-mode status to inspect local artifacts and ready models.")
+                print("Use --bedrock-batch-mode resume to submit ready models to LeetCode.")
+            elif args.bedrock_batch_mode == 'collect':
+                print("✓ Bedrock batch output collection completed!")
+            elif args.bedrock_batch_mode == 'status':
+                print("✓ Bedrock batch status check completed!")
+            else:
+                print("✓ Bedrock batch resume completed!")
+            print(f"{'='*60}")
+            for result in batch_results:
+                print(f"Model: {result['model_id']}")
+                print(f"Results: {result['results_file']}")
+                print(f"Report: {result['report_file']}")
+                print("-" * 60)
+            return 0
+
+        if args.gemini_batch_config:
+            print(f"Running Gemini batch generation from: {args.gemini_batch_config}")
+            print(f"Mode: {args.gemini_batch_mode}")
+            batch_runner = GeminiBatchRunner(args.gemini_batch_config, run_id)
+            batch_results = batch_runner.run(
+                mode=args.gemini_batch_mode,
+                filter_models=args.batch_models,
+                filter_prompts=args.batch_prompts,
+                num_problems=args.batch_num_problems,
+                num_trials=args.batch_num_trials,
+                problem_offset=args.batch_problem_offset,
+                skip_premium=args.skip_premium,
+            )
+            print(f"\n{'='*60}")
+            if args.gemini_batch_mode == 'submit':
+                print("Gemini batch jobs submitted!")
+                print("Use --gemini-batch-mode collect to download finished outputs later.")
+                print("Use --gemini-batch-mode status to inspect local artifacts and ready models.")
+                print("Use --gemini-batch-mode resume to submit ready models to LeetCode.")
+            elif args.gemini_batch_mode == 'collect':
+                print("Gemini batch output collection completed!")
+            elif args.gemini_batch_mode == 'status':
+                print("Gemini batch status check completed!")
+            else:
+                print("Gemini batch resume completed!")
+            print(f"{'='*60}")
+            for result in batch_results:
+                print(f"Model: {result['model_id']}")
+                print(f"Results: {result['results_file']}")
+                print(f"Report: {result['report_file']}")
+                print("-" * 60)
+            return 0
+
         # Initialize evaluator with provider and model
         evaluator = LeetCodeEvaluator(
             provider=args.provider,
@@ -264,7 +559,11 @@ Examples:
                             'temperature': params.get('temperature', Config.MODEL_TEMPERATURE),
                             'top_p': params.get('top_p', Config.MODEL_TOP_P),
                             'max_tokens': params.get('max_tokens', Config.MODEL_MAX_TOKENS),
-                            'provider': params.get('provider', args.provider or Config.LLM_PROVIDER)
+                            'provider': params.get('provider', args.provider or Config.LLM_PROVIDER),
+                            'dataset': base_params.get('dataset'),
+                            'num_problems': base_params.get('num_problems'),
+                            'stability_runs': base_params.get('stability_runs'),
+                            'generation_mode': 'realtime',
                         }
                         agg_manager.save_experiment_summary(
                             f"{name}_{prompt_type}",
@@ -300,7 +599,9 @@ Examples:
                         'attempts': base_params.get('attempts'),
                         'stability_runs': base_params.get('stability_runs'),
                         'workers': base_params.get('workers'),
-                        'selection': base_params.get('selection')
+                        'selection': base_params.get('selection'),
+                        'dataset': base_params.get('dataset'),
+                        'generation_mode': 'realtime',
                     }
                     agg_manager.save_experiment_summary(exp_dir_name, metrics, config_data)
                     agg_manager.copy_raw_data(exp_evaluator.experiment_manager)
@@ -390,7 +691,9 @@ Examples:
                 'attempts': args.attempts,
                 'stability_runs': args.stability_runs,
                 'workers': args.workers,
-                'selection': args.selection
+                'selection': args.selection,
+                'dataset': args.dataset,
+                'generation_mode': 'realtime',
             }
             agg_manager.save_experiment_summary(exp_name_base, metrics, config_data)
             agg_manager.copy_raw_data(evaluator.experiment_manager)
@@ -426,7 +729,11 @@ Examples:
                     'temperature': args.temperature or Config.MODEL_TEMPERATURE,
                     'top_p': args.top_p or Config.MODEL_TOP_P,
                     'max_tokens': args.max_tokens or Config.MODEL_MAX_TOKENS,
-                    'provider': args.provider or Config.LLM_PROVIDER
+                    'provider': args.provider or Config.LLM_PROVIDER,
+                    'dataset': args.dataset,
+                    'num_problems': args.num_problems,
+                    'stability_runs': args.stability_runs,
+                    'generation_mode': 'realtime',
                 }
                 agg_manager.save_experiment_summary(
                     f"{exp_name}_{prompt_type}",

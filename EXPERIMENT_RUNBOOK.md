@@ -39,13 +39,14 @@ LLM_PROVIDER=openrouter
 | Flag | Short | Type | Default | Description |
 |---|---|---|---|---|
 | `--num-problems` | - | `int` | `5` | Number of problems to evaluate. |
+| `--dataset` | - | `str` | `main` | Dataset selector, e.g. `main`, `test`, or a direct JSON path. |
 | `--difficulty` | - | `str` | `None` | Filter by difficulty: `EASY`, `MEDIUM`, `HARD`. |
 | `--attempts` | - | `int` | `1` | Number of evaluation trials per problem. |
 | `--num-trials` | - | `int` | `1` | Alias for `--attempts`. |
 | `--fetch-only` | - | `bool` | `False` | Only fetch and save problem metadata without running evaluation. |
 | `--selection` | - | `str` | `LATEST` | Problem selection strategy: `LATEST` or `RANDOM`. |
 | `--report` | - | `str` | `None` | Generate a report from an existing results JSON file. |
-| `--generate-report` | - | `bool` | `False` | Aggregate all results from `results/summary` into a leaderboard. |
+| `--generate-report` | - | `bool` | `False` | Aggregate all archived results from `output/aggregate/summary` into a leaderboard. |
 | `--provider` | - | `str` | `bedrock`| LLM provider: `openai`, `gemini`, `grok`, `qwen`, `openrouter`, `bedrock`. |
 | `--model` | - | `str` | `None` | Override the default model ID for the chosen provider. |
 | `--temperature` | - | `float` | `0.3` | Override the LLM temperature setting. |
@@ -54,6 +55,8 @@ LLM_PROVIDER=openrouter
 | `--workers` | - | `int` | `4` | Number of concurrent workers for LLM generation. |
 | `--stability-runs`| - | `int` | `1` | Number of repeated runs for stability analysis (sets attempts). |
 | `--experiment-config`| - | `str` | `None` | Path to a JSON file defining batch experiments. |
+| `--qwen-batch-config`| - | `str` | `None` | Path to a JSON file defining Qwen batch-generation jobs. |
+| `--qwen-batch-mode`| - | `str` | `resume` | Qwen batch lifecycle mode: `submit`, `collect`, `status`, `resume`. |
 
 ## Usage Examples
 
@@ -155,6 +158,51 @@ python main.py --experiment-config experiments/multi_provider.json \
   --num-problems 30
 ```
 
+### 8. Two-Phase Qwen Batch Workflow
+
+Use a real config file for long-running jobs:
+
+```bash
+python main.py --qwen-batch-config experiments/paper_qwen_batch.json --qwen-batch-mode submit
+```
+
+This creates the batch jobs and writes:
+- `output/batch_jobs/<stable_run_id>/<model>/<prompt>/requests_manifest.json`
+- `output/batch_jobs/<stable_run_id>/<model>/<prompt>/batch_job.json`
+
+Computer A later downloads completed outputs and writes normalized results:
+
+```bash
+python main.py --qwen-batch-config experiments/paper_qwen_batch.json --qwen-batch-mode collect
+```
+
+Sync `output/batch_jobs/<stable_run_id>/` to Computer B, then inspect local readiness:
+
+```bash
+python main.py --qwen-batch-config experiments/paper_qwen_batch.json --qwen-batch-mode status
+```
+
+If models are ready, Computer B continues into sequential LeetCode submission:
+
+```bash
+python main.py --qwen-batch-config experiments/paper_qwen_batch.json --qwen-batch-mode resume
+```
+
+For a long-running resume on macOS:
+
+```bash
+nohup caffeinate -i python3 main.py --qwen-batch-config experiments/paper_qwen_batch.json --qwen-batch-mode resume > qwen_batch_resume.log 2>&1 &
+tail -f qwen_batch_resume.log
+```
+
+Notes:
+- `collect` is the phase that talks to DashScope after `submit`.
+- `status` only reads local artifacts and prints job status, model-ready state, and evaluation state.
+- `status=in_progress` means the saved metadata still shows the remote job running; it does not mean that model is ready for LeetCode submission.
+- `resume` only processes ready models. A ready model means both prompt jobs are `completed` and both normalized outputs exist.
+- `resume` skips models that are not ready and does not mark them failed.
+- Do not use temporary config files if you plan to leave and resume later.
+
 ## Available Metrics
 
 ### 1. **Correctness Metrics**
@@ -188,6 +236,11 @@ python main.py --experiment-config experiments/multi_provider.json \
 All outputs are consolidated in the `output/` directory:
 ```
 output/
+├── aggregate/
+│   ├── summary/             # Prompt-specific summaries archived across all runs/models
+│   ├── raw/                 # Raw JSONL trial archives across all runs/models
+│   ├── tables/              # Dataset stats, leaderboard, TeX table, and paper input JSON
+│   └── figures/             # Cross-model aggregated plots
 ├── results/
 │   ├── evaluations/           # Evaluation results JSON
 │   ├── problems/             # Problem metadata
@@ -232,6 +285,8 @@ python main.py --report results/evaluations/evaluation_results_*.json
 # Aggregate all results
 python main.py --generate-report
 ```
+
+`--generate-report` reads from `output/aggregate/summary/`, so you can run models one at a time and aggregate later without manually copying files.
 
 ## Troubleshooting
 - **Rate limiting**: Add `--workers 2` to reduce concurrent requests

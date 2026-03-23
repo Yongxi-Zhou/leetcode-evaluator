@@ -5,8 +5,7 @@ import os
 import json
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
+import tempfile
 from typing import Dict, List, Tuple
 from datetime import datetime
 from scipy import stats
@@ -14,6 +13,14 @@ from collections import defaultdict
 
 from leetcode_evaluator.core.config import Config
 from leetcode_evaluator.core.stability_metrics import StabilityAnalyzer
+
+if not os.environ.get("MPLCONFIGDIR"):
+    os.environ["MPLCONFIGDIR"] = os.path.join(tempfile.gettempdir(), "leetcode-evaluator-mpl")
+if not os.environ.get("MPLBACKEND"):
+    os.environ["MPLBACKEND"] = "Agg"
+
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 class ReportGenerator:

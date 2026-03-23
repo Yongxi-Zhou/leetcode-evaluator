@@ -1,0 +1,317 @@
+"""
+Qwen batch client built on Alibaba DashScope's OpenAI-compatible Batch File API.
+"""
+import json
+import os
+import re
+import time
+from typing import Dict, Any, List, Tuple
+
+import httpx
+from openai import OpenAI
+
+from leetcode_evaluator.core.config import Config
+from leetcode_evaluator.clients.llm.base import LLMClient
+
+
+class QwenBatchClient(LLMClient):
+    """Client for Qwen batch generation via DashScope OpenAI-compatible batch APIs."""
+
+    TERMINAL_STATES = {"completed", "failed", "expired", "cancelled"}
+
+    def __init__(self, model_id: str = None, api_key: str = None, base_url: str = None):
+        super().__init__(model_id=model_id or Config.QWEN_MODEL_ID)
+        self.api_key = api_key or Config.DASHSCOPE_API_KEY or Config.OPENAI_API_KEY
+        self.base_url = base_url or Config.QWEN_API_BASE_URL
+        self.request_timeout_s = Config.LLM_REQUEST_TIMEOUT_S
+        self.http_client = httpx.Client(
+            timeout=httpx.Timeout(
+                timeout=self.request_timeout_s,
+                connect=min(10.0, float(self.request_timeout_s)),
+                read=float(self.request_timeout_s),
+                write=min(30.0, float(self.request_timeout_s)),
+                pool=min(10.0, float(self.request_timeout_s)),
+            )
+        )
+        self.client = OpenAI(
+            api_key=self.api_key,
+            base_url=self.base_url,
+            timeout=self.request_timeout_s,
+            max_retries=0,
+            http_client=self.http_client,
+        )
+
+    def _invoke_model(self, prompt: str, **kwargs) -> Dict[str, Any]:
+        raise NotImplementedError("QwenBatchClient only supports offline batch generation")
+
+    def _sanitize_component(self, value: str) -> str:
+        return re.sub(r'[^A-Za-z0-9._-]+', "_", str(value))
+
+    def build_custom_id(self, problem: Dict[str, Any], prompt_type: str, trial_index: int) -> str:
+        frontend_id = problem.get('frontend_question_id') or problem.get('problem_id') or problem.get('question_id')
+        return (
+            f"model={self._sanitize_component(self.model_id)}"
+            f"|problem={self._sanitize_component(frontend_id)}"
+            f"|slug={self._sanitize_component(problem['title_slug'])}"
+            f"|prompt={self._sanitize_component(prompt_type)}"
+            f"|trial={trial_index}"
+        )
+
+    def build_request_entry(
+        self,
+        problem: Dict[str, Any],
+        prompt_type: str,
+        trial_index: int,
+        generation_params: Dict[str, Any],
+    ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        use_detailed_prompt = prompt_type == 'detailed'
+        prompt = self._prepare_prompt(problem, use_detailed_prompt)
+        custom_id = self.build_custom_id(problem, prompt_type, trial_index)
+        body = {
+            "model": self.model_id,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": "You are an expert Python programmer specializing in algorithmic problem solving."
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            "temperature": generation_params.get('temperature', Config.MODEL_TEMPERATURE),
+            "max_tokens": generation_params.get('max_tokens', Config.MODEL_MAX_TOKENS),
+            "top_p": generation_params.get('top_p', Config.MODEL_TOP_P),
+        }
+        request_entry = {
+            "custom_id": custom_id,
+            "method": "POST",
+            "url": "/v1/chat/completions",
+            "body": body,
+        }
+        manifest_entry = {
+            "custom_id": custom_id,
+            "model_id": self.model_id,
+            "problem_id": problem.get('frontend_question_id') or problem.get('question_id'),
+            "backend_question_id": problem.get('question_id'),
+            "title": problem['title'],
+            "title_slug": problem['title_slug'],
+            "difficulty": problem.get('difficulty'),
+            "topics": problem.get('topics', []),
+            "prompt_type": prompt_type,
+            "trial_index": trial_index,
+            "input_file_body": body,
+        }
+        return request_entry, manifest_entry
+
+    def write_requests_jsonl(self, request_entries: List[Dict[str, Any]], output_path: str):
+        with open(output_path, 'w') as f:
+            for entry in request_entries:
+                f.write(json.dumps(entry, ensure_ascii=True) + '\n')
+
+    def upload_batch_file(self, input_path: str) -> Dict[str, Any]:
+        print(f"Uploading batch input file for model {self.model_id}: {input_path}")
+        with open(input_path, 'rb') as f:
+            response = self.client.files.create(file=f, purpose="batch")
+        if hasattr(response, "model_dump"):
+            return response.model_dump()
+        return dict(response)
+
+    def create_batch_job(
+        self,
+        input_file_id: str,
+        metadata: Dict[str, Any],
+        completion_window: str = None,
+    ) -> Dict[str, Any]:
+        batch = self.client.batches.create(
+            input_file_id=input_file_id,
+            endpoint="/v1/chat/completions",
+            completion_window=completion_window or Config.QWEN_BATCH_COMPLETION_WINDOW,
+            metadata=metadata,
+        )
+        if hasattr(batch, "model_dump"):
+            return batch.model_dump()
+        return dict(batch)
+
+    def retrieve_batch_job(self, batch_id: str) -> Dict[str, Any]:
+        batch = self.client.batches.retrieve(batch_id)
+        if hasattr(batch, "model_dump"):
+            return batch.model_dump()
+        return dict(batch)
+
+    def poll_batch_job(self, batch_id: str) -> Dict[str, Any]:
+        while True:
+            batch = self.retrieve_batch_job(batch_id)
+            status = str(batch.get('status', '')).lower()
+            print(f"Qwen batch status: model={self.model_id}, batch_id={batch_id}, status={status}")
+            if status in self.TERMINAL_STATES:
+                return batch
+            time.sleep(Config.QWEN_BATCH_POLL_INTERVAL_S)
+
+    def download_file(self, file_id: str, output_path: str) -> str:
+        content = self.client.files.content(file_id)
+        if hasattr(content, "write_to_file"):
+            content.write_to_file(output_path)
+        else:
+            payload = getattr(content, "text", None)
+            if payload is None and hasattr(content, "read"):
+                payload = content.read()
+            if isinstance(payload, bytes):
+                with open(output_path, 'wb') as f:
+                    f.write(payload)
+            else:
+                with open(output_path, 'w') as f:
+                    f.write(payload or "")
+        return output_path
+
+    def load_jsonl_records(self, path: str) -> List[Dict[str, Any]]:
+        if not path or not os.path.exists(path):
+            return []
+        records = []
+        with open(path, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    records.append(json.loads(line))
+                except json.JSONDecodeError:
+                    continue
+        return records
+
+    def _extract_response_text(self, response_body: Dict[str, Any]) -> str:
+        choices = response_body.get('choices') or []
+        if not choices:
+            return ""
+        message = choices[0].get('message') or {}
+        content = message.get('content')
+        if isinstance(content, str):
+            return content
+        if isinstance(content, list):
+            parts = []
+            for item in content:
+                if isinstance(item, dict) and item.get('type') == 'text':
+                    parts.append(item.get('text', ''))
+            return "\n".join(parts)
+        return ""
+
+    def normalize_batch_outputs(
+        self,
+        output_records: List[Dict[str, Any]],
+        error_records: List[Dict[str, Any]],
+        manifest_entries: List[Dict[str, Any]],
+    ) -> Dict[str, Dict[str, Any]]:
+        manifest_by_id = {entry['custom_id']: entry for entry in manifest_entries}
+        normalized: Dict[str, Dict[str, Any]] = {}
+
+        for record in error_records:
+            custom_id = record.get('custom_id')
+            if not custom_id:
+                continue
+            error_text = record.get('error')
+            if isinstance(error_text, dict):
+                error_text = json.dumps(error_text, ensure_ascii=True)
+            normalized[custom_id] = {
+                'status': 'Generation Failed',
+                'error': error_text or 'Batch error',
+                'gen_status': 'Error',
+                'input_tokens': 0,
+                'output_tokens': 0,
+                'latency_ms': 0.0,
+                'cost': 0.0,
+                'raw_response': None,
+            }
+
+        for record in output_records:
+            custom_id = record.get('custom_id')
+            if not custom_id:
+                continue
+            response = record.get('response') or {}
+            response_body = response.get('body') or {}
+            error = record.get('error') or response_body.get('error')
+            if error:
+                normalized[custom_id] = {
+                    'status': 'Generation Failed',
+                    'error': json.dumps(error, ensure_ascii=True) if isinstance(error, dict) else str(error),
+                    'gen_status': 'Error',
+                    'input_tokens': 0,
+                    'output_tokens': 0,
+                    'latency_ms': 0.0,
+                    'cost': 0.0,
+                    'raw_response': None,
+                }
+                continue
+
+            text = self._extract_response_text(response_body)
+            usage = response_body.get('usage') or {}
+            input_tokens = int(usage.get('prompt_tokens', 0) or 0)
+            output_tokens = int(usage.get('completion_tokens', 0) or 0)
+            pricing = Config.MODEL_PRICING.get(self.model_id, Config.MODEL_PRICING['default'])
+            cost = (input_tokens * pricing['input'] + output_tokens * pricing['output']) / 1000
+            code = self._extract_code(text) if text else None
+
+            if not text:
+                normalized[custom_id] = {
+                    'status': 'Generation Failed',
+                    'error': 'Empty batch response',
+                    'gen_status': 'Error',
+                    'input_tokens': input_tokens,
+                    'output_tokens': output_tokens,
+                    'latency_ms': 0.0,
+                    'cost': cost,
+                    'raw_response': text,
+                }
+                continue
+
+            if not code:
+                normalized[custom_id] = {
+                    'status': 'Extraction Failed',
+                    'error': 'Failed to extract code from batch response',
+                    'raw_response': text,
+                    'gen_status': 'Success',
+                    'input_tokens': input_tokens,
+                    'output_tokens': output_tokens,
+                    'latency_ms': 0.0,
+                    'cost': cost,
+                }
+                continue
+
+            if not self.validate_code_syntax(code):
+                normalized[custom_id] = {
+                    'status': 'Syntax Error',
+                    'error': 'Invalid Python syntax',
+                    'code': code,
+                    'raw_response': text,
+                    'gen_status': 'Success',
+                    'input_tokens': input_tokens,
+                    'output_tokens': output_tokens,
+                    'latency_ms': 0.0,
+                    'cost': cost,
+                }
+                continue
+
+            normalized[custom_id] = {
+                'status': 'Success',
+                'code': code,
+                'raw_response': text,
+                'gen_status': 'Success',
+                'input_tokens': input_tokens,
+                'output_tokens': output_tokens,
+                'latency_ms': 0.0,
+                'cost': cost,
+            }
+
+        for custom_id in manifest_by_id:
+            if custom_id not in normalized:
+                normalized[custom_id] = {
+                    'status': 'Generation Failed',
+                    'error': 'Missing batch result',
+                    'gen_status': 'Error',
+                    'input_tokens': 0,
+                    'output_tokens': 0,
+                    'latency_ms': 0.0,
+                    'cost': 0.0,
+                    'raw_response': None,
+                }
+
+        return normalized
