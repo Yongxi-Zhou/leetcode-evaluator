@@ -214,5 +214,8 @@ class LLMClientFactory:
         elif provider == 'qwen':
             from leetcode_evaluator.clients.llm.qwen import QwenClient
             return QwenClient(model_id=model_id)
+        elif provider == 'anthropic':
+            from leetcode_evaluator.clients.llm.anthropic_client import AnthropicClient
+            return AnthropicClient(model_id=model_id)
         else:
             raise ValueError(f"Unsupported LLM provider: {provider}")

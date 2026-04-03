@@ -50,3 +50,6 @@ Thumbs.db
 venv/
 env/
 ENV/
+
+*/logs
+main.*

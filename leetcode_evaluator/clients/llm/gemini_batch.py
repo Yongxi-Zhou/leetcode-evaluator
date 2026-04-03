@@ -83,20 +83,44 @@ class GeminiBatchClient(LLMClient):
         use_detailed_prompt = prompt_type == "detailed"
         prompt = self._prepare_prompt(problem, use_detailed_prompt)
         custom_id = self.build_custom_id(problem, prompt_type, trial_index)
+        # Append a hidden trial tag so each trial has a unique prompt hash
+        # (Vertex AI doesn't support custom_id, so we use this for matching)
+        prompt_with_tag = f"{prompt}\n<!-- trial={trial_index} -->"
         system_msg = "You are an expert Python programmer specializing in algorithmic problem solving."
 
-        # Vertex AI GenerateContent batch format
+        # Vertex AI GenerateContent batch format with structured output
+        # Forces model to return only a JSON object with a "code" field,
+        # avoiding thinking/explanation tokens that eat into maxOutputTokens.
         request_body = {
             "contents": [
-                {"role": "user", "parts": [{"text": prompt}]}
+                {"role": "user", "parts": [{"text": prompt_with_tag}]}
             ],
             "systemInstruction": {
-                "parts": [{"text": system_msg}]
+                "parts": [{"text": system_msg + " Return only the Python code solution. Use \\n for newlines in the code string."}]
             },
             "generationConfig": {
                 "temperature": generation_params.get("temperature", Config.MODEL_TEMPERATURE),
-                "maxOutputTokens": generation_params.get("max_tokens", Config.MODEL_MAX_TOKENS),
+                # Batch API does not support thinkingConfig — thinking tokens
+                # count against maxOutputTokens. Use 16384 to prevent truncation.
+                "maxOutputTokens": max(generation_params.get("max_tokens", Config.MODEL_MAX_TOKENS), 16384),
                 "topP": generation_params.get("top_p", Config.MODEL_TOP_P),
+                "responseMimeType": "application/json",
+                "responseSchema": {
+                    "type": "object",
+                    "properties": {
+                        "code": {
+                            "type": "string",
+                            "description": "Complete Python solution code with newline characters"
+                        }
+                    },
+                    "required": ["code"]
+                },
+                # Use LOW thinking to minimize thinking token usage.
+                # For Gemini 3.x, thinkingLevel (not thinkingBudget) correctly
+                # separates thinking tokens from maxOutputTokens.
+                "thinkingConfig": {
+                    "thinkingLevel": "LOW"
+                },
             },
         }
 
@@ -113,7 +137,7 @@ class GeminiBatchClient(LLMClient):
             "prompt_type": prompt_type,
             "trial_index": trial_index,
             # fingerprint for matching output to input when order is uncertain
-            "prompt_hash": hashlib.md5(prompt.encode()).hexdigest(),
+            "prompt_hash": hashlib.md5(prompt_with_tag.encode()).hexdigest(),
         }
         return request_entry, manifest_entry
 
@@ -168,10 +192,12 @@ class GeminiBatchClient(LLMClient):
     ) -> Dict[str, Any]:
         """Submit a Vertex AI BatchPredictionJob."""
         job = aiplatform.BatchPredictionJob.submit(
-            source_model=self._source_model(),
-            input_dataset=input_gcs_uri,
-            output_uri_prefix=output_gcs_prefix,
-            display_name=display_name,
+            job_display_name=display_name,
+            model_name=self._source_model(),
+            instances_format="jsonl",
+            predictions_format="jsonl",
+            gcs_source=input_gcs_uri,
+            gcs_destination_prefix=output_gcs_prefix,
         )
         return {
             "job_name": job.resource_name,
@@ -228,14 +254,67 @@ class GeminiBatchClient(LLMClient):
         return records
 
     def _extract_text_from_response(self, response: Dict[str, Any]) -> str:
-        """Extract generated text from Vertex AI GenerateContent response."""
+        """Extract generated text from Vertex AI GenerateContent response.
+
+        With structured output (responseMimeType=application/json), the response
+        text is a JSON string like {"code": "class Solution: ..."}.
+        We extract the "code" field directly if present.
+        """
         candidates = response.get("candidates") or []
         if not candidates:
             return ""
         content = candidates[0].get("content") or {}
         parts = content.get("parts") or []
         texts = [p.get("text", "") for p in parts if isinstance(p, dict)]
-        return "\n".join(texts)
+        raw_text = "\n".join(texts)
+
+        # Try to parse as structured JSON output.
+        # Gemini may return JSON with literal newlines inside strings,
+        # making it invalid JSON. We try multiple strategies:
+        try:
+            parsed = json.loads(raw_text)
+            if isinstance(parsed, dict) and "code" in parsed:
+                return parsed["code"]
+        except (json.JSONDecodeError, TypeError):
+            # Strategy 2: extract "code" value with regex
+            # Handles cases where JSON has literal newlines in string values
+            code_match = re.search(r'"code"\s*:\s*"', raw_text)
+            if code_match:
+                start = code_match.end()
+                # Find the closing quote (not preceded by backslash)
+                # Walk char by char to handle escapes properly
+                chars = []
+                i = start
+                while i < len(raw_text):
+                    c = raw_text[i]
+                    if c == '\\' and i + 1 < len(raw_text):
+                        next_c = raw_text[i + 1]
+                        if next_c == 'n':
+                            chars.append('\n')
+                        elif next_c == 't':
+                            chars.append('\t')
+                        elif next_c == '"':
+                            chars.append('"')
+                        elif next_c == '\\':
+                            chars.append('\\')
+                        else:
+                            chars.append(c)
+                            chars.append(next_c)
+                        i += 2
+                    elif c == '"':
+                        break
+                    elif c == '\n':
+                        # Literal newline inside JSON string — skip it
+                        i += 1
+                        continue
+                    else:
+                        chars.append(c)
+                        i += 1
+                code = "".join(chars)
+                if code.strip():
+                    return code
+
+        return raw_text
 
     def _extract_usage_from_response(self, response: Dict[str, Any]) -> Tuple[int, int]:
         """Return (input_tokens, output_tokens) from usageMetadata."""
@@ -265,12 +344,12 @@ class GeminiBatchClient(LLMClient):
     ) -> Dict[str, Dict[str, Any]]:
         """Normalize Vertex AI batch outputs to the standard structure.
 
-        Vertex AI output preserves line order and echoes the request.
-        We map by line index (primary) with prompt-hash fallback.
+        Vertex AI output does NOT preserve line order, so we match
+        by prompt hash (from the echoed request) to the manifest.
         """
         normalized: Dict[str, Dict[str, Any]] = {}
 
-        # Build prompt_hash → custom_id lookup for fallback matching
+        # Build prompt_hash → custom_id lookup
         hash_to_custom_id = {}
         for entry in manifest_entries:
             h = entry.get("prompt_hash", "")
@@ -278,15 +357,17 @@ class GeminiBatchClient(LLMClient):
                 hash_to_custom_id[h] = entry["custom_id"]
 
         for idx, record in enumerate(output_records):
-            # Determine custom_id: by line index or by prompt hash
-            if idx < len(manifest_entries):
-                custom_id = manifest_entries[idx]["custom_id"]
-            else:
-                # fallback: match by prompt hash
-                request = record.get("request") or {}
-                h = self._prompt_hash_from_request(request)
-                custom_id = hash_to_custom_id.get(h)
-                if not custom_id:
+            # Match by prompt hash from the echoed request
+            request = record.get("request") or {}
+            h = self._prompt_hash_from_request(request)
+            custom_id = hash_to_custom_id.get(h)
+            if not custom_id:
+                # Fallback to line index only if hash matching fails
+                if idx < len(manifest_entries):
+                    custom_id = manifest_entries[idx]["custom_id"]
+                    print(f"  Warning: prompt hash match failed for line {idx}, falling back to index")
+                else:
+                    print(f"  Warning: skipping output line {idx}, no matching manifest entry")
                     continue
 
             status_text = record.get("status", "")

@@ -15,6 +15,9 @@ from leetcode_evaluator.core.stability_metrics import StabilityAnalyzer
 from leetcode_evaluator.core.qwen_batch_runner import QwenBatchRunner
 from leetcode_evaluator.core.bedrock_batch_runner import BedrockBatchRunner
 from leetcode_evaluator.core.gemini_batch_runner import GeminiBatchRunner
+from leetcode_evaluator.core.azure_batch_runner import AzureBatchRunner
+from leetcode_evaluator.core.openai_batch_runner import OpenAIBatchRunner
+from leetcode_evaluator.core.anthropic_batch_runner import AnthropicBatchRunner
 
 
 def main():
@@ -26,6 +29,33 @@ def main():
         stem = os.path.splitext(os.path.basename(abs_path))[0]
         safe_stem = "".join(ch if ch.isalnum() or ch in "._-" else "_" for ch in stem)
         return f"bedrock_batch_{safe_stem}_{digest}"
+
+    def build_openai_batch_run_id(config_path: str) -> str:
+        abs_path = os.path.abspath(config_path)
+        with open(abs_path, 'rb') as f:
+            content = f.read()
+        digest = hashlib.sha1(content).hexdigest()[:10]
+        stem = os.path.splitext(os.path.basename(abs_path))[0]
+        safe_stem = "".join(ch if ch.isalnum() or ch in "._-" else "_" for ch in stem)
+        return f"openai_batch_{safe_stem}_{digest}"
+
+    def build_azure_batch_run_id(config_path: str) -> str:
+        abs_path = os.path.abspath(config_path)
+        with open(abs_path, 'rb') as f:
+            content = f.read()
+        digest = hashlib.sha1(content).hexdigest()[:10]
+        stem = os.path.splitext(os.path.basename(abs_path))[0]
+        safe_stem = "".join(ch if ch.isalnum() or ch in "._-" else "_" for ch in stem)
+        return f"azure_batch_{safe_stem}_{digest}"
+
+    def build_anthropic_batch_run_id(config_path: str) -> str:
+        abs_path = os.path.abspath(config_path)
+        with open(abs_path, 'rb') as f:
+            content = f.read()
+        digest = hashlib.sha1(content).hexdigest()[:10]
+        stem = os.path.splitext(os.path.basename(abs_path))[0]
+        safe_stem = "".join(ch if ch.isalnum() or ch in "._-" else "_" for ch in stem)
+        return f"anthropic_batch_{safe_stem}_{digest}"
 
     def build_gemini_batch_run_id(config_path: str) -> str:
         abs_path = os.path.abspath(config_path)
@@ -292,6 +322,66 @@ Examples:
         help='Override the auto-generated Gemini batch run ID'
     )
 
+    parser.add_argument(
+        '--openai-batch-config',
+        type=str,
+        help='Path to a JSON file defining one or more OpenAI batch-generation jobs'
+    )
+
+    parser.add_argument(
+        '--openai-batch-mode',
+        choices=['submit', 'collect', 'resume', 'status'],
+        default='resume',
+        help='OpenAI batch lifecycle mode (default: resume)'
+    )
+
+    parser.add_argument(
+        '--openai-batch-run-id',
+        type=str,
+        default=None,
+        help='Override the auto-generated OpenAI batch run ID'
+    )
+
+    parser.add_argument(
+        '--azure-batch-config',
+        type=str,
+        help='Path to a JSON file defining one or more Azure OpenAI batch-generation jobs'
+    )
+
+    parser.add_argument(
+        '--azure-batch-mode',
+        choices=['submit', 'collect', 'resume', 'status'],
+        default='resume',
+        help='Azure batch lifecycle mode: submit only, collect outputs only, resume ready models, or status-only (default: resume)'
+    )
+
+    parser.add_argument(
+        '--azure-batch-run-id',
+        type=str,
+        default=None,
+        help='Override the auto-generated Azure batch run ID'
+    )
+
+    parser.add_argument(
+        '--anthropic-batch-config',
+        type=str,
+        help='Path to a JSON file defining one or more Anthropic batch-generation jobs'
+    )
+
+    parser.add_argument(
+        '--anthropic-batch-mode',
+        choices=['submit', 'collect', 'resume', 'status'],
+        default='resume',
+        help='Anthropic batch lifecycle mode (default: resume)'
+    )
+
+    parser.add_argument(
+        '--anthropic-batch-run-id',
+        type=str,
+        default=None,
+        help='Override the auto-generated Anthropic batch run ID'
+    )
+
     args = parser.parse_args()
     
     # Generate run ID for new experiments
@@ -303,6 +393,12 @@ Examples:
             run_id = build_bedrock_batch_run_id(args.bedrock_batch_config)
         elif args.gemini_batch_config:
             run_id = args.gemini_batch_run_id or build_gemini_batch_run_id(args.gemini_batch_config)
+        elif args.openai_batch_config:
+            run_id = args.openai_batch_run_id or build_openai_batch_run_id(args.openai_batch_config)
+        elif args.azure_batch_config:
+            run_id = args.azure_batch_run_id or build_azure_batch_run_id(args.azure_batch_config)
+        elif args.anthropic_batch_config:
+            run_id = args.anthropic_batch_run_id or build_anthropic_batch_run_id(args.anthropic_batch_config)
         else:
             run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
         if args.model:
@@ -419,7 +515,6 @@ Examples:
                 mode=args.bedrock_batch_mode,
                 filter_models=args.batch_models,
                 filter_prompts=args.batch_prompts,
-                num_problems=args.batch_num_problems,
             )
             print(f"\n{'='*60}")
             if args.bedrock_batch_mode == 'submit':
@@ -472,6 +567,97 @@ Examples:
                 print(f"Results: {result['results_file']}")
                 print(f"Report: {result['report_file']}")
                 print("-" * 60)
+            return 0
+
+        if args.openai_batch_config:
+            print(f"Running OpenAI batch generation from: {args.openai_batch_config}")
+            print(f"Mode: {args.openai_batch_mode}")
+            batch_runner = OpenAIBatchRunner(args.openai_batch_config, run_id)
+            batch_results = batch_runner.run(
+                mode=args.openai_batch_mode,
+                filter_models=args.batch_models,
+                filter_prompts=args.batch_prompts,
+                num_problems=args.batch_num_problems,
+                num_trials=args.batch_num_trials,
+                problem_offset=args.batch_problem_offset,
+                skip_premium=args.skip_premium,
+            )
+            print(f"\n{'='*60}")
+            if args.openai_batch_mode == 'submit':
+                print("OpenAI batch jobs submitted!")
+                print("Use --openai-batch-mode collect to download finished outputs later.")
+                print("Use --openai-batch-mode resume to submit ready models to LeetCode.")
+            elif args.openai_batch_mode == 'collect':
+                print("OpenAI batch output collection completed!")
+            elif args.openai_batch_mode == 'status':
+                print("OpenAI batch status check completed!")
+            else:
+                print("OpenAI batch resume completed!")
+            print(f"{'='*60}")
+            for result in batch_results:
+                print(f"Model: {result['model_id']}\nResults: {result['results_file']}\nReport: {result['report_file']}\n{'-'*60}")
+            return 0
+
+        if args.azure_batch_config:
+            print(f"Running Azure OpenAI batch generation from: {args.azure_batch_config}")
+            print(f"Mode: {args.azure_batch_mode}")
+            batch_runner = AzureBatchRunner(args.azure_batch_config, run_id)
+            batch_results = batch_runner.run(
+                mode=args.azure_batch_mode,
+                filter_models=args.batch_models,
+                filter_prompts=args.batch_prompts,
+                num_problems=args.batch_num_problems,
+                num_trials=args.batch_num_trials,
+                problem_offset=args.batch_problem_offset,
+                skip_premium=args.skip_premium,
+            )
+            print(f"\n{'='*60}")
+            if args.azure_batch_mode == 'submit':
+                print("Azure batch jobs submitted!")
+                print("Use --azure-batch-mode collect to download finished outputs later.")
+                print("Use --azure-batch-mode status to inspect local artifacts and ready models.")
+                print("Use --azure-batch-mode resume to submit ready models to LeetCode.")
+            elif args.azure_batch_mode == 'collect':
+                print("Azure batch output collection completed!")
+            elif args.azure_batch_mode == 'status':
+                print("Azure batch status check completed!")
+            else:
+                print("Azure batch resume completed!")
+            print(f"{'='*60}")
+            for result in batch_results:
+                print(f"Model: {result['model_id']}")
+                print(f"Results: {result['results_file']}")
+                print(f"Report: {result['report_file']}")
+                print("-" * 60)
+            return 0
+
+        if args.anthropic_batch_config:
+            print(f"Running Anthropic batch generation from: {args.anthropic_batch_config}")
+            print(f"Mode: {args.anthropic_batch_mode}")
+            batch_runner = AnthropicBatchRunner(args.anthropic_batch_config, run_id)
+            batch_results = batch_runner.run(
+                mode=args.anthropic_batch_mode,
+                filter_models=args.batch_models,
+                filter_prompts=args.batch_prompts,
+                num_problems=args.batch_num_problems,
+                num_trials=args.batch_num_trials,
+                problem_offset=args.batch_problem_offset,
+                skip_premium=args.skip_premium,
+            )
+            print(f"\n{'='*60}")
+            if args.anthropic_batch_mode == 'submit':
+                print("Anthropic batch jobs submitted!")
+                print("Use --anthropic-batch-mode collect to download finished outputs later.")
+                print("Use --anthropic-batch-mode resume to submit ready models to LeetCode.")
+            elif args.anthropic_batch_mode == 'collect':
+                print("Anthropic batch output collection completed!")
+            elif args.anthropic_batch_mode == 'status':
+                print("Anthropic batch status check completed!")
+            else:
+                print("Anthropic batch resume completed!")
+            print(f"{'='*60}")
+            for result in batch_results:
+                print(f"Model: {result['model_id']}\nResults: {result['results_file']}\nReport: {result['report_file']}\n{'-'*60}")
             return 0
 
         # Initialize evaluator with provider and model

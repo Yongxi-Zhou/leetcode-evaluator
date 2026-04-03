@@ -84,10 +84,26 @@ class Config:
     GCP_LOCATION = os.getenv('GCP_LOCATION', 'us-central1')
     GEMINI_BATCH_GCS_BUCKET = os.getenv('GEMINI_BATCH_GCS_BUCKET', '')
     GEMINI_BATCH_POLL_INTERVAL_S = int(os.getenv('GEMINI_BATCH_POLL_INTERVAL_S', 30))
+
+    # OpenAI Batch Configuration
+    OPENAI_BATCH_POLL_INTERVAL_S = int(os.getenv('OPENAI_BATCH_POLL_INTERVAL_S', 60))
+
+    # Anthropic Configuration
+    ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY')
+    ANTHROPIC_MODEL_ID = os.getenv('ANTHROPIC_MODEL_ID', 'claude-haiku-4-5-20251001')
+    ANTHROPIC_BATCH_POLL_INTERVAL_S = int(os.getenv('ANTHROPIC_BATCH_POLL_INTERVAL_S', 60))
+
+    # Azure OpenAI Batch Configuration
+    AZURE_OPENAI_API_KEY = os.getenv('AZURE_OPENAI_API_KEY')
+    AZURE_OPENAI_ENDPOINT = os.getenv('AZURE_OPENAI_ENDPOINT', '')   # e.g. https://<resource>.openai.azure.com/
+    AZURE_OPENAI_API_VERSION = os.getenv('AZURE_OPENAI_API_VERSION', '2024-10-21')
+    AZURE_OPENAI_DEPLOYMENT = os.getenv('AZURE_OPENAI_DEPLOYMENT', 'gpt-4o')
+    AZURE_BATCH_COMPLETION_WINDOW = os.getenv('AZURE_BATCH_COMPLETION_WINDOW', '24h')
+    AZURE_BATCH_POLL_INTERVAL_S = int(os.getenv('AZURE_BATCH_POLL_INTERVAL_S', 60))
     
     # Concurrency and Throttling
     WORKER_THREADS = int(os.getenv('WORKER_THREADS', 4))
-    LEETCODE_SUBMISSION_DELAY_S = int(os.getenv('LEETCODE_SUBMISSION_DELAY_S', 10))
+    LEETCODE_SUBMISSION_DELAY_S = int(os.getenv('LEETCODE_SUBMISSION_DELAY_S', 15))
     LEETCODE_RATE_LIMIT_COOLDOWN_S = int(os.getenv('LEETCODE_RATE_LIMIT_COOLDOWN_S', 60))
     
     SUBMISSION_POLL_INTERVAL = 2  # seconds
@@ -289,9 +305,13 @@ The solution must be efficient enough to avoid obvious Time Limit Exceeded outco
                 # Allow either explicit DashScope key or OPENAI_API_KEY fallback for compatibility
                 'DASHSCOPE_API_KEY/OPENAI_API_KEY': cls.DASHSCOPE_API_KEY or cls.OPENAI_API_KEY,
             })
+        elif provider == 'anthropic':
+            required.update({
+                'ANTHROPIC_API_KEY': cls.ANTHROPIC_API_KEY,
+            })
         else:
             raise ValueError(
-                f"Unsupported LLM provider: {provider}. Choose from: bedrock, openai, gemini, grok, qwen")
+                f"Unsupported LLM provider: {provider}. Choose from: bedrock, openai, gemini, grok, qwen, anthropic")
 
         missing = [key for key, value in required.items() if not value]
         if missing:

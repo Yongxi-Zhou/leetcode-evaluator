@@ -38,35 +38,48 @@ class BedrockClient(LLMClient):
                 config=boto_config
             )
         
+    # Tool definition for structured code output (Claude models only)
+    _CODE_TOOL = {
+        "name": "submit_solution",
+        "description": "Submit the Python solution code for the LeetCode problem.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "description": "Complete Python solution code, ready to run."
+                }
+            },
+            "required": ["code"]
+        }
+    }
+
     def _invoke_model(self, prompt: str, **kwargs) -> Dict[str, Any]:
         """Invoke the Bedrock model and return text with usage metadata"""
-        
+
         temperature = kwargs.get('temperature', 0.3)
         top_p = kwargs.get('top_p', 0.9)
         max_tokens = kwargs.get('max_tokens', 4096)
-        
-        # Prepare request based on model family
+
+        # Claude models: use tool_use to force structured code-only output
         if 'anthropic.claude' in self.model_id:
             body = {
                 "anthropic_version": "bedrock-2023-05-31",
                 "max_tokens": max_tokens,
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ],
+                "messages": [{"role": "user", "content": prompt}],
                 "temperature": temperature,
-                "top_p": top_p
+                "top_p": top_p,
+                "tools": [self._CODE_TOOL],
+                "tool_choice": {"type": "tool", "name": "submit_solution"},
             }
         else:
             body = {
                 "prompt": prompt,
                 "max_tokens": max_tokens,
                 "temperature": temperature,
-                "top_p": top_p
+                "top_p": top_p,
             }
-        
+
         try:
             response = self.client.invoke_model(
                 modelId=self.model_id,
@@ -74,34 +87,36 @@ class BedrockClient(LLMClient):
                 contentType='application/json',
                 accept='application/json'
             )
-            
+
             response_body = json.loads(response['body'].read())
             text = None
             usage = {'input_tokens': 0, 'output_tokens': 0}
-            
-            # Extract text and usage based on model response format
+
             if 'anthropic.claude' in self.model_id:
-                if 'content' in response_body and len(response_body['content']) > 0:
-                    text = response_body['content'][0]['text']
-                
-                # Check for usage metadata in Claude responses
+                # Extract code from tool_use block
+                for block in response_body.get('content', []):
+                    if block.get('type') == 'tool_use' and block.get('name') == 'submit_solution':
+                        text = block.get('input', {}).get('code', '')
+                        break
+                # Fallback to plain text block if no tool_use found
+                if text is None:
+                    for block in response_body.get('content', []):
+                        if block.get('type') == 'text':
+                            text = block.get('text', '')
+                            break
                 if 'usage' in response_body:
                     usage['input_tokens'] = response_body['usage'].get('input_tokens', 0)
                     usage['output_tokens'] = response_body['usage'].get('output_tokens', 0)
-                    
             elif 'completion' in response_body:
                 text = response_body['completion']
             elif 'generated_text' in response_body:
                 text = response_body['generated_text']
-            
+
             if text is None:
                 raise ValueError(f"Could not extract response from Bedrock: {response_body}")
-                
-            return {
-                'text': text,
-                'usage': usage
-            }
-            
+
+            return {'text': text, 'usage': usage}
+
         except Exception as e:
             print(f"Bedrock invocation error: {str(e)}")
             raise e
