@@ -1,0 +1,13 @@
+Running OpenAI batch generation from: experiments/paper_openai_batch_gpt41_minimal.json
+Mode: resume
+Run id: openai_batch_paper_openai_batch_gpt41_minimal_93b4aace81
+Batch root: output/batch_jobs/openai_batch_paper_openai_batch_gpt41_minimal_93b4aace81
+
+------------------------------------------------------------
+OPENAI BATCH MODEL: gpt-4.1
+------------------------------------------------------------
+Skipping model not ready: gpt-4.1 (WAITING_FOR_DETAILED)
+
+============================================================
+OpenAI batch resume completed!
+============================================================

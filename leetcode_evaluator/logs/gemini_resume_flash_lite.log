@@ -1,0 +1,45 @@
+/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/clients/llm/gemini.py:6: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+2026-03-29 14:22:52,824 - INFO - Experiment started: 20260329_142252_gemini-3.1-flash-lite-preview
+2026-03-29 14:22:52,824 - INFO - Provider: gemini, Model: gemini-3.1-flash-lite-preview
+2026-03-29 14:22:52,825 - INFO - Experiment Name: gemini-3.1-flash-lite-preview
+2026-03-29 14:22:53,465 - INFO - Initialized evaluator with gemini
+Running Gemini batch generation from: experiments/paper_gemini_batch.json
+Mode: resume
+Stable run id: gemini_batch_paper_gemini_batch_fb12aead32
+Batch root: output/batch_jobs/gemini_batch_paper_gemini_batch_fb12aead32
+Filter models: ['gemini-3.1-flash-lite-preview']
+
+------------------------------------------------------------
+GEMINI BATCH MODEL: gemini-3.1-flash-lite-preview
+------------------------------------------------------------
+Reusing normalized batch output: model=gemini-3.1-flash-lite-preview, prompt=detailed
+Reusing normalized batch output: model=gemini-3.1-flash-lite-preview, prompt=minimal
+Resuming from results file: output/gemini_batch_paper_gemini_batch_fb12aead32/results/evaluations/evaluation_results_20260329_142122.json
+✓ Session cookies configured: ['gr_user_id', 'cf_clearance', '87b5a3c3f1a55520_gr_last_sent_cs1', 'INGRESSCOOKIE', 'ip_check', 'LEETCODE_SESSION', '87b5a3c3f1a55520_gr_session_id', '87b5a3c3f1a55520_gr_last_sent_sid_with_cs1', '87b5a3c3f1a55520_gr_cs1', '_gid', '_gat', '87b5a3c3f1a55520_gr_session_id_sent_vst', '_ga', 'FCCDCF', '__gads', '__gpi', '__eoi', 'FCNEC', '_ga_CDRWKZTDEX', 'csrftoken']
+============================================================
+LeetCode AI Solution Evaluator
+============================================================
+✓ Successfully authenticated as bce896482
+✓ Using gemini provider with model: gemini-3.1-flash-lite-preview
+
+
+🚀 Starting generated-result submission batch:
+  - Total Problems: 100
+  - Submission Delay: 15s
+  - Total Generated Attempts: 1000
+Progress:   0%|          | 0/100 [00:00<?, ?it/s]Progress:   1Traceback (most recent call last):
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/main.py", line 448, in main
+    batch_results = batch_runner.run(
+     Progress:   4%|▍         | 4/100 [13:23<5:12:14, 195.15s/it]Progress:   5%|▌         | 5/100 [18:29<6:12:08, 235.04s/it]Progress:   6%|▌         | 6/100 [21:57<5:53:48, 225.84s/it]Progress:   7%|▋         | 7/100 [27:01<6:29:37, 251.37s/it]Progress:   8%|▊         | 8/100 [33:48<7:41:26, 300.94s/it]Progress:   9%|▉         | 9/100 [38:17<7:21:08, 290.87s/it]Progress:  10%|█         | 10/100 [41:37<6:34:15, 262.83s/it]Progress:  11%|█         | 11/100 [46:55<6:54:47, 279.63s/it]Progress:  12%|█▏        | 12/100 [50:48<6:29:35, 265.63s/it]Progress:  13%|█▎        | 13/100 [53:14<5:32:31, 229.32s/it]Progress:  14%|█▍        | 14/100 [57:02<5:28:13, 228.99s/it]Progress:  15%|█▌        | 15/100 [1:03:58<6:44:12, 285.32s/it]Progress:  16%|█▌        | 16/100 [1:58:50<27:46:28, 1190.34s/it]Progress:  17%|█▋        | 17/100 [2:02:45<20:49:13, 903.05s/it] Progress:  18%|█▊        | 18/100 [2:06:00<15:43:24, 690.30s/it]Progress:  19%|█▉        | 19/100 [2:11:03<12:54:36, 573.79s/it]Progress:  20%|██        | 20/100 [2:14:59<10:30:01, 472.52s/it]Progress:  21%|██        | 21/100 [2:19:08<8:53:36, 405.27s/it] Progress:  22%|██▏       | 22/100 [2:23:18<7:46:30, 358.85s/it]Progress:  23%|██▎       | 23/100 [2:28:07<7:13:37, 337.89s/it]Progress:  24%|██▍       | 24/100 [2:31:07<6:08:02, 290.57s/it]Progress:  25%|██▌       | 25/100 [2:35:33<5:53:41, 282.95s/it]Progress:  26%|██▌       | 26/100 [2:42:31<6:39:11, 323.68s/it]Progress:  27%|██▋       | 27/100 [2:45:47<5:47:14, 285.40s/it]Progress:  28%|██▊       | 28/100 [2:49:39<5:23:05, 269.24s/it]Progress:  29%|██▉       | 29/100 [2:52:58<4:53:53, 248.36s/it]Progress:  30%|███       | 30/100 [2:58:05<5:10:12, 265.89s/it]Progress:  31%|███       | 31/100 [3:04:03<5:37:35, 293.55s/it]Progress:  32%|███▏      | 32/100 [3:09:01<5:33:55, 294.64s/it]Progress:  33%|███▎      | 33/100 [3:12:49<5:06:43, 274.69s/it]Progress:  34%|███▍      | 34/100 [3:16:58<4:53:37, 266.94s/it]Progress:  35%|███▌      | 35/100 [3:21:08<4:43:40, 261.85s/it]Progress:  36%|███▌      | 36/100 [3:24:08<4:13:22, 237.53s/it]Progress:  37%|███▋      | 37/100 [3:28:57<4:25:38, 252.99s/it]Progress:  38%|███▊      | 38/100 [3:32:17<4:04:59, 237.09s/it]Progress:  39%|███▉      | 39/100 [3:37:15<4:19:38, 255.39s/it]Progress:  40%|████      | 40/100 [3:48:59<6:29:41, 389.69s/it]unt and re-run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+✗ Error: LeetCode rate limit exhausted: 10 consecutive submission failures (no submission_id). Switch LeetCode account and re-run.

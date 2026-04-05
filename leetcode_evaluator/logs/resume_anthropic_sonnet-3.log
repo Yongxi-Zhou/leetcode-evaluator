@@ -1,0 +1,83 @@
+2026-04-03 12:40:19,693 - INFO - Experiment started: 20260403_124019_claude-sonnet-4-5-20250929
+2026-04-03 12:40:19,694 - INFO - Provider: anthropic, Model: claude-sonnet-4-5-20250929
+2026-04-03 12:40:19,694 - INFO - Experiment Name: claude-sonnet-4-5-20250929
+2026-04-03 12:40:20,137 - INFO - Initialized evaluator with anthropic
+Running Anthropic batch generation from: experiments/paper_anthropic_batch.json
+Mode: resume
+Run id: anthropic_batch_paper_anthropic_batch_8b59109138
+Batch root: output/batch_jobs/anthropic_batch_paper_anthropic_batch_8b59109138
+Filter models: ['claude-sonnet-4-5-20250929']
+
+------------------------------------------------------------
+ANTHROPIC BATCH MODEL: claude-sonnet-4-5-20250929
+------------------------------------------------------------
+Reusing normalized batch output: model=claude-sonnet-4-5-20250929, prompt=detailed
+Reusing normalized batch output: model=claude-sonnet-4-5-20250929, prompt=minimal
+Resuming from results file: output/anthropic_batch_paper_anthropic_batch_8b59109138/results/evaluations/evaluation_results_20260402_232903.json
+✓ Session cookies configured: ['gr_user_id', '__stripe_mid', '87b5a3c3f1a55520_gr_last_sent_cs1', 'cf_clearance', 'LEETCODE_SESSION', 'INGRESSCOOKIE', 'ip_check', '87b5a3c3f1a55520_gr_session_id', '87b5a3c3f1a55520_gr_last_sent_sid_with_cs1', '87b5a3c3f1a55520_gr_cs1', '_gid', '_gat', '_ga', '87b5a3c3f1a55520_gr_session_id_sent_vst', 'FCCDCF', '__gads', '__gpi', '__eoi', 'FCNEC', '_ga_CDRWKZTDEX', 'csrftoken']
+============================================================
+LeetCode AI Solution Evaluator
+============================================================
+✓ Successfully authenticated as taylorjones0286
+✓ Using anthropic provider with model: claude-sonnet-4-5-20250929
+
+
+🚀 Starting generated-result submission batch:
+  - Total Problems: 100
+  - Already complete (resuming): 99, remaining: 1
+  - Submission Delay: 15s
+  - Total Generated Attempts: 10
+Progress:   0%|          | 0/1 [00:00<?, ?it/s]Progress: 100%|██████████| 1/1 [03:18<00:00, 198.11s/it]Progress: 100%|██████████| 1/1 [03:18<00:00, 198.11s/it]
+2026-04-03 12:43:38,465 - INFO - Summary saved to output/anthropic_batch_paper_anthropic_batch_8b59109138/experiments/20260403_124019_claude-sonnet-4-5-20250929/summary.csv
+2026-04-03 12:43:38,548 - INFO - Stability summary saved to output/anthropic_batch_paper_anthropic_batch_8b59109138/experiments/20260403_124019_claude-sonnet-4-5-20250929/stability_summary.json
+✓ Submission created: 1968058248
+✓ Submission created: 1968058449
+✓ Submission created: 1968058670
+✓ Submission created: 1968058877
+✓ Submission created: 1968059101
+✓ Submission created: 1968059300
+✓ Submission created: 1968059480
+✓ Submission created: 1968059683
+✓ Submission created: 1968059864
+✓ Submission created: 1968060052
+
+========================================
+STABILITY EVALUATION SUMMARY
+========================================
+Total Problems:          200
+Total Runs:              1000
+Run-Level Pass Rate:     52.1%
+95% CI (RLPR):           [49.0%, 55.18%]
+Perfect Stability Rate:  45.0%
+95% CI (PSR):            [38.26%, 51.92%]
+First-Pass Accuracy:     50.5%
+95% CI (FPA):            [43.63%, 57.35%]
+Pass@1:                  50.50%
+Pass@3:                  57.50%
+Pass@5:                  58.50%
+Average Variance:        0.0252
+95% CI (AV):             [0.0164, 0.0348]
+p50 Latency:             0.0 ms
+p90 Latency:             0.0 ms
+========================================
+
+
+============================================================
+✓ Evaluation complete!
+✓ Results saved to: output/anthropic_batch_paper_anthropic_batch_8b59109138/results/evaluations/evaluation_results_20260402_232903.json
+============================================================
+✓ Raw data archived to output/anthropic_batch_paper_anthropic_batch_8b59109138/results/raw/20260403_124019_claude-sonnet-4-5-20250929.jsonl
+✓ Raw data archived to output/aggregate/raw/20260403_124019_claude-sonnet-4-5-20250929.jsonl
+✓ Visualizations saved to output/anthropic_batch_paper_anthropic_batch_8b59109138/reports/20260403_124019_claude-sonnet-4-5-20250929
+✓ Report generated: output/anthropic_batch_paper_anthropic_batch_8b59109138/reports/20260403_124019_claude-sonnet-4-5-20250929/analysis_report.md
+✓ Raw data archived to output/anthropic_batch_paper_anthropic_batch_8b59109138/results/raw/20260403_124019_claude-sonnet-4-5-20250929.jsonl
+✓ Raw data archived to output/aggregate/raw/20260403_124019_claude-sonnet-4-5-20250929.jsonl
+✓ Model fully complete: 100/100 problems
+
+============================================================
+Anthropic batch resume completed!
+============================================================
+Model: claude-sonnet-4-5-20250929
+Results: output/anthropic_batch_paper_anthropic_batch_8b59109138/results/evaluations/evaluation_results_20260402_232903.json
+Report: output/anthropic_batch_paper_anthropic_batch_8b59109138/reports/20260403_124019_claude-sonnet-4-5-20250929/analysis_report.md
+------------------------------------------------------------

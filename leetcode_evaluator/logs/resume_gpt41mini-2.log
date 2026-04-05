@@ -1,0 +1,91 @@
+2026-03-31 17:52:40,054 - INFO - Experiment started: 20260331_175240_gpt-4.1-mini
+2026-03-31 17:52:40,055 - INFO - Provider: openai, Model: gpt-4.1-mini
+2026-03-31 17:52:40,055 - INFO - Experiment Name: gpt-4.1-mini
+2026-03-31 17:52:40,445 - INFO - Initialized evaluator with openai
+Running OpenAI batch generation from: experiments/paper_openai_batch.json
+Mode: resume
+Run id: openai_batch_paper_openai_batch_b9c4511d1e
+Batch root: output/batch_jobs/openai_batch_paper_openai_batch_b9c4511d1e
+
+------------------------------------------------------------
+OPENAI BATCH MODEL: gpt-4.1-mini
+------------------------------------------------------------
+Reusing normalized batch output: model=gpt-4.1-mini, prompt=detailed
+Reusing normalized batch output: model=gpt-4.1-mini, prompt=minimal
+Resuming from results file: output/openai_batch_paper_openai_batch_b9c4511d1e/results/evaluations/evaluation_results_20260330_211630.json
+✓ Session cookies configured: ['gr_user_id', 'cf_clearance', '87b5a3c3f1a55520_gr_last_sent_cs1', '__stripe_mid', 'FCCDCF', 'FCNEC', 'INGRESSCOOKIE', 'ip_check', 'LEETCODE_SESSION', '87b5a3c3f1a55520_gr_session_id', '87b5a3c3f1a55520_gr_last_sent_sid_with_cs1', '87b5a3c3f1a55520_gr_cs1', '_gid', '_gat', '_ga', '87b5a3c3f1a55520_gr_session_id_sent_vst', '_ga_CDRWKZTDEX', 'csrftoken']
+============================================================
+LeetCode AI Solution Evaluator
+============================================================
+✓ Successfully authenticated as ccchow971
+✓ Using openai provider with model: gpt-4.1-mini
+
+
+🚀 Starting generated-result submission batch:
+  - Total Problems: 100
+  - Already complete (resuming): 99, remaining: 1
+  - Submission Delay: 15s
+  - Total Generated Attempts: 10
+Progress:   0%|          | 0/1 [00:00<?, ?it/s]Progress: 100%|██████████| 1/1 [03:05<00:00, 185.66s/it]Progress: 100%|██████████| 1/1 [03:05<00:00, 185.66s/it]
+2026-03-31 17:55:46,344 - INFO - Summary saved to output/openai_batch_paper_openai_batch_b9c4511d1e/experiments/20260331_175240_gpt-4.1-mini/summary.csv
+2026-03-31 17:55:46,486 - INFO - Stability summary saved to output/openai_batch_paper_openai_batch_b9c4511d1e/experiments/20260331_175240_gpt-4.1-mini/stability_summary.json
+✓ Submission created: 1965367656
+✓ Submission created: 1965367750
+✓ Submission created: 1965367857
+✓ Submission created: 1965367939
+✓ Submission created: 1965368040
+✓ Submission created: 1965368144
+✓ Submission created: 1965368229
+✓ Submission created: 1965368327
+✓ Submission created: 1965368412
+✓ Submission created: 1965368512
+
+========================================
+STABILITY EVALUATION SUMMARY
+========================================
+Total Problems:          200
+Total Runs:              1000
+Run-Level Pass Rate:     58.8%
+95% CI (RLPR):           [55.72%, 61.81%]
+Perfect Stability Rate:  48.5%
+95% CI (PSR):            [41.67%, 55.39%]
+First-Pass Accuracy:     60.5%
+95% CI (FPA):            [53.59%, 67.02%]
+Pass@1:                  60.50%
+Pass@3:                  66.50%
+Pass@5:                  68.00%
+Average Variance:        0.0388
+95% CI (AV):             [0.028, 0.0504]
+p50 Latency:             0.0 ms
+p90 Latency:             0.0 ms
+========================================
+
+
+============================================================
+✓ Evaluation complete!
+✓ Results saved to: output/openai_batch_paper_openai_batch_b9c4511d1e/results/evaluations/evaluation_results_20260330_211630.json
+============================================================
+✓ Raw data archived to output/openai_batch_paper_openai_batch_b9c4511d1e/results/raw/20260331_175240_gpt-4.1-mini.jsonl
+✓ Raw data archived to output/aggregate/raw/20260331_175240_gpt-4.1-mini.jsonl
+✓ Visualizations saved to output/openai_batch_paper_openai_batch_b9c4511d1e/reports/20260331_175240_gpt-4.1-mini
+✓ Report generated: output/openai_batch_paper_openai_batch_b9c4511d1e/reports/20260331_175240_gpt-4.1-mini/analysis_report.md
+✓ Raw data archived to output/openai_batch_paper_openai_batch_b9c4511d1e/results/raw/20260331_175240_gpt-4.1-mini.jsonl
+✓ Raw data archived to output/aggregate/raw/20260331_175240_gpt-4.1-mini.jsonl
+✓ Model fully complete: 100/100 problems
+
+------------------------------------------------------------
+OPENAI BATCH MODEL: gpt-4.1
+------------------------------------------------------------
+Resuming OpenAI batch job: model=gpt-4.1, prompt=detailed, status=cancelled, job_id=batch_69cb468ee7a0819080483a3958a0b512
+✗ Failed collecting gpt-4.1/detailed: OpenAI batch job for gpt-4.1/detailed failed: cancelled
+Resuming OpenAI batch job: model=gpt-4.1, prompt=minimal, status=failed, job_id=batch_69cb4695d3e88190ac553df3d8accaa1
+✗ Failed collecting gpt-4.1/minimal: OpenAI batch job for gpt-4.1/minimal failed: failed
+Skipping model not ready: gpt-4.1 (FAILED)
+
+============================================================
+OpenAI batch resume completed!
+============================================================
+Model: gpt-4.1-mini
+Results: output/openai_batch_paper_openai_batch_b9c4511d1e/results/evaluations/evaluation_results_20260330_211630.json
+Report: output/openai_batch_paper_openai_batch_b9c4511d1e/reports/20260331_175240_gpt-4.1-mini/analysis_report.md
+------------------------------------------------------------

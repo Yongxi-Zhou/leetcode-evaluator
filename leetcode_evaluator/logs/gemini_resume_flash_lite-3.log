@@ -1,0 +1,173 @@
+/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/clients/llm/gemini.py:6: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+2026-03-29 21:01:14,647 - INFO - Experiment started: 20260329_210114_gemini-3.1-flash-lite-preview
+2026-03-29 21:01:14,647 - INFO - Provider: gemini, Model: gemini-3.1-flash-lite-preview
+2026-03-29 21:01:14,647 - INFO - Experiment Name: gemini-3.1-flash-lite-preview
+2026-03-29 21:01:15,330 - INFO - Initialized evaluator with gemini
+Running Gemini batch generation from: experiments/paper_gemini_batch.json
+Mode: resume
+Stable run id: gemini_batch_paper_gemini_batch_fb12aead32
+Batch root: output/batch_jobs/gemini_batch_paper_gemini_batch_fb12aead32
+Filter models: ['gemini-3.1-flash-lite-preview']
+
+------------------------------------------------------------
+GEMINI BATCH MODEL: gemini-3.1-flash-lite-preview
+------------------------------------------------------------
+Reusing normalized batch output: model=gemini-3.1-flash-lite-preview, prompt=detailed
+Reusing normalized batch output: model=gemini-3.1-flash-lite-preview, prompt=minimal
+Resuming from results file: output/gemini_batch_paper_gemini_batch_fb12aead32/results/evaluations/evaluation_results_20260329_142122.json
+✓ Session cookies configured: ['gr_user_id', 'cf_clearance', '87b5a3c3f1a55520_gr_last_sent_cs1', 'INGRESSCOOKIE', 'ip_check', 'LEETCODE_SESSION', '87b5a3c3f1a55520_gr_session_id', '87b5a3c3f1a55520_gr_last_sent_sid_with_cs1', '87b5a3c3f1a55520_gr_cs1', '_gid', '_gat', '87b5a3c3f1a55520_gr_session_id_sent_vst', '_ga', 'FCCDCF', '__gads', '__gpi', '__eoi', 'FCNEC', '_ga_CDRWKZTDEX', 'csrftoken']
+============================================================
+LeetCode AI Solution Evaluator
+============================================================
+✓ Successfully authenticated as bce896482
+✓ Using gemini provider with model: gemini-3.1-flash-lite-preview
+
+
+🚀 Starting generated-result submission batch:
+  - Total Problems: 100
+  - Already complete (resuming): 16, remaining: 84
+  - Submission Delay: 15s
+  - Total Generated Attempts: 840
+Progress:   0%|          | 0/84 [00:00<?, ?it/s]Progress:   1%|          | 1/84 [02:32<3:30:26, 152.13s/it]Progress:   2%|▏         | 2/84 [05:44<4:00:13, 175.78s/it]Progress:   4%|▎         | 3/84 [08:46<4:01:22, 178.80s/it]Progress:   5%|▍         | 4/84 [12:33<4:23:20, 197.50s/it]Progress:   6%|▌         | 5/84 [16:12<4:30:40, 205.58s/it]Progress:   7%|▋         | 6/84 [19:13<4:16:05, 196.99s/it]Progress:   8%|▊         | 7/84 [22:26<4:11:11, 195.73s/it]Progress:  10%|▉         | 8/84 [25:25<4:01:15, 190.47s/it]Progress:  11%|█         | 9/84 [33:10<5:45:22, 276.30s/it]Traceback (most recent call last):
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/main.py", line 479, in main
+    batch_results = batch_runner.run(
+        mode=args.gemini_batch_mode,
+    ...<5 lines>...
+        skip_premium=args.skip_premium,
+    )
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/gemini_batch_runner.py", line 682, in run
+    results_file = evaluator.run_generated_evaluation(
+        generated_items,
+        stability_runs=self.stability_runs,
+        results_file=active_results_file,
+    )
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/evaluator.py", line 616, in run_generated_evaluation
+    results = self.evaluate_generated_batch(generated_items, results_file=results_file)
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/evaluator.py", line 410, in evaluate_generated_batch
+    self._process_submission_item(item, results, None, pbar)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/evaluator.py", line 241, in _process_submission_item
+    raise RateLimitExhaustedException(
+    ...<3 lines>...
+    )
+leetcode_evaluator.core.evaluator.RateLimitExhaustedException: LeetCode rate limit exhausted: 10 consecutive submission failures (no submission_id). Switch LeetCode account and re-run.
+Progress:  11%|█         | 9/84 [39:11<5:26:38, 261.32s/it]
+✓ Submission created: 1963414932
+✓ Submission created: 1963415141
+✓ Submission created: 1963415346
+✓ Submission created: 1963415552
+✓ Submission created: 1963415749
+✓ Submission created: 1963415974
+✓ Submission created: 1963416189
+✓ Submission created: 1963416410
+✓ Submission created: 1963416642
+✓ Submission created: 1963416849
+✓ Submission created: 1963417065
+✓ Submission created: 1963417306
+✓ Submission created: 1963417532
+✓ Submission created: 1963417769
+✓ Submission created: 1963417992
+✓ Submission created: 1963418217
+✓ Submission created: 1963418451
+✓ Submission created: 1963418667
+✓ Submission created: 1963418874
+✓ Submission created: 1963419078
+✓ Submission created: 1963419271
+✓ Submission created: 1963419503
+✓ Submission created: 1963419702
+✓ Submission created: 1963419909
+✓ Submission created: 1963420135
+✓ Submission created: 1963420346
+✓ Submission created: 1963420581
+✓ Submission created: 1963420879
+✓ Submission created: 1963421084
+✓ Submission created: 1963421359
+✓ Submission created: 1963421638
+✓ Submission created: 1963421889
+✓ Submission created: 1963422133
+✓ Submission created: 1963422390
+✓ Submission created: 1963422688
+✓ Submission created: 1963422965
+✓ Submission created: 1963423224
+✓ Submission created: 1963423500
+✓ Submission created: 1963423773
+✓ Submission created: 1963424010
+✓ Submission created: 1963424280
+✓ Submission created: 1963424523
+✓ Submission created: 1963424844
+✓ Submission created: 1963425200
+✓ Submission created: 1963425451
+✓ Submission created: 1963425775
+✓ Submission created: 1963426030
+✓ Submission created: 1963426276
+✓ Submission created: 1963426500
+✓ Submission created: 1963426705
+✓ Submission created: 1963426936
+✓ Submission created: 1963427160
+✓ Submission created: 1963427355
+✓ Submission created: 1963427582
+✓ Submission created: 1963427793
+✓ Submission created: 1963428005
+✓ Submission created: 1963428219
+✓ Submission created: 1963428418
+✓ Submission created: 1963428658
+✓ Submission created: 1963428891
+✓ Submission created: 1963429167
+✓ Submission created: 1963429451
+✓ Submission created: 1963429718
+✓ Submission created: 1963429937
+✓ Submission created: 1963430205
+✓ Submission created: 1963430410
+✓ Submission created: 1963430630
+✓ Submission created: 1963430869
+✓ Submission created: 1963431105
+✓ Submission created: 1963431342
+✓ Submission created: 1963431561
+✓ Submission created: 1963431800
+✓ Submission created: 1963432007
+✓ Submission created: 1963432233
+✓ Submission created: 1963432451
+✓ Submission created: 1963432666
+✓ Submission created: 1963432896
+✓ Submission created: 1963433117
+✓ Submission created: 1963433365
+✓ Submission created: 1963433569
+✓ Submission created: 1963433786
+✓ Submission created: 1963433979
+✓ Submission created: 1963434184
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+RATE LIMIT EXHAUSTED for model: gemini-3.1-flash-lite-preview
+Progress saved. Switch LeetCode account and re-run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+✗ Error: LeetCode rate limit exhausted: 10 consecutive submission failures (no submission_id). Switch LeetCode account and re-run.

@@ -1,0 +1,83 @@
+2026-03-25 19:41:28,135 - INFO - Experiment started: 20260325_194128_deepseek-v3.2
+2026-03-25 19:41:28,136 - INFO - Provider: qwen, Model: deepseek-v3.2
+2026-03-25 19:41:28,136 - INFO - Experiment Name: deepseek-v3.2
+2026-03-25 19:41:29,210 - INFO - Initialized evaluator with qwen
+🚀 Running Qwen batch generation from: experiments/paper_qwen_batch_deepseek.json
+Mode: resume
+Stable run id: qwen_batch_paper_qwen_batch_deepseek_f372dc2788
+Batch root: output/batch_jobs/qwen_batch_paper_qwen_batch_deepseek_f372dc2788
+Filter models: ['deepseek-v3.2']
+
+------------------------------------------------------------
+QWEN BATCH MODEL: deepseek-v3.2
+------------------------------------------------------------
+Reusing normalized batch output: model=deepseek-v3.2, prompt=detailed
+Reusing normalized batch output: model=deepseek-v3.2, prompt=minimal
+Resuming from results file: output/qwen_batch_paper_qwen_batch_deepseek_f372dc2788/results/evaluations/evaluation_results_20260325_084025.json
+✓ Session cookies configured: ['_gid', 'ip_check', 'gr_user_id', '87b5a3c3f1a55520_gr_session_id', '87b5a3c3f1a55520_gr_session_id_sent_vst', 'cf_clearance', 'LEETCODE_SESSION', 'INGRESSCOOKIE', '__gads', '__gpi', '__eoi', '_gat', '_dd_s', '87b5a3c3f1a55520_gr_last_sent_sid_with_cs1', '87b5a3c3f1a55520_gr_last_sent_cs1', 'messages', '87b5a3c3f1a55520_gr_cs1', '_ga', 'FCCDCF', 'FCNEC', '_ga_CDRWKZTDEX', 'csrftoken']
+============================================================
+LeetCode AI Solution Evaluator
+============================================================
+✓ Successfully authenticated as bce896482
+✓ Using qwen provider with model: deepseek-v3.2
+
+
+🚀 Starting generated-result submission batch:
+  - Total Problems: 100
+  - Already complete (resuming): 99, remaining: 1
+  - Submission Delay: 15s
+  - Total Generated Attempts: 10
+Progress:   0%|          | 0/1 [00:00<?, ?it/s]Progress: 100%|██████████| 1/1 [03:18<00:00, 199.00s/it]Progress: 100%|██████████| 1/1 [03:19<00:00, 199.00s/it]
+2026-03-25 19:44:48,446 - INFO - Summary saved to output/qwen_batch_paper_qwen_batch_deepseek_f372dc2788/experiments/20260325_194128_deepseek-v3.2/summary.csv
+2026-03-25 19:44:48,544 - INFO - Stability summary saved to output/qwen_batch_paper_qwen_batch_deepseek_f372dc2788/experiments/20260325_194128_deepseek-v3.2/stability_summary.json
+✓ Submission created: 1959442210
+✓ Submission created: 1959442368
+✓ Submission created: 1959442534
+✓ Submission created: 1959442666
+✓ Submission created: 1959442835
+✓ Submission created: 1959442985
+✓ Submission created: 1959443137
+✓ Submission created: 1959443309
+✓ Submission created: 1959443475
+✓ Submission created: 1959443636
+
+========================================
+STABILITY EVALUATION SUMMARY
+========================================
+Total Problems:          200
+Total Runs:              1000
+Run-Level Pass Rate:     48.0%
+95% CI (RLPR):           [44.92%, 51.1%]
+Perfect Stability Rate:  37.0%
+95% CI (PSR):            [30.61%, 43.88%]
+First-Pass Accuracy:     49.0%
+95% CI (FPA):            [42.16%, 55.88%]
+Pass@1:                  49.00%
+Pass@3:                  58.50%
+Pass@5:                  61.00%
+Average Variance:        0.0476
+95% CI (AV):             [0.0356, 0.0604]
+p50 Latency:             0.0 ms
+p90 Latency:             0.0 ms
+========================================
+
+
+============================================================
+✓ Evaluation complete!
+✓ Results saved to: output/qwen_batch_paper_qwen_batch_deepseek_f372dc2788/results/evaluations/evaluation_results_20260325_084025.json
+============================================================
+✓ Raw data archived to output/qwen_batch_paper_qwen_batch_deepseek_f372dc2788/results/raw/20260325_194128_deepseek-v3.2.jsonl
+✓ Raw data archived to output/aggregate/raw/20260325_194128_deepseek-v3.2.jsonl
+✓ Visualizations saved to output/qwen_batch_paper_qwen_batch_deepseek_f372dc2788/reports/20260325_194128_deepseek-v3.2
+✓ Report generated: output/qwen_batch_paper_qwen_batch_deepseek_f372dc2788/reports/20260325_194128_deepseek-v3.2/analysis_report.md
+✓ Raw data archived to output/qwen_batch_paper_qwen_batch_deepseek_f372dc2788/results/raw/20260325_194128_deepseek-v3.2.jsonl
+✓ Raw data archived to output/aggregate/raw/20260325_194128_deepseek-v3.2.jsonl
+✓ Model fully complete: 100/100 problems
+
+============================================================
+✓ Qwen batch resume completed!
+============================================================
+Model: deepseek-v3.2
+Results: output/qwen_batch_paper_qwen_batch_deepseek_f372dc2788/results/evaluations/evaluation_results_20260325_084025.json
+Report: output/qwen_batch_paper_qwen_batch_deepseek_f372dc2788/reports/20260325_194128_deepseek-v3.2/analysis_report.md
+------------------------------------------------------------

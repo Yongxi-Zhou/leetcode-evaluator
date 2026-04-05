@@ -1,0 +1,29 @@
+2026-03-21 22:33:08,173 - INFO - Experiment started: 20260321_223308_qwen-max
+2026-03-21 22:33:08,173 - INFO - Provider: qwen, Model: qwen-max
+2026-03-21 22:33:08,173 - INFO - Experiment Name: qwen-max
+2026-03-21 22:33:08,590 - INFO - Initialized evaluator with qwen
+🚀 Running Qwen batch generation from: experiments/paper_qwen_batch.json
+Mode: resume
+Stable run id: qwen_batch_paper_qwen_batch_608ffde791
+Batch root: output/batch_jobs/qwen_batch_paper_qwen_batch_608ffde791
+Filter models: ['qwen-max']
+
+------------------------------------------------------------
+QWEN BATCH MODEL: qwen-max
+------------------------------------------------------------
+Reusing normalized batch output: model=qwen-max, prompt=detailed
+Reusing normalized batch output: model=qwen-max, prompt=minimal
+✓ Session cookies configured
+============================================================
+LeetCode AI Solution Evaluator
+============================================================
+✓ Successfully authenticated as colindickson5303
+✓ Using qwen provider with model: qwen-max
+
+
+🚀 Starting generated-result submission batch:
+  - Problems: 100
+  - Submission Delay: 10s
+  - Total Generated Attempts: 1000
+Progress:   0%|          | 0/100 [00:00<?, ?it/s]/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/multiprocessing/resource_tracker.py:396: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-d2kn4q6b'}
+  warnings.warn(

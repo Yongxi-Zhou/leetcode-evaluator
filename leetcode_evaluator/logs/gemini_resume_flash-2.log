@@ -1,0 +1,582 @@
+/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/clients/llm/gemini.py:6: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+2026-03-29 09:43:17,643 - INFO - Experiment started: 20260329_094317_gemini-3-flash-preview
+2026-03-29 09:43:17,645 - INFO - Provider: gemini, Model: gemini-3-flash-preview
+2026-03-29 09:43:17,645 - INFO - Experiment Name: gemini-3-flash-preview
+2026-03-29 09:43:18,086 - INFO - Initialized evaluator with gemini
+Running Gemini batch generation from: experiments/paper_gemini_batch.json
+Mode: resume
+Stable run id: gemini_batch_paper_gemini_batch_fb12aead32
+Batch root: output/batch_jobs/gemini_batch_paper_gemini_batch_fb12aead32
+Filter models: ['gemini-3-flash-preview']
+
+------------------------------------------------------------
+GEMINI BATCH MODEL: gemini-3-flash-preview
+------------------------------------------------------------
+Reusing normalized batch output: model=gemini-3-flash-preview, prompt=detailed
+Reusing normalized batch output: model=gemini-3-flash-preview, prompt=minimal
+Resuming from results file: output/gemini_batch_paper_gemini_batch_fb12aead32/results/evaluations/evaluation_results_20260329_004834.json
+✓ Session cookies configured: ['gr_user_id', '87b5a3c3f1a55520_gr_last_sent_cs1', '__stripe_mid', 'cf_clearance', 'messages', 'FCCDCF', '__gads', '__gpi', '__eoi', 'FCNEC', 'ip_check', '_gid', 'LEETCODE_SESSION', 'INGRESSCOOKIE', '87b5a3c3f1a55520_gr_session_id', '87b5a3c3f1a55520_gr_last_sent_sid_with_cs1', '_gat', '87b5a3c3f1a55520_gr_session_id_sent_vst', '87b5a3c3f1a55520_gr_cs1', '_ga', '_ga_CDRWKZTDEX', 'csrftoken']
+============================================================
+LeetCode AI Solution Evaluator
+============================================================
+✓ Successfully authenticated as sim465329
+✓ Using gemini provider with model: gemini-3-flash-preview
+
+
+🚀 Starting generated-result submission batch:
+  - Total Problems: 100
+  - Already complete (resuming): 50, remaining: 50
+  - Submission Delay: 15s
+  - Total Generated Attempts: 500
+Progress:   0%|          | 0/50 [00:00<?, ?it/s]Progress:   2%|▏         | 1/50 [03:20<2:44:00, 200.82s/it]Progress:   4%|▍         | 2/50 [06:43<2:41:17, 201.62s/it]Progress:   6%|▌         | 3/50 [09:41<2:29:31, 190.88s/it]Progress:   8%|▊         | 4/50 [12:59<2:28:45, 194.02s/it]Progress:  10%|█         | 5/50 [16:19<2:27:02, 196.05s/it]Progress:  12%|█▏        | 6/50 [19:29<2:22:10, 193.87s/it]Progress:  14%|█▍        | 7/50 [22:35<2:17:15, 191.53s/it]Progress:  16%|█▌        | 8/50 [25:41<2:12:47, 189.71s/it]Progress:  18%|█▊        | 9/50 [31:30<2:43:38, 239.48s/it]Progress:  20%|██        | 10/50 [34:46<2:30:39, 225.99s/it]Progress:  22%|██▏       | 11/50 [37:57<2:19:58, 215.36s/it]Progress:  24%|██▍       | 12/50 [40:59<2:09:50, 205.02s/it]Progress:  26%|██▌       | 13/50 [45:07<2:14:35, 218.25s/it]Progress:  28%|██▊       | 14/50 [48:10<2:04:28, 207.45s/it]Progress:  30%|███       | 15/50 [51:15<1:57:11, 200.90s/it]Progress:  32%|███▏      | 16/50 [54:14<1:50:05, 194.29s/it]Progress:  34%|███▍      | 17/50 [57:57<1:51:36, 202.92s/it]Progress:  36%|███▌      | 18/50 [1:01:14<1:47:11, 200.99s/it]Progress:  38%|███▊      | 19/50 [1:04:57<1:47:18, 207.71s/it]Progress:  40%|████      | 20/50 [1:08:00<1:40:02, 200.07s/it]Progress:  42%|████▏     | 21/50 [1:10:59<1:33:40, 193.82s/it]Progress:  44%|████▍     | 22/50 [1:14:24<1:32:00, 197.15s/it]Progress:  46%|████▌     | 23/50 [1:17:20<1:25:56, 190.98s/it]Progress:  48%|████▊     | 24/50 [1:20:19<1:21:10, 187.32s/it]Progress:  50%|█████     | 25/50 [1:23:27<1:18:10, 187.62s/it]Progress:  52%|█████▏    | 26/50 [1:26:46<1:16:21, 190.90s/it]Progress:  54%|█████▍    | 27/50 [1:29:56<1:13:04, 190.63s/it]Progress:  56%|█████▌    | 28/50 [1:33:03<1:09:29, 189.50s/it]Progress:  58%|█████▊    | 29/50 [1:36:10<1:06:05, 188.84s/it]Progress:  60%|██████    | 30/50 [1:39:10<1:02:06, 186.31s/it]Progress:  62%|██████▏   | 31/50 [1:42:42<1:01:22, 193.81s/it]Progress:  64%|██████▍   | 32/50 [1:45:57<58:16, 194.24s/it]  Progress:  66%|██████▌   | 33/50 [1:48:55<53:40, 189.42s/it]Progress:  68%|██████▊   | 34/50 [1:52:14<51:13, 192.11s/it]Progress:  70%|███████   | 35/50 [1:55:30<48:22, 193.53s/it]Progress:  72%|███████▏  | 36/50 [1:58:33<44:22, 190.14s/it]Progress:  74%|███████▍  | 37/50 [2:01:36<40:43, 187.97s/it]Progress:  76%|███████▌  | 38/50 [2:04:55<38:16, 191.38s/it]Progress:  78%|███████▊  | 39/50 [2:08:11<35:21, 192.89s/it]Progress:  80%|████████  | 40/50 [2:12:21<34:59, 209.94s/it]Progress:  82%|████████▏ | 41/50 [2:15:20<30:06, 200.73s/it]Progress:  84%|████████▍ | 42/50 [2:18:30<26:19, 197.42s/it]Progress:  86%|████████▌ | 43/50 [2:21:42<22:50, 195.74s/it]Progress:  88%|████████▊ | 44/50 [2:24:43<19:07, 191.25s/it]Progress:  90%|█████████ | 45/50 [2:27:43<15:39, 187.86s/it]Progress:  92%|█████████▏| 46/50 [2:30:41<12:19, 184.99s/it]Progress:  94%|█████████▍| 47/50 [2:34:30<09:54, 198.21s/it]Progress:  96%|█████████▌| 48/50 [2:37:49<06:36, 198.39s/it]Progress:  98%|█████████▊| 49/50 [2:40:49<03:12, 192.90s/it]Progress: 100%|██████████| 50/50 [2:43:58<00:00, 191.93s/it]Progress: 100%|██████████| 50/50 [2:43:58<00:00, 196.78s/it]
+2026-03-29 12:27:17,220 - INFO - Summary saved to output/gemini_batch_paper_gemini_batch_fb12aead32/experiments/20260329_094317_gemini-3-flash-preview/summary.csv
+2026-03-29 12:27:17,336 - INFO - Stability summary saved to output/gemini_batch_paper_gemini_batch_fb12aead32/experiments/20260329_094317_gemini-3-flash-preview/stability_summary.json
+✓ Submission created: 1963045626
+✓ Submission created: 1963045963
+✓ Submission created: 1963046276
+✓ Submission created: 1963046597
+✓ Submission created: 1963046917
+✓ Submission created: 1963047259
+✓ Submission created: 1963047579
+✓ Submission created: 1963047933
+✓ Submission created: 1963048254
+✓ Submission created: 1963048589
+✓ Submission created: 1963048938
+✓ Submission created: 1963049268
+✓ Submission created: 1963049576
+✓ Submission created: 1963049914
+✓ Submission created: 1963050236
+✓ Submission created: 1963050537
+✓ Submission created: 1963050839
+✓ Submission created: 1963051181
+✓ Submission created: 1963051504
+✓ Submission created: 1963051849
+✓ Submission created: 1963052186
+✓ Submission created: 1963052467
+✓ Submission created: 1963052759
+✓ Submission created: 1963053072
+✓ Submission created: 1963053363
+✓ Submission created: 1963053635
+✓ Submission created: 1963053903
+✓ Submission created: 1963054223
+✓ Submission created: 1963054515
+✓ Submission created: 1963054793
+✓ Submission created: 1963055086
+✓ Submission created: 1963055377
+✓ Submission created: 1963055673
+✓ Submission created: 1963055991
+✓ Submission created: 1963056325
+✓ Submission created: 1963056614
+✓ Submission created: 1963056942
+✓ Submission created: 1963057249
+✓ Submission created: 1963057543
+✓ Submission created: 1963057883
+✓ Submission created: 1963058197
+✓ Submission created: 1963058523
+✓ Submission created: 1963058858
+✓ Submission created: 1963059181
+✓ Submission created: 1963059505
+✓ Submission created: 1963059873
+✓ Submission created: 1963060226
+✓ Submission created: 1963060556
+✓ Submission created: 1963060841
+✓ Submission created: 1963061142
+✓ Submission created: 1963061422
+✓ Submission created: 1963061716
+✓ Submission created: 1963062060
+✓ Submission created: 1963062327
+✓ Submission created: 1963062658
+✓ Submission created: 1963062951
+✓ Submission created: 1963063266
+✓ Submission created: 1963063535
+✓ Submission created: 1963063843
+✓ Submission created: 1963064109
+✓ Submission created: 1963064425
+✓ Submission created: 1963064738
+✓ Submission created: 1963065018
+✓ Submission created: 1963065303
+✓ Submission created: 1963065627
+✓ Submission created: 1963065947
+✓ Submission created: 1963066241
+✓ Submission created: 1963066527
+✓ Submission created: 1963066812
+✓ Submission created: 1963067116
+✓ Submission created: 1963067428
+✓ Submission created: 1963067760
+✓ Submission created: 1963068043
+✓ Submission created: 1963068356
+✓ Submission created: 1963068618
+✓ Submission created: 1963068910
+✓ Submission created: 1963069215
+✓ Submission created: 1963069527
+✓ Submission created: 1963069824
+✓ Submission created: 1963070176
+✓ Submission created: 1963070483
+✓ Submission created: 1963070891
+✓ Submission created: 1963071517
+✓ Submission created: 1963071894
+✓ Submission created: 1963072506
+✓ Submission created: 1963073243
+✓ Submission created: 1963073988
+✓ Submission created: 1963074682
+✓ Submission created: 1963075369
+✓ Submission created: 1963075809
+✓ Submission created: 1963076307
+✓ Submission created: 1963076666
+✓ Submission created: 1963076993
+✓ Submission created: 1963077337
+✓ Submission created: 1963077674
+✓ Submission created: 1963078022
+✓ Submission created: 1963078290
+✓ Submission created: 1963078643
+✓ Submission created: 1963078979
+✓ Submission created: 1963079265
+✓ Submission created: 1963079597
+✓ Submission created: 1963079926
+✓ Submission created: 1963080237
+✓ Submission created: 1963080521
+✓ Submission created: 1963080844
+✓ Submission created: 1963081173
+✓ Submission created: 1963081515
+✓ Submission created: 1963081855
+✓ Submission created: 1963082241
+✓ Submission created: 1963082627
+✓ Submission created: 1963082964
+✓ Submission created: 1963083273
+✓ Submission created: 1963083546
+✓ Submission created: 1963083841
+✓ Submission created: 1963084129
+✓ Submission created: 1963084423
+✓ Submission created: 1963084714
+✓ Submission created: 1963085075
+✓ Submission created: 1963085400
+✓ Submission created: 1963085730
+✓ Submission created: 1963086060
+✓ Submission created: 1963086408
+✓ Submission created: 1963086792
+✓ Submission created: 1963087248
+✓ Submission created: 1963087632
+✓ Submission created: 1963088136
+✓ Submission created: 1963088594
+✓ Submission created: 1963089048
+✓ Submission created: 1963089390
+✓ Submission created: 1963089885
+✓ Submission created: 1963090287
+✓ Submission created: 1963090611
+✓ Submission created: 1963090932
+✓ Submission created: 1963091240
+✓ Submission created: 1963091532
+✓ Submission created: 1963091893
+✓ Submission created: 1963092198
+✓ Submission created: 1963092507
+✓ Submission created: 1963092800
+✓ Submission created: 1963093097
+✓ Submission created: 1963093406
+✓ Submission created: 1963093754
+✓ Submission created: 1963094079
+✓ Submission created: 1963094354
+✓ Submission created: 1963094635
+✓ Submission created: 1963094934
+✓ Submission created: 1963095242
+✓ Submission created: 1963095543
+✓ Submission created: 1963095853
+✓ Submission created: 1963096188
+✓ Submission created: 1963096513
+✓ Submission created: 1963096809
+✓ Submission created: 1963097079
+✓ Submission created: 1963097380
+✓ Submission created: 1963097695
+✓ Submission created: 1963097998
+✓ Submission created: 1963098331
+✓ Submission created: 1963098620
+✓ Submission created: 1963098933
+✓ Submission created: 1963099250
+✓ Submission created: 1963099543
+✓ Submission created: 1963099934
+✓ Submission created: 1963100295
+✓ Submission created: 1963100647
+✓ Submission created: 1963100988
+✓ Submission created: 1963101378
+✓ Submission created: 1963101741
+✓ Submission created: 1963102098
+✓ Submission created: 1963102466
+✓ Submission created: 1963102861
+✓ Submission created: 1963103252
+✓ Submission created: 1963103606
+✓ Submission created: 1963103935
+✓ Submission created: 1963104256
+✓ Submission created: 1963104589
+✓ Submission created: 1963104935
+✓ Submission created: 1963105205
+✓ Submission created: 1963105540
+✓ Submission created: 1963105886
+✓ Submission created: 1963106218
+✓ Submission created: 1963106562
+✓ Submission created: 1963107000
+✓ Submission created: 1963107487
+✓ Submission created: 1963107979
+✓ Submission created: 1963108281
+✓ Submission created: 1963108744
+✓ Submission created: 1963109083
+✓ Submission created: 1963109448
+✓ Submission created: 1963109813
+✓ Submission created: 1963110141
+✓ Submission created: 1963110474
+✓ Submission created: 1963110778
+✓ Submission created: 1963111067
+✓ Submission created: 1963111391
+✓ Submission created: 1963111713
+✓ Submission created: 1963112026
+✓ Submission created: 1963112417
+✓ Submission created: 1963112711
+✓ Submission created: 1963113047
+✓ Submission created: 1963113414
+✓ Submission created: 1963113743
+✓ Submission created: 1963114069
+✓ Submission created: 1963114405
+✓ Submission created: 1963114680
+✓ Submission created: 1963114986
+✓ Submission created: 1963115290
+✓ Submission created: 1963115602
+✓ Submission created: 1963115964
+✓ Submission created: 1963116260
+✓ Submission created: 1963116548
+✓ Submission created: 1963116878
+✓ Submission created: 1963117215
+✓ Submission created: 1963117532
+✓ Submission created: 1963117928
+✓ Submission created: 1963118258
+✓ Submission created: 1963118594
+✓ Submission created: 1963118949
+✓ Submission created: 1963119268
+✓ Submission created: 1963119622
+✓ Submission created: 1963119958
+✓ Submission created: 1963120338
+✓ Submission created: 1963120635
+✓ Submission created: 1963120925
+✓ Submission created: 1963121225
+✓ Submission created: 1963121529
+✓ Submission created: 1963121844
+✓ Submission created: 1963122140
+✓ Submission created: 1963122414
+✓ Submission created: 1963122706
+✓ Submission created: 1963122974
+✓ Submission created: 1963123278
+✓ Submission created: 1963123569
+✓ Submission created: 1963123870
+✓ Submission created: 1963124218
+✓ Submission created: 1963124517
+✓ Submission created: 1963124833
+✓ Submission created: 1963125125
+✓ Submission created: 1963125408
+✓ Submission created: 1963125719
+✓ Submission created: 1963126016
+✓ Submission created: 1963126330
+✓ Submission created: 1963126666
+✓ Submission created: 1963126993
+✓ Submission created: 1963127292
+✓ Submission created: 1963127571
+✓ Submission created: 1963127891
+✓ Submission created: 1963128231
+✓ Submission created: 1963128537
+✓ Submission created: 1963128811
+✓ Submission created: 1963129143
+✓ Submission created: 1963129432
+✓ Submission created: 1963129772
+✓ Submission created: 1963130117
+✓ Submission created: 1963130469
+✓ Submission created: 1963130812
+✓ Submission created: 1963131131
+✓ Submission created: 1963131450
+✓ Submission created: 1963131757
+✓ Submission created: 1963132051
+✓ Submission created: 1963132361
+✓ Submission created: 1963132699
+✓ Submission created: 1963132985
+✓ Submission created: 1963133347
+✓ Submission created: 1963133641
+✓ Submission created: 1963134013
+✓ Submission created: 1963134330
+✓ Submission created: 1963134654
+✓ Submission created: 1963134969
+✓ Submission created: 1963135313
+✓ Submission created: 1963135630
+✓ Submission created: 1963135951
+✓ Submission created: 1963136262
+✓ Submission created: 1963136552
+✓ Submission created: 1963136861
+✓ Submission created: 1963137224
+✓ Submission created: 1963137506
+✓ Submission created: 1963137801
+✓ Submission created: 1963138116
+✓ Submission created: 1963138440
+✓ Submission created: 1963138806
+✓ Submission created: 1963139147
+✓ Submission created: 1963139487
+✓ Submission created: 1963139839
+✓ Submission created: 1963140132
+✓ Submission created: 1963140430
+✓ Submission created: 1963140805
+✓ Submission created: 1963141126
+✓ Submission created: 1963141453
+✓ Submission created: 1963141749
+✓ Submission created: 1963142073
+✓ Submission created: 1963142385
+✓ Submission created: 1963142725
+✓ Submission created: 1963143034
+✓ Submission created: 1963143330
+✓ Submission created: 1963143644
+✓ Submission created: 1963143933
+✓ Submission created: 1963144183
+✓ Submission created: 1963144469
+✓ Submission created: 1963144796
+✓ Submission created: 1963145156
+✓ Submission created: 1963145485
+✓ Submission created: 1963145993
+✓ Submission created: 1963146308
+✓ Submission created: 1963146806
+✓ Submission created: 1963147094
+✓ Submission created: 1963147389
+✓ Submission created: 1963147733
+✓ Submission created: 1963148010
+✓ Submission created: 1963148323
+✓ Submission created: 1963148663
+✓ Submission created: 1963148988
+✓ Submission created: 1963149319
+✓ Submission created: 1963149667
+✓ Submission created: 1963150008
+✓ Submission created: 1963150351
+✓ Submission created: 1963150690
+✓ Submission created: 1963151044
+✓ Submission created: 1963151367
+✓ Submission created: 1963151705
+✓ Submission created: 1963152042
+✓ Submission created: 1963152356
+✓ Submission created: 1963152654
+✓ Submission created: 1963152968
+✓ Submission created: 1963153259
+✓ Submission created: 1963153560
+✓ Submission created: 1963153833
+✓ Submission created: 1963154098
+✓ Submission created: 1963154359
+✓ Submission created: 1963154632
+✓ Submission created: 1963154884
+✓ Submission created: 1963155145
+✓ Submission created: 1963155447
+✓ Submission created: 1963155740
+✓ Submission created: 1963156031
+✓ Submission created: 1963156351
+✓ Submission created: 1963156667
+✓ Submission created: 1963156945
+✓ Submission created: 1963157229
+✓ Submission created: 1963157539
+✓ Submission created: 1963157800
+✓ Submission created: 1963158086
+✓ Submission created: 1963158351
+✓ Submission created: 1963158644
+✓ Submission created: 1963158938
+✓ Submission created: 1963159173
+✓ Submission created: 1963159617
+✓ Submission created: 1963159854
+✓ Submission created: 1963160118
+✓ Submission created: 1963160365
+✓ Submission created: 1963160666
+✓ Submission created: 1963160916
+✓ Submission created: 1963161160
+✓ Submission created: 1963161422
+✓ Submission created: 1963161687
+✓ Submission created: 1963161919
+✓ Submission created: 1963162198
+✓ Submission created: 1963162447
+✓ Submission created: 1963162723
+✓ Submission created: 1963163005
+✓ Submission created: 1963163245
+✓ Submission created: 1963163458
+✓ Submission created: 1963163722
+✓ Submission created: 1963163928
+✓ Submission created: 1963164179
+✓ Submission created: 1963164472
+✓ Submission created: 1963164741
+✓ Submission created: 1963165006
+✓ Submission created: 1963165259
+✓ Submission created: 1963165507
+✓ Submission created: 1963165748
+✓ Submission created: 1963165975
+✓ Submission created: 1963166224
+✓ Submission created: 1963166521
+✓ Submission created: 1963166815
+✓ Submission created: 1963167058
+✓ Submission created: 1963167343
+✓ Submission created: 1963167623
+✓ Submission created: 1963167932
+✓ Submission created: 1963168211
+✓ Submission created: 1963168460
+✓ Submission created: 1963168720
+✓ Submission created: 1963168976
+✓ Submission created: 1963169204
+✓ Submission created: 1963169462
+✓ Submission created: 1963169736
+✓ Submission created: 1963169992
+✓ Submission created: 1963170233
+✓ Submission created: 1963170507
+✓ Submission created: 1963170762
+✓ Submission created: 1963171017
+✓ Submission created: 1963171271
+✓ Submission created: 1963171589
+✓ Submission created: 1963171951
+✓ Submission created: 1963172293
+✓ Submission created: 1963172620
+✓ Submission created: 1963172973
+✓ Submission created: 1963173302
+✓ Submission created: 1963173580
+✓ Submission created: 1963173884
+✓ Submission created: 1963174225
+✓ Submission created: 1963174534
+✓ Submission created: 1963174769
+✓ Submission created: 1963175011
+✓ Submission created: 1963175222
+✓ Submission created: 1963175446
+✓ Submission created: 1963175647
+✓ Submission created: 1963175859
+✓ Submission created: 1963176079
+✓ Submission created: 1963176315
+✓ Submission created: 1963176563
+✓ Submission created: 1963176802
+✓ Submission created: 1963177026
+✓ Submission created: 1963177262
+✓ Submission created: 1963177505
+✓ Submission created: 1963177710
+✓ Submission created: 1963177916
+✓ Submission created: 1963178162
+✓ Submission created: 1963178378
+✓ Submission created: 1963178612
+✓ Submission created: 1963178859
+✓ Submission created: 1963179119
+✓ Submission created: 1963179368
+✓ Submission created: 1963179605
+✓ Submission created: 1963179844
+✓ Submission created: 1963180068
+✓ Submission created: 1963180322
+✓ Submission created: 1963180513
+✓ Submission created: 1963180696
+✓ Submission created: 1963180960
+✓ Submission created: 1963181198
+✓ Submission created: 1963181411
+✓ Submission created: 1963181624
+✓ Submission created: 1963181830
+✓ Submission created: 1963182043
+✓ Submission created: 1963182262
+✓ Submission created: 1963182468
+✓ Submission created: 1963182695
+✓ Submission created: 1963182916
+✓ Submission created: 1963183166
+✓ Submission created: 1963183397
+✓ Submission created: 1963183638
+✓ Submission created: 1963183900
+✓ Submission created: 1963184102
+✓ Submission created: 1963184326
+✓ Submission created: 1963184534
+✓ Submission created: 1963184744
+✓ Submission created: 1963184986
+✓ Submission created: 1963185181
+✓ Submission created: 1963185375
+✓ Submission created: 1963185595
+✓ Submission created: 1963185820
+✓ Submission created: 1963186028
+✓ Submission created: 1963186264
+✓ Submission created: 1963186489
+✓ Submission created: 1963186695
+✓ Submission created: 1963186901
+✓ Submission created: 1963187128
+✓ Submission created: 1963187361
+✓ Submission created: 1963187588
+✓ Submission created: 1963187777
+✓ Submission created: 1963187994
+✓ Submission created: 1963188276
+✓ Submission created: 1963188552
+✓ Submission created: 1963188811
+✓ Submission created: 1963189082
+✓ Submission created: 1963189353
+✓ Submission created: 1963189656
+✓ Submission created: 1963189913
+✓ Submission created: 1963190200
+✓ Submission created: 1963190450
+✓ Submission created: 1963190753
+✓ Submission created: 1963190989
+✓ Submission created: 1963191212
+✓ Submission created: 1963191425
+✓ Submission created: 1963191676
+✓ Submission created: 1963191912
+✓ Submission created: 1963192145
+✓ Submission created: 1963192358
+✓ Submission created: 1963192590
+✓ Submission created: 1963192833
+✓ Submission created: 1963193070
+✓ Submission created: 1963193280
+✓ Submission created: 1963193479
+✓ Submission created: 1963193708
+✓ Submission created: 1963193931
+✓ Submission created: 1963194133
+✓ Submission created: 1963194321
+✓ Submission created: 1963194518
+✓ Submission created: 1963194724
+✓ Submission created: 1963194921
+✓ Submission created: 1963195152
+✓ Submission created: 1963195382
+✓ Submission created: 1963195608
+✓ Submission created: 1963195809
+✓ Submission created: 1963196017
+✓ Submission created: 1963196227
+✓ Submission created: 1963196458
+✓ Submission created: 1963196670
+✓ Submission created: 1963196887
+✓ Submission created: 1963197095
+
+========================================
+STABILITY EVALUATION SUMMARY
+========================================
+Total Problems:          200
+Total Runs:              1000
+Run-Level Pass Rate:     82.0%
+95% CI (RLPR):           [79.5%, 84.26%]
+Perfect Stability Rate:  68.5%
+95% CI (PSR):            [61.76%, 74.54%]
+First-Pass Accuracy:     83.0%
+95% CI (FPA):            [77.18%, 87.57%]
+Pass@1:                  83.00%
+Pass@3:                  91.00%
+Pass@5:                  91.50%
+Average Variance:        0.0484
+95% CI (AV):             [0.0364, 0.0612]
+p50 Latency:             0.0 ms
+p90 Latency:             0.0 ms
+========================================
+
+
+============================================================
+✓ Evaluation complete!
+✓ Results saved to: output/gemini_batch_paper_gemini_batch_fb12aead32/results/evaluations/evaluation_results_20260329_004834.json
+============================================================
+✓ Raw data archived to output/gemini_batch_paper_gemini_batch_fb12aead32/results/raw/20260329_094317_gemini-3-flash-preview.jsonl
+✓ Raw data archived to output/aggregate/raw/20260329_094317_gemini-3-flash-preview.jsonl
+✓ Visualizations saved to output/gemini_batch_paper_gemini_batch_fb12aead32/reports/20260329_094317_gemini-3-flash-preview
+✓ Report generated: output/gemini_batch_paper_gemini_batch_fb12aead32/reports/20260329_094317_gemini-3-flash-preview/analysis_report.md
+✓ Raw data archived to output/gemini_batch_paper_gemini_batch_fb12aead32/results/raw/20260329_094317_gemini-3-flash-preview.jsonl
+✓ Raw data archived to output/aggregate/raw/20260329_094317_gemini-3-flash-preview.jsonl
+Model fully complete: 100/100 problems
+
+============================================================
+Gemini batch resume completed!
+============================================================
+Model: gemini-3-flash-preview
+Results: output/gemini_batch_paper_gemini_batch_fb12aead32/results/evaluations/evaluation_results_20260329_004834.json
+Report: output/gemini_batch_paper_gemini_batch_fb12aead32/reports/20260329_094317_gemini-3-flash-preview/analysis_report.md
+------------------------------------------------------------

@@ -1,0 +1,585 @@
+2026-03-31 23:02:55,334 - INFO - Experiment started: 20260331_230255_gpt-4.1
+2026-03-31 23:02:55,336 - INFO - Provider: openai, Model: gpt-4.1
+2026-03-31 23:02:55,336 - INFO - Experiment Name: gpt-4.1
+2026-03-31 23:02:55,914 - INFO - Initialized evaluator with openai
+Running OpenAI batch generation from: experiments/paper_openai_batch_gpt41_minimal.json
+Mode: resume
+Run id: openai_batch_paper_openai_batch_gpt41_minimal_93b4aace81
+Batch root: output/batch_jobs/openai_batch_paper_openai_batch_gpt41_minimal_93b4aace81
+
+------------------------------------------------------------
+OPENAI BATCH MODEL: gpt-4.1
+------------------------------------------------------------
+Reusing normalized batch output: model=gpt-4.1, prompt=detailed
+Reusing normalized batch output: model=gpt-4.1, prompt=minimal
+Resuming from results file: output/openai_batch_paper_openai_batch_gpt41_minimal_93b4aace81/results/evaluations/evaluation_results_20260331_194223.json
+✓ Session cookies configured: ['gr_user_id', 'cf_clearance', '__stripe_mid', '_gid', 'ip_check', 'LEETCODE_SESSION', 'INGRESSCOOKIE', '87b5a3c3f1a55520_gr_session_id', '_gat', '87b5a3c3f1a55520_gr_session_id_sent_vst', '_ga', '__stripe_sid', '_ga_CDRWKZTDEX', 'csrftoken']
+============================================================
+LeetCode AI Solution Evaluator
+============================================================
+✓ Successfully authenticated as colindickson5303
+✓ Using openai provider with model: gpt-4.1
+
+
+🚀 Starting generated-result submission batch:
+  - Total Problems: 100
+  - Already complete (resuming): 49, remaining: 51
+  - Submission Delay: 15s
+  - Total Generated Attempts: 510
+Progress:   0%|          | 0/51 [00:00<?, ?it/s]Progress:   2%|▏         | 1/51 [03:30<2:55:43, 210.87s/it]Progress:   4%|▍         | 2/51 [06:50<2:47:00, 204.50s/it]Progress:   6%|▌         | 3/51 [10:29<2:48:37, 210.77s/it]Progress:   8%|▊         | 4/51 [13:26<2:34:53, 197.74s/it]Progress:  10%|▉         | 5/51 [16:46<2:31:59, 198.26s/it]Progress:  12%|█▏        | 6/51 [20:04<2:28:45, 198.33s/it]Progress:  14%|█▎        | 7/51 [23:11<2:22:48, 194.74s/it]Progress:  16%|█▌        | 8/51 [26:23<2:18:55, 193.85s/it]Progress:  18%|█▊        | 9/51 [29:27<2:13:22, 190.53s/it]Progress:  20%|█▉        | 10/51 [32:45<2:11:56, 193.09s/it]Progress:  22%|██▏       | 11/51 [36:01<2:09:14, 193.85s/it]Progress:  24%|██▎       | 12/51 [39:15<2:05:57, 193.79s/it]Progress:  25%|██▌       | 13/51 [42:11<1:59:26, 188.59s/it]Progress:  27%|██▋       | 14/51 [46:05<2:04:38, 202.12s/it]Progress:  29%|██▉       | 15/51 [49:19<1:59:50, 199.73s/it]Progress:  31%|███▏      | 16/51 [52:16<1:52:37, 193.08s/it]Progress:  33%|███▎      | 17/51 [55:18<1:47:21, 189.46s/it]Progress:  35%|███▌      | 18/51 [1:00:19<2:02:38, 222.98s/it]Progress:  37%|███▋      | 19/51 [1:03:38<1:55:13, 216.05s/it]Progress:  39%|███▉      | 20/51 [1:06:56<1:48:44, 210.46s/it]Progress:  41%|████      | 21/51 [1:09:54<1:40:19, 200.63s/it]Progress:  43%|████▎     | 22/51 [1:12:49<1:33:16, 192.98s/it]Progress:  45%|████▌     | 23/51 [1:17:41<1:43:54, 222.68s/it]Progress:  47%|████▋     | 24/51 [1:20:40<1:34:18, 209.57s/it]Progress:  49%|████▉     | 25/51 [1:23:46<1:27:48, 202.64s/it]Progress:  51%|█████     | 26/51 [1:27:03<1:23:44, 200.98s/it]Progress:  53%|█████▎    | 27/51 [1:30:23<1:20:11, 200.47s/it]Progress:  55%|█████▍    | 28/51 [1:35:23<1:28:18, 230.37s/it]Progress:  57%|█████▋    | 29/51 [1:38:37<1:20:29, 219.54s/it]Progress:  59%|█████▉    | 30/51 [1:41:41<1:13:04, 208.81s/it]Progress:  61%|██████    | 31/51 [1:44:38<1:06:28, 199.43s/it]Progress:  63%|██████▎   | 32/51 [1:47:51<1:02:29, 197.36s/it]Progress:  65%|██████▍   | 33/51 [1:51:08<59:12, 197.36s/it]  Progress:  67%|██████▋   | 34/51 [1:55:37<1:01:57, 218.69s/it]Progress:  69%|██████▊   | 35/51 [1:59:12<58:05, 217.84s/it]  Progress:  71%|███████   | 36/51 [2:02:21<52:15, 209.02s/it]Progress:  73%|███████▎  | 37/51 [2:05:38<47:57, 205.55s/it]Progress:  75%|███████▍  | 38/51 [2:08:36<42:45, 197.32s/it]Progress:  76%|███████▋  | 39/51 [2:11:55<39:31, 197.66s/it]Progress:  78%|███████▊  | 40/51 [2:16:08<39:18, 214.42s/it]Progress:  80%|████████  | 41/51 [2:20:17<37:27, 224.72s/it]Progress:  82%|████████▏ | 42/51 [2:23:14<31:33, 210.38s/it]Progress:  84%|████████▍ | 43/51 [2:26:54<28:24, 213.12s/it]Progress:  86%|████████▋ | 44/51 [2:30:11<24:18, 208.31s/it]Progress:  88%|████████▊ | 45/51 [2:33:24<20:22, 203.72s/it]Progress:  90%|█████████ | 46/51 [2:36:29<16:30, 198.08s/it]Progress:  92%|█████████▏| 47/51 [2:39:34<12:57, 194.35s/it]Progress:  94%|█████████▍| 48/51 [2:43:34<10:24, 208.01s/it]Progress:  96%|█████████▌| 49/51 [2:46:52<06:50, 205.05s/it]Progress:  98%|█████████▊| 50/51 [2:49:49<03:16, 196.63s/it]Progress: 100%|██████████| 51/51 [3:01:26<00:00, 346.76s/it]Progress: 100%|██████████| 51/51 [3:01:26<00:00, 213.47s/it]
+2026-04-01 02:04:22,995 - INFO - Summary saved to output/openai_batch_paper_openai_batch_gpt41_minimal_93b4aace81/experiments/20260331_230255_gpt-4.1/summary.csv
+2026-04-01 02:04:23,092 - INFO - Stability summary saved to output/openai_batch_paper_openai_batch_gpt41_minimal_93b4aace81/experiments/20260331_230255_gpt-4.1/stability_summary.json
+✓ Submission created: 1965548289
+✓ Submission created: 1965548557
+✓ Submission created: 1965548855
+✓ Submission created: 1965549172
+✓ Submission created: 1965549463
+✓ Submission created: 1965549746
+✓ Submission created: 1965550081
+✓ Submission created: 1965550386
+✓ Submission created: 1965550700
+✓ Submission created: 1965550998
+✓ Submission created: 1965551406
+✓ Submission created: 1965551687
+✓ Submission created: 1965551958
+✓ Submission created: 1965552260
+✓ Submission created: 1965552546
+✓ Submission created: 1965552850
+✓ Submission created: 1965553156
+✓ Submission created: 1965553456
+✓ Submission created: 1965553772
+✓ Submission created: 1965554055
+✓ Submission created: 1965554330
+✓ Submission created: 1965554629
+✓ Submission created: 1965554912
+✓ Submission created: 1965555201
+✓ Submission created: 1965555478
+✓ Submission created: 1965555882
+✓ Submission created: 1965556265
+✓ Submission created: 1965556535
+✓ Submission created: 1965556786
+✓ Submission created: 1965557079
+✓ Submission created: 1965557334
+✓ Submission created: 1965557566
+✓ Submission created: 1965557811
+✓ Submission created: 1965558031
+✓ Submission created: 1965558284
+✓ Submission created: 1965558542
+✓ Submission created: 1965558795
+✓ Submission created: 1965559033
+✓ Submission created: 1965559309
+✓ Submission created: 1965559558
+✓ Submission created: 1965559812
+✓ Submission created: 1965560100
+✓ Submission created: 1965560420
+✓ Submission created: 1965560706
+✓ Submission created: 1965560968
+✓ Submission created: 1965561279
+✓ Submission created: 1965561541
+✓ Submission created: 1965561840
+✓ Submission created: 1965562113
+✓ Submission created: 1965562398
+✓ Submission created: 1965562702
+✓ Submission created: 1965563009
+✓ Submission created: 1965563292
+✓ Submission created: 1965563582
+✓ Submission created: 1965563867
+✓ Submission created: 1965564133
+✓ Submission created: 1965564440
+✓ Submission created: 1965564713
+✓ Submission created: 1965564984
+✓ Submission created: 1965565260
+✓ Submission created: 1965565550
+✓ Submission created: 1965565828
+✓ Submission created: 1965566067
+✓ Submission created: 1965566323
+✓ Submission created: 1965566584
+✓ Submission created: 1965566910
+✓ Submission created: 1965567238
+✓ Submission created: 1965567502
+✓ Submission created: 1965567762
+✓ Submission created: 1965568038
+✓ Submission created: 1965568348
+✓ Submission created: 1965568640
+✓ Submission created: 1965568882
+✓ Submission created: 1965569180
+✓ Submission created: 1965569452
+✓ Submission created: 1965569770
+✓ Submission created: 1965570028
+✓ Submission created: 1965570326
+✓ Submission created: 1965570606
+✓ Submission created: 1965570895
+✓ Submission created: 1965571161
+✓ Submission created: 1965571466
+✓ Submission created: 1965571722
+✓ Submission created: 1965571987
+✓ Submission created: 1965572232
+✓ Submission created: 1965572471
+✓ Submission created: 1965572722
+✓ Submission created: 1965573025
+✓ Submission created: 1965573249
+✓ Submission created: 1965573487
+✓ Submission created: 1965573755
+✓ Submission created: 1965574049
+✓ Submission created: 1965574322
+✓ Submission created: 1965574583
+✓ Submission created: 1965574853
+✓ Submission created: 1965575133
+✓ Submission created: 1965575410
+✓ Submission created: 1965575683
+✓ Submission created: 1965575954
+✓ Submission created: 1965576199
+✓ Submission created: 1965576428
+✓ Submission created: 1965576676
+✓ Submission created: 1965576912
+✓ Submission created: 1965577173
+✓ Submission created: 1965577426
+✓ Submission created: 1965577695
+✓ Submission created: 1965577955
+✓ Submission created: 1965578219
+✓ Submission created: 1965578473
+✓ Submission created: 1965578712
+✓ Submission created: 1965578973
+✓ Submission created: 1965579202
+✓ Submission created: 1965579443
+✓ Submission created: 1965579682
+✓ Submission created: 1965579949
+✓ Submission created: 1965580196
+✓ Submission created: 1965580440
+✓ Submission created: 1965580692
+✓ Submission created: 1965580944
+✓ Submission created: 1965581184
+✓ Submission created: 1965581435
+✓ Submission created: 1965581684
+✓ Submission created: 1965581908
+✓ Submission created: 1965582147
+✓ Submission created: 1965582398
+✓ Submission created: 1965582650
+✓ Submission created: 1965582908
+✓ Submission created: 1965583144
+✓ Submission created: 1965583399
+✓ Submission created: 1965583655
+✓ Submission created: 1965583868
+✓ Submission created: 1965584266
+✓ Submission created: 1965584536
+✓ Submission created: 1965584726
+✓ Submission created: 1965585101
+✓ Submission created: 1965585485
+✓ Submission created: 1965585751
+✓ Submission created: 1965586005
+✓ Submission created: 1965586368
+✓ Submission created: 1965586639
+✓ Submission created: 1965586865
+✓ Submission created: 1965587089
+✓ Submission created: 1965587308
+✓ Submission created: 1965587504
+✓ Submission created: 1965587740
+✓ Submission created: 1965587964
+✓ Submission created: 1965588216
+✓ Submission created: 1965588488
+✓ Submission created: 1965588736
+✓ Submission created: 1965589116
+✓ Submission created: 1965589336
+✓ Submission created: 1965589565
+✓ Submission created: 1965589802
+✓ Submission created: 1965590043
+✓ Submission created: 1965590274
+✓ Submission created: 1965590500
+✓ Submission created: 1965590745
+✓ Submission created: 1965590975
+✓ Submission created: 1965591197
+✓ Submission created: 1965591406
+✓ Submission created: 1965591647
+✓ Submission created: 1965591909
+✓ Submission created: 1965592152
+✓ Submission created: 1965592354
+✓ Submission created: 1965592586
+✓ Submission created: 1965592810
+✓ Submission created: 1965593049
+✓ Submission created: 1965593264
+✓ Submission created: 1965593486
+✓ Submission created: 1965593749
+✓ Submission created: 1965593990
+✓ Submission created: 1965594399
+✓ Submission created: 1965594826
+✓ Submission created: 1965595211
+✓ Submission created: 1965595611
+✓ Submission created: 1965595979
+✓ Submission created: 1965596345
+✓ Submission created: 1965596712
+✓ Submission created: 1965597099
+✓ Submission created: 1965597444
+✓ Submission created: 1965597814
+✓ Submission created: 1965598071
+✓ Submission created: 1965598324
+✓ Submission created: 1965598561
+✓ Submission created: 1965598787
+✓ Submission created: 1965598999
+✓ Submission created: 1965599264
+✓ Submission created: 1965599554
+✓ Submission created: 1965599798
+✓ Submission created: 1965600048
+✓ Submission created: 1965600263
+✓ Submission created: 1965600512
+✓ Submission created: 1965600760
+✓ Submission created: 1965601007
+✓ Submission created: 1965601222
+✓ Submission created: 1965601460
+✓ Submission created: 1965601701
+✓ Submission created: 1965601916
+✓ Submission created: 1965602136
+✓ Submission created: 1965602341
+✓ Submission created: 1965602561
+✓ Submission created: 1965602763
+✓ Submission created: 1965602944
+✓ Submission created: 1965603137
+✓ Submission created: 1965603334
+✓ Submission created: 1965603529
+✓ Submission created: 1965603746
+✓ Submission created: 1965603944
+✓ Submission created: 1965604151
+✓ Submission created: 1965604364
+✓ Submission created: 1965604576
+✓ Submission created: 1965604760
+✓ Submission created: 1965604955
+✓ Submission created: 1965605146
+✓ Submission created: 1965605357
+✓ Submission created: 1965605571
+✓ Submission created: 1965605775
+✓ Submission created: 1965605944
+✓ Submission created: 1965606152
+✓ Submission created: 1965606357
+✓ Submission created: 1965606569
+✓ Submission created: 1965606912
+✓ Submission created: 1965607246
+✓ Submission created: 1965607594
+✓ Submission created: 1965607922
+✓ Submission created: 1965608254
+✓ Submission created: 1965608596
+✓ Submission created: 1965608938
+✓ Submission created: 1965609250
+✓ Submission created: 1965609537
+✓ Submission created: 1965609841
+✓ Submission created: 1965610044
+✓ Submission created: 1965610234
+✓ Submission created: 1965610417
+✓ Submission created: 1965610611
+✓ Submission created: 1965610780
+✓ Submission created: 1965610963
+✓ Submission created: 1965611177
+✓ Submission created: 1965611355
+✓ Submission created: 1965611574
+✓ Submission created: 1965611761
+✓ Submission created: 1965611960
+✓ Submission created: 1965612152
+✓ Submission created: 1965612355
+✓ Submission created: 1965612536
+✓ Submission created: 1965612707
+✓ Submission created: 1965612893
+✓ Submission created: 1965613079
+✓ Submission created: 1965613378
+✓ Submission created: 1965613540
+✓ Submission created: 1965613731
+✓ Submission created: 1965613947
+✓ Submission created: 1965614147
+✓ Submission created: 1965614367
+✓ Submission created: 1965614569
+✓ Submission created: 1965614809
+✓ Submission created: 1965615009
+✓ Submission created: 1965615189
+✓ Submission created: 1965615390
+✓ Submission created: 1965615589
+✓ Submission created: 1965615806
+✓ Submission created: 1965616006
+✓ Submission created: 1965616190
+✓ Submission created: 1965616391
+✓ Submission created: 1965616618
+✓ Submission created: 1965616813
+✓ Submission created: 1965616985
+✓ Submission created: 1965617172
+✓ Submission created: 1965617371
+✓ Submission created: 1965617594
+✓ Submission created: 1965617777
+✓ Submission created: 1965617959
+✓ Submission created: 1965618168
+✓ Submission created: 1965618493
+✓ Submission created: 1965618831
+✓ Submission created: 1965619046
+✓ Submission created: 1965619327
+✓ Submission created: 1965619595
+Submission error: HTTPSConnectionPool(host='leetcode.com', port=443): Read timed out. (read timeout=30)
+✓ Submission created: 1965620455
+✓ Submission created: 1965620768
+✓ Submission created: 1965620963
+✓ Submission created: 1965621148
+✓ Submission created: 1965621364
+✓ Submission created: 1965621551
+✓ Submission created: 1965621753
+✓ Submission created: 1965621949
+✓ Submission created: 1965622141
+✓ Submission created: 1965622339
+✓ Submission created: 1965622541
+✓ Submission created: 1965622713
+✓ Submission created: 1965622898
+✓ Submission created: 1965623108
+✓ Submission created: 1965623329
+✓ Submission created: 1965623541
+✓ Submission created: 1965623739
+✓ Submission created: 1965623915
+✓ Submission created: 1965624101
+✓ Submission created: 1965624284
+✓ Submission created: 1965624463
+✓ Submission created: 1965624599
+✓ Submission created: 1965624775
+✓ Submission created: 1965624976
+✓ Submission created: 1965625159
+✓ Submission created: 1965625341
+✓ Submission created: 1965625534
+✓ Submission created: 1965625723
+✓ Submission created: 1965625896
+✓ Submission created: 1965626062
+✓ Submission created: 1965626222
+✓ Submission created: 1965626392
+✓ Submission created: 1965626584
+✓ Submission created: 1965626796
+✓ Submission created: 1965626966
+✓ Submission created: 1965627159
+✓ Submission created: 1965627371
+✓ Submission created: 1965627560
+✓ Submission created: 1965627752
+✓ Submission created: 1965627949
+✓ Submission created: 1965628131
+✓ Submission created: 1965628315
+✓ Submission created: 1965628496
+✓ Submission created: 1965628683
+✓ Submission created: 1965628865
+✓ Submission created: 1965629059
+✓ Submission created: 1965629263
+✓ Submission created: 1965629452
+✓ Submission created: 1965629615
+✓ Submission created: 1965629807
+✓ Submission created: 1965629979
+✓ Submission created: 1965630177
+✓ Submission created: 1965630462
+✓ Submission created: 1965630738
+✓ Submission created: 1965631028
+✓ Submission created: 1965631297
+✓ Submission created: 1965631572
+✓ Submission created: 1965631774
+✓ Submission created: 1965631959
+✓ Submission created: 1965632251
+✓ Submission created: 1965632456
+✓ Submission created: 1965632747
+✓ Submission created: 1965632955
+✓ Submission created: 1965633145
+✓ Submission created: 1965633363
+✓ Submission created: 1965633574
+✓ Submission created: 1965633807
+✓ Submission created: 1965634047
+✓ Submission created: 1965634212
+✓ Submission created: 1965634424
+✓ Submission created: 1965634635
+✓ Submission created: 1965634836
+✓ Submission created: 1965635002
+✓ Submission created: 1965635176
+✓ Submission created: 1965635344
+✓ Submission created: 1965635537
+✓ Submission created: 1965635736
+✓ Submission created: 1965635938
+✓ Submission created: 1965636131
+✓ Submission created: 1965636328
+✓ Submission created: 1965636490
+✓ Submission created: 1965636649
+✓ Submission created: 1965636830
+✓ Submission created: 1965637032
+✓ Submission created: 1965637227
+✓ Submission created: 1965637415
+✓ Submission created: 1965637652
+✓ Submission created: 1965637826
+✓ Submission created: 1965638004
+✓ Submission created: 1965638216
+✓ Submission created: 1965638397
+✓ Submission created: 1965638565
+✓ Submission created: 1965638733
+✓ Submission created: 1965638906
+✓ Submission created: 1965639080
+✓ Submission created: 1965639262
+✓ Submission created: 1965639436
+✓ Submission created: 1965639618
+✓ Submission created: 1965639796
+✓ Submission created: 1965639961
+✓ Submission created: 1965640141
+✓ Submission created: 1965640338
+✓ Submission created: 1965640543
+✓ Submission created: 1965640735
+✓ Submission created: 1965640936
+✓ Submission created: 1965641103
+✓ Submission created: 1965641315
+✓ Submission created: 1965641524
+✓ Submission created: 1965641733
+✓ Submission created: 1965641930
+✓ Submission created: 1965642115
+✓ Submission created: 1965642291
+✓ Submission created: 1965642582
+✓ Submission created: 1965642804
+✓ Submission created: 1965643002
+✓ Submission created: 1965643215
+✓ Submission created: 1965643428
+✓ Submission created: 1965643714
+✓ Submission created: 1965643996
+✓ Submission created: 1965644204
+✓ Submission created: 1965644518
+✓ Submission created: 1965644819
+✓ Submission created: 1965645084
+✓ Submission created: 1965645329
+✓ Submission created: 1965645613
+✓ Submission created: 1965645845
+✓ Submission created: 1965646107
+✓ Submission created: 1965646386
+✓ Submission created: 1965646653
+✓ Submission created: 1965646916
+✓ Submission created: 1965647153
+✓ Submission created: 1965647393
+✓ Submission created: 1965647578
+✓ Submission created: 1965647765
+✓ Submission created: 1965647975
+✓ Submission created: 1965648164
+✓ Submission created: 1965648352
+✓ Submission created: 1965648525
+✓ Submission created: 1965648721
+✓ Submission created: 1965648910
+✓ Submission created: 1965649120
+✓ Submission created: 1965649315
+✓ Submission created: 1965649547
+✓ Submission created: 1965649809
+✓ Submission created: 1965650055
+✓ Submission created: 1965650287
+✓ Submission created: 1965650542
+✓ Submission created: 1965650769
+✓ Submission created: 1965650982
+✓ Submission created: 1965651203
+✓ Submission created: 1965651423
+✓ Submission created: 1965651669
+✓ Submission created: 1965651889
+✓ Submission created: 1965652095
+✓ Submission created: 1965652316
+✓ Submission created: 1965652527
+✓ Submission created: 1965652747
+✓ Submission created: 1965652943
+✓ Submission created: 1965653141
+✓ Submission created: 1965653360
+✓ Submission created: 1965653584
+✓ Submission created: 1965653803
+✓ Submission created: 1965654012
+✓ Submission created: 1965654193
+✓ Submission created: 1965654391
+✓ Submission created: 1965654652
+✓ Submission created: 1965654876
+✓ Submission created: 1965655072
+✓ Submission created: 1965655267
+✓ Submission created: 1965655475
+✓ Submission created: 1965655673
+✓ Submission created: 1965655901
+✓ Submission created: 1965656119
+✓ Submission created: 1965656326
+✓ Submission created: 1965656535
+✓ Submission created: 1965656724
+✓ Submission created: 1965656933
+✓ Submission created: 1965657105
+✓ Submission created: 1965657299
+✓ Submission created: 1965657546
+✓ Submission created: 1965657747
+✓ Submission created: 1965657958
+✓ Submission created: 1965658193
+✓ Submission created: 1965658419
+✓ Submission created: 1965658610
+✓ Submission created: 1965658822
+✓ Submission created: 1965659031
+✓ Submission created: 1965659276
+✓ Submission created: 1965659506
+✓ Submission created: 1965659735
+✓ Submission created: 1965659911
+✓ Submission created: 1965660144
+✓ Submission created: 1965660517
+✓ Submission created: 1965660856
+✓ Submission created: 1965661098
+✓ Submission created: 1965661347
+✓ Submission created: 1965661659
+✓ Submission created: 1965661884
+✓ Submission created: 1965662055
+✓ Submission created: 1965662318
+✓ Submission created: 1965662563
+✓ Submission created: 1965662896
+✓ Submission created: 1965663103
+✓ Submission created: 1965663310
+✓ Submission created: 1965663546
+✓ Submission created: 1965663773
+✓ Submission created: 1965663998
+✓ Submission created: 1965664217
+✓ Submission created: 1965664390
+✓ Submission created: 1965664631
+✓ Submission created: 1965664845
+✓ Submission created: 1965665096
+✓ Submission created: 1965665322
+✓ Submission created: 1965665532
+✓ Submission created: 1965665736
+✓ Submission created: 1965665950
+✓ Submission created: 1965666153
+✓ Submission created: 1965666367
+✓ Submission created: 1965666560
+✓ Submission created: 1965666782
+✓ Submission created: 1965667026
+✓ Submission created: 1965667224
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+
+========================================
+STABILITY EVALUATION SUMMARY
+========================================
+Total Problems:          199
+Total Runs:              995
+Run-Level Pass Rate:     58.49%
+95% CI (RLPR):           [55.4%, 61.52%]
+Perfect Stability Rate:  47.24%
+95% CI (PSR):            [40.42%, 54.16%]
+First-Pass Accuracy:     58.29%
+95% CI (FPA):            [51.35%, 64.92%]
+Pass@1:                  58.29%
+Pass@3:                  66.33%
+Pass@5:                  69.35%
+Average Variance:        0.043
+95% CI (AV):             [0.0317, 0.0547]
+p50 Latency:             0.0 ms
+p90 Latency:             0.0 ms
+========================================
+
+
+============================================================
+✓ Evaluation complete!
+✓ Results saved to: output/openai_batch_paper_openai_batch_gpt41_minimal_93b4aace81/results/evaluations/evaluation_results_20260331_194223.json
+============================================================
+Partial run: 98/100 done. Re-run with --batch-problem-offset 98 to continue.
+
+============================================================
+OpenAI batch resume completed!
+============================================================
+Model: gpt-4.1
+Results: output/openai_batch_paper_openai_batch_gpt41_minimal_93b4aace81/results/evaluations/evaluation_results_20260331_194223.json
+Report: None
+------------------------------------------------------------

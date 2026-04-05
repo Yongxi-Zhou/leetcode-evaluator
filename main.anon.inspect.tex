@@ -1,0 +1,330 @@
+% EMNLP/ARR paper source with switchable modes.
+% Set \anonymoussubmissiontrue for ARR anonymous submission.
+% Set \preprintversiontrue for arXiv/preprint builds.
+\documentclass[11pt]{article}
+\newif\ifanonymoussubmission
+\newif\ifpreprintversion
+\anonymoussubmissiontrue
+\preprintversionfalse
+% Remap fonts unavailable in this TeX installation to CM equivalents
+\renewcommand\sfdefault{cmss}
+\renewcommand\ttdefault{cmtt}
+\ifanonymoussubmission
+  \usepackage[review]{acl}
+\else
+  \ifpreprintversion
+    \usepackage[preprint]{acl}
+  \else
+    \usepackage{acl}
+  \fi
+\fi
+
+% Standard package includes
+\usepackage{times}
+\renewcommand\ttdefault{cmtt}  % times sets ttdefault to pcr (Courier), not available here
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{array}
+
+\title{Evaluating Large Language Model Performance on Deterministic Programming Tasks: Accuracy and Prompt-Conditioned Stability}
+
+\ifanonymoussubmission
+\author{Anonymous ACL Submission}
+\else
+\author{
+  Yongxi Zhou \\
+  Northeastern University \\
+  Massachusetts, USA \\
+  \texttt{zhou.yongx@northeastern.edu}
+}
+\fi
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We study how large language models (LLMs) behave under repeated sampling on deterministic programming tasks. Standard code-generation evaluations usually emphasize single-run accuracy or eventual success under repeated sampling, but many deployment settings also require \emph{stability}: similar outcomes across repeated invocations under the same task description and controlled decoding settings. We present a repeated-run evaluation protocol and report complementary metrics for run-level accuracy, first-pass accuracy, retry-free coverage, and problem-level variability. On a recency-based benchmark of 100 LeetCode-style problems, we evaluate 13 models from five provider families under two prompt templates with five repeated runs per problem, yielding 13{,}000 evaluation instances. Across all configurations, run-level pass rate and perfect stability rate are strongly correlated ($r=0.985$), but pass rate consistently exceeds retry-free coverage, with an observed gap of 2.4 to 16.2 percentage points. The gap is largest for mid-performing systems, where problem-level outcomes are most variable across runs, and prompt effects are model-dependent rather than uniformly beneficial. These results suggest that repeated-run reliability is a useful complement to conventional accuracy reporting for deterministic code-generation tasks.
+\end{abstract}
+
+\section{Introduction}
+Large language models are increasingly used as \emph{program synthesis} and \emph{code assistance} systems for tasks with deterministic specifications: given a fixed problem statement and test suite, correctness is binary. Conventional benchmarks typically report single-run performance, or summarize repeated sampling through eventual-success metrics such as pass@$k$ \cite{chen2021codex,austin2021program}. In practice, however, repeated calls under the same task description can yield different programs and different pass/fail outcomes, even when the downstream workflow expects reproducible behavior.
+
+This paper studies that repeated-invocation variability directly. Rather than treating repeated sampling only as an opportunity to recover one success among many attempts, we evaluate how much of a model's measured accuracy translates into \emph{retry-free} behavior under fixed conditions. Our focus is therefore complementary to pass@$k$: we ask not only whether a model can solve a task eventually, but also how reliably it succeeds when invoked multiple times in the same way.
+
+The paper is organized around three empirical questions:
+\begin{enumerate}
+  \item How large is the gap between run-level success and retry-free problem coverage under repeated evaluation?
+  \item How much do prompt choices change repeated-run stability across models?
+  \item Which aggregate summaries best expose problem-level variability that single-run reporting hides?
+\end{enumerate}
+
+We focus on deterministic tasks because they represent a common usage mode for code-generation systems: unit-tested functions, competitive-programming style problems, and API-level transformations with verifiable outputs. In such settings, the accuracy--stability gap has direct practical consequences: a model with 60\% run-level pass rate but only 47\% perfect stability solves many individual attempts, yet still leaves a substantial fraction of tasks in a retry-required regime. Our aim is therefore not merely to rank models by mean performance, but to characterize how much of their observed accuracy translates into reliable repeated-use behavior.
+
+\section{Related Work}
+Evaluations of LLMs for code generation are commonly framed around pass@$k$ and functional correctness under automated testing \cite{chen2021codex,austin2021program}. These metrics are well suited to questions of eventual success or sampling efficiency: repeated sampling is used to estimate whether at least one candidate among multiple generations is correct. Related prompting work, including zero-shot reasoning and self-consistency, likewise treats multiple samples as a mechanism for improving downstream task performance rather than as an object of measurement in its own right \cite{kojima2022zeroshot,wang2022self}. In contrast, our focus is on what repeated sampling reveals about the stability of outcomes under fixed conditions.
+
+Recent work has also emphasized that code-generation evaluation is sensitive to benchmark construction, execution methodology, and reporting choices \cite{liu2024your,du2024evaluating}. Our framing is most aligned with this robustness-oriented perspective, but shifts the emphasis from benchmark validity alone to repeated-invocation reliability under a fixed judge. Instead of asking only whether a benchmark is sound or whether a model can eventually solve a task, we ask how often correctness is reproducible at the problem level when the task, prompt family, and decoding regime are held fixed.
+
+More broadly, work on calibration and predictive reliability \cite{guo2017calibration} motivates looking beyond average accuracy when systems are used in settings where consistency matters. We adapt that intuition to deterministic program evaluation by measuring not only run-level success, but also retry-free task coverage and variability across repeated runs. This perspective is deliberately narrower than end-to-end agent evaluation: it isolates repeated-run behavior for a single-turn coding setting, while real deployments may involve additional orchestration, tool use, and runtime dependencies whose reliability and security properties must be analyzed separately.
+
+\section{Experimental Setup}
+
+\subsection{Problem Dataset}
+We evaluate on a curated dataset of deterministic programming problems, denoted $\mathcal{D}=\{(x_i, T_i)\}_{i=1}^{N}$, where $x_i$ is the natural-language specification (including I/O format and constraints) and $T_i$ is a deterministic test harness. Each problem is graded by executing the model-produced program against $T_i$, producing a binary correctness indicator. These tasks are instantiated as LeetCode problems with platform-provided acceptance criteria, and all generations are evaluated as Python solutions against Python-based submission templates.
+
+\paragraph{Problem selection.} To reduce the risk of benchmark contamination from model training data, we select the $N=100$ most recently published problems available on the platform at collection time, sampling the newest problems first. Problems requiring paid-only access are excluded. No further manual curation is applied; the final benchmark is entirely determined by recency rank. This construction does not guarantee that evaluated models have never encountered related problem statements during training, but it substantially reduces the probability of direct memorization compared to historically popular problems.
+
+The dataset spans three difficulty tiers (Easy, Medium, Hard) and covers a broad range of algorithmic topics including Array, Dynamic Programming, String, Graph, and Simulation. All problems satisfy the following properties:
+\begin{itemize}
+  \item \textbf{Deterministic grading:} each $T_i$ yields a deterministic accept/reject outcome.
+  \item \textbf{Self-contained evaluation:} no network access or external dependencies are required at runtime.
+  \item \textbf{Fixed snapshot:} all models are evaluated on the identical problem set to ensure comparability across runs.
+\end{itemize}
+
+In the evaluation framework, this benchmark is stored as a fixed local dataset snapshot rather than fetched online at run time. This design ensures that all model families are evaluated against the same problem set and ordering, and reduces the chance that later platform changes silently alter the benchmark during the experimental campaign.
+
+\subsection{Models}
+
+We evaluate 13 models across five provider families, covering a range of model scales, training objectives, and architectural choices, including both standard and reasoning-specialized variants. The evaluated models are listed in Table~\ref{tab:models}.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Models evaluated in this study, grouped by provider family. $\dagger$ denotes reasoning-specialized models.}
+\label{tab:models}
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lll}
+\toprule
+Family & Model & Type \\
+\midrule
+\multirow{2}{*}{OpenAI}
+  & GPT-4.1         & flagship \\
+  & GPT-4.1-mini    & lightweight \\
+\midrule
+\multirow{2}{*}{Anthropic}
+  & Claude Sonnet 4.5 & flagship \\
+  & Claude Haiku 4.5  & lightweight \\
+\midrule
+\multirow{3}{*}{Google}
+  & Gemini 3.1 Pro (preview)        & flagship \\
+  & Gemini 3 Flash (preview)        & efficient \\
+  & Gemini 3.1 Flash-Lite (preview) & lightweight \\
+\midrule
+\multirow{4}{*}{Qwen}
+  & QwQ-Plus   & reasoning$^\dagger$ \\
+  & Qwen-Plus  & flagship \\
+  & Qwen-Max   & large \\
+  & Qwen-Turbo & lightweight \\
+\midrule
+\multirow{2}{*}{DeepSeek}
+  & DeepSeek-R1   & reasoning$^\dagger$ \\
+  & DeepSeek-V3.2 & flagship \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsection{Evaluation Framework}
+For a model $m$ and a fixed evaluation configuration $c$ (prompt template, decoding parameters, toolchain), we run each problem $x_i$ multiple times. Each run produces a candidate program which is executed against $T_i$.
+
+Let $Y_{i,r}^{(m,c)} \in \{0,1\}$ denote whether run $r \in \{1,\dots,R\}$ passes all tests for problem $i$. We treat compilation errors, runtime errors, timeouts, and wrong answers as failures ($0$).
+
+The evaluation pipeline separates generation from execution. For large-scale experiments, model outputs are first generated through provider APIs, cached locally, normalized into a shared format, and only then submitted to the deterministic judge. This design makes experiments resumable across providers and reduces the risk that transient provider-side failures are conflated with downstream execution outcomes.
+
+\subsection{Repeated-Run Methodology}
+We adopt a repeated-run design to estimate both mean performance and variability. For each $(m,c)$ pair we:
+\begin{enumerate}
+  \item Sample $R$ independent generations per problem under configuration $c$.
+  \item Evaluate each generation deterministically against $T_i$.
+  \item Aggregate outcomes into run-level and problem-level metrics with uncertainty estimates.
+\end{enumerate}
+
+The primary controlled intervention is the prompt template. We compare two prompt variants while holding the dataset, model, decoding parameters, and execution environment fixed. All models are evaluated with temperature $0.3$, top-$p=0.9$, and a maximum output budget of $4096$ tokens, using $R=5$ repeated runs per problem per prompt configuration. We use a non-zero temperature because the goal of the study is to characterize repeated-run variability under realistic stochastic decoding rather than to collapse outputs toward near-deterministic behavior at $T=0$. The two prompt templates---\textsc{Detailed} and \textsc{Minimal}---are held fixed across all models to enable a controlled comparison of prompt sensitivity.
+
+\paragraph{Prompt templates.} Both prompts instruct the model to return plain Python source code only and to follow the provided LeetCode method signature exactly. The \textsc{Detailed} prompt uses a longer structured template emphasizing careful constraint reading, edge-case coverage, submission readiness, and accepted-style performance. The \textsc{Minimal} prompt conveys the same task more compactly, with lighter instruction scaffolding. Because both templates share the same output constraints and code template, the prompt comparison isolates instruction density rather than changing the task itself.
+
+\paragraph{Normalization and execution.} Raw generations from different providers are normalized into a common local representation before evaluation. Code is extracted from model responses, basic syntax validity is checked, and each candidate is then submitted to the same deterministic judge. This normalization step is important because provider APIs differ in output packaging, token accounting, and batch interfaces even when the downstream task is identical.
+
+\subsection{Metrics Definition}
+
+\paragraph{Run-Level Pass Rate (RLPR).}
+$$
+\mathrm{RLPR}(m,c)=\frac{1}{NR}\sum_{i=1}^{N}\sum_{r=1}^{R} Y_{i,r}^{(m,c)}.
+$$
+RLPR measures the probability that a \emph{random invocation} succeeds.
+
+\paragraph{First-Pass Accuracy (FPA).}
+$$
+\mathrm{FPA}(m,c)=\frac{1}{N}\sum_{i=1}^{N} Y_{i,1}^{(m,c)}.
+$$
+FPA matches common single-run benchmark reporting and enables comparability to existing results.
+
+\paragraph{Perfect Stability Rate (PSR).}
+$$
+\mathrm{PSR}(m,c)=\frac{1}{N}\sum_{i=1}^{N} \mathbf{1}\!\left[\sum_{r=1}^{R} Y_{i,r}^{(m,c)}=R\right].
+$$
+PSR quantifies the fraction of tasks for which the system is reliably correct without retries.
+
+\paragraph{Average Variance (AV).}
+$$
+\mathrm{AV}(m,c)=\frac{1}{N}\sum_{i=1}^{N} \frac{R}{R-1}\hat{p}_i^{(m,c)}\!\left(1-\hat{p}_i^{(m,c)}\right),
+$$
+where $\hat{p}_i = \frac{1}{R}\sum_r Y_{i,r}$. This finite-sample correction yields the unbiased Bernoulli variance estimate for each problem under repeated sampling. AV captures average instability across tasks.
+
+\paragraph{95\% Confidence Intervals.}
+For RLPR, FPA, and PSR, we compute 95\% Wilson score intervals. For AV, we use nonparametric bootstrap over problems.
+
+\paragraph{Prompt comparison tests.}
+Because \textsc{Detailed} and \textsc{Minimal} prompting are evaluated on the same underlying problems, prompt comparisons are paired rather than independent. For PSR, we therefore compare prompt conditions at the problem level using an exact McNemar test on the binary indicator of whether all $R=5$ runs for a problem pass under each prompt condition. We use these tests as a conservative check on whether observed prompt differences are larger than expected from the finite benchmark size alone.
+
+\paragraph{Scope of inference.}
+Unless otherwise stated, reported statistics are descriptive summaries of the observed benchmark and evaluation protocol rather than claims of universal model behavior. In particular, prompt comparisons should be interpreted as controlled comparisons between the two specific templates used in this study, not as claims about prompt engineering in general.
+
+\section{Results}
+
+\begin{table*}[t]
+\centering
+\small
+\caption{Main results across all 13 models and two prompt configurations (100 problems, $R=5$ runs, 13{,}000 total evaluation instances). RLPR, FPA, PSR, and AV are shown for both \textsc{Detailed} (D) and \textsc{Minimal} (M) prompts. All values are point estimates in \%; corresponding 95\% confidence intervals are computed as described in Section~3 and reported in the archived per-model summaries.}
+\label{tab:overall-performance}
+\setlength{\tabcolsep}{2.5pt}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{llcccccccc}
+\toprule
+\multirow{2}{*}{Family} & \multirow{2}{*}{Model}
+  & \multicolumn{2}{c}{RLPR}
+  & \multicolumn{2}{c}{FPA}
+  & \multicolumn{2}{c}{PSR}
+  & \multicolumn{2}{c}{AV} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}\cmidrule(lr){9-10}
+& & D & M & D & M & D & M & D & M \\
+\midrule
+\multirow{2}{*}{OpenAI}
+  & GPT-4.1      & 59.6 & 59.2 & 61.6 & 56.0 & 47.5 & 49.0 & 4.36 & 4.08 \\
+  & GPT-4.1-mini & 58.4 & 59.2 & 60.0 & 61.0 & 50.0 & 47.0 & 3.28 & 4.48 \\
+\midrule
+\multirow{2}{*}{Anthropic}
+  & Claude Sonnet 4.5 & 52.8 & 51.4 & 52.0 & 49.0 & 43.0 & 47.0 & 3.36 & 1.68 \\
+  & Claude Haiku 4.5  & 41.2 & 40.8 & 42.0 & 43.0 & 35.0 & 34.0 & 2.40 & 2.00 \\
+\midrule
+\multirow{3}{*}{Google}
+  & Gemini 3.1 Pro (preview)        & \textbf{86.2} & 85.8 & 87.0 & 88.0 & \textbf{75.0} & 74.0 & 3.36 & 3.92 \\
+  & Gemini 3 Flash (preview)        & 80.8 & \textbf{83.2} & 83.0 & 83.0 & 67.0 & 70.0 & 5.28 & 4.40 \\
+  & Gemini 3.1 Flash-Lite (preview) & 69.2 & 63.6 & 69.0 & 65.0 & 53.0 & 50.0 & 5.28 & 5.44 \\
+\midrule
+\multirow{4}{*}{Qwen}
+  & QwQ-Plus   & 72.8 & 72.6 & 75.0 & 70.0 & 59.0 & 58.0 & 4.80 & 4.72 \\
+  & Qwen-Plus  & 63.4 & 61.2 & 64.0 & 61.0 & 52.0 & 51.0 & 4.72 & 4.64 \\
+  & Qwen-Max   & 30.6 & 30.4 & 30.0 & 30.0 & 26.0 & 25.0 & 2.24 & 2.24 \\
+  & Qwen-Turbo & 34.4 & 30.8 & 33.0 & 30.0 & 32.0 & 28.0 & 0.88 & 1.04 \\
+\midrule
+\multirow{2}{*}{DeepSeek}
+  & DeepSeek-R1   & 84.2 & \textbf{84.4} & 83.0 & 83.0 & 74.0 & \textbf{75.0} & 3.76 & 3.20 \\
+  & DeepSeek-V3.2 & 48.4 & 47.6 & 51.0 & 47.0 & 36.0 & 38.0 & 5.52 & 4.00 \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
+
+\subsection{Overall Accuracy and Stability}
+Table~\ref{tab:overall-performance} reports RLPR, FPA, PSR, and AV for all 26 model/prompt configurations. The top performers under RLPR are Gemini 3.1 Pro (86.2\% D / 85.8\% M), DeepSeek-R1 (84.2\% D / 84.4\% M), and Gemini 3 Flash (80.8\% D / 83.2\% M). More broadly, the table shows that high run-level performance and high retry-free coverage often co-occur, but not in a one-to-one way: models with similar RLPR can still differ materially in PSR and AV.
+
+Figure~\ref{fig:acc-stability-scatter} plots RLPR against PSR for all 26 configurations. All points fall below the diagonal, confirming that RLPR consistently overstates production reliability. Across all configurations, RLPR and PSR are strongly correlated ($r=0.985$, $p<0.001$), which is directionally expected because both metrics are derived from the same underlying per-problem success structure. The informative result is therefore not the existence of a high correlation itself, but the persistent and non-uniform gap between run-level success and retry-free coverage.
+
+The gap $\Delta = \mathrm{RLPR} - \mathrm{PSR}$ is non-uniform and reaches its maximum in the mid-accuracy tier. Gemini 3.1 Flash-Lite has the largest gap (16.2\% under \textsc{Detailed}), followed by Gemini 3 Flash and QwQ-Plus (both 13.8\%). At the low end, Qwen-Turbo has a gap of only 2.4\%---not because it is uniformly reliable, but because its outcomes are highly polarized: many problems are either always failed or always passed, leaving less room for intermediate trial-to-trial variability. This pattern is reflected in AV: Qwen-Turbo has the lowest AV ($0.0088$), while Gemini 3.1 Flash-Lite has the highest ($0.0528$). Together, PSR and AV help distinguish between systems that are consistently strong, consistently weak, and unstable in the middle.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{output/aggregate/figures/paper_figure1_accuracy_vs_stability.png}
+\caption{RLPR vs.\ PSR scatter plot across all 26 configurations (13 models $\times$ 2 prompt types). Points are colored by model family and shaped by prompt type. The diagonal marks $\mathrm{PSR}=\mathrm{RLPR}$; points below indicate configurations where mean success overstates stable problem coverage.}
+\label{fig:acc-stability-scatter}
+\end{figure}
+
+\subsection{Problem-Level Stability Analysis}
+
+Figure~\ref{fig:stability-heatmap} presents a cross-model stability overview. Each row corresponds to one of the 13 models, ordered by RLPR under \textsc{Detailed} prompting (highest at top). Each column corresponds to one of the 100 problems, grouped by difficulty tier (Easy, Medium, Hard) and sorted within each tier by decreasing mean pass rate across all models. Cell color encodes the empirical pass probability for that model--problem pair, averaged over $R=5$ runs: green indicates a problem solved consistently on every run, red indicates consistent failure, and yellow indicates high trial-to-trial variability.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{output/aggregate/figures/paper_figure2_stability_heatmap.png}
+\caption{Cross-model stability heatmap (\textsc{Detailed} prompt). Rows: 13 models sorted by RLPR descending. Columns: 100 problems grouped by difficulty tier with dashed separators, and ordered within each tier by decreasing mean pass rate. Cell color encodes empirical pass rate over $R=5$ runs (green $=1.0$, red $=0.0$, yellow $\approx 0.5$).}
+\label{fig:stability-heatmap}
+\end{figure*}
+
+Figure~\ref{fig:success-distribution} shows the distribution of per-problem pass rates aggregated across all models. Qwen-Turbo shows the most polarized profile (AV $= 0.0088$), while Gemini 3.1 Flash-Lite has the highest AV ($0.0528$), indicating substantial trial-to-trial variability.
+
+This view is useful because it exposes qualitatively different reliability profiles that similar aggregate pass rates can hide. A model with many $\hat{p}_i \approx 1$ and $\hat{p}_i \approx 0$ problems behaves differently from a model with many $\hat{p}_i \approx 0.4$ or $0.6$ problems, even when their average run-level pass rate is similar.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{output/aggregate/figures/paper_figure3_success_distribution.png}
+\caption{Problem-level success distribution for all 13 models (\textsc{Detailed} prompt). Each panel shows the fraction of problems in each empirical pass-probability bin $\hat{p}_i \in \{0/5,\ldots,5/5\}$, arranged in decreasing order of PSR.}
+\label{fig:success-distribution}
+\end{figure}
+
+We further note that retry-based recovery does not eliminate instability. PSR directly measures the fraction of tasks that do not require retries, while AV highlights how much of the remaining workload lies in a stochastic regime.
+
+\subsection{Difficulty Gradient and Failure Modes}
+
+To characterize where instability occurs, we performed a post-hoc aggregate analysis over the archived trial-level outputs from the completed paper runs. Pooling outcomes by benchmark difficulty reveals a pronounced gradient: run-level pass rates are highest on Easy problems (90.6\%), lower on Medium problems (62.2\%), and substantially lower on Hard problems (34.0\%). This indicates that the overall accuracy--stability pattern is not driven by a small number of outlier tasks; it coexists with a broad increase in failure probability as algorithmic difficulty rises.
+
+Failure modes are also non-uniform. Across the archived outputs, the dominant non-accept verdict is \emph{Wrong Answer}, followed by \emph{Time Limit Exceeded} and \emph{Runtime Error}. This ordering suggests that most failures arise from selecting an incorrect or incomplete algorithm rather than from pure formatting noise alone. At the same time, the prevalence of timeouts and runtime failures increases noticeably on Medium and Hard problems, indicating that instability is partly tied to implementation robustness and complexity-sensitive performance rather than only to binary conceptual success or failure.
+
+These observations refine the interpretation of PSR and AV. A low PSR can reflect at least two qualitatively different regimes: algorithmic inconsistency, where runs alternate between accepted and wrong solutions, and implementation fragility, where some runs fail because the produced program is incomplete, inefficient, or execution-unsafe. Distinguishing these regimes is useful for deployment, because they imply different mitigation strategies such as prompt refinement, stricter output constraints, or downstream verification.
+
+\subsection{Prompt Sensitivity}
+
+Figure~\ref{fig:prompt-comparison} visualizes the prompt effect as a paired scatter plot: each of the 13 models appears as a single point with its \textsc{Minimal}-prompt PSR on the $x$-axis and \textsc{Detailed}-prompt PSR on the $y$-axis. Points above the diagonal indicate that detailed prompting improves stability.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.8\linewidth]{output/aggregate/figures/paper_figure4_prompt_comparison.png}
+\caption{Prompt sensitivity: paired scatter of PSR under \textsc{Detailed} vs.\ \textsc{Minimal} prompting for all 13 models. Points above the diagonal indicate that detailed prompting improves stability. Points are colored by model family.}
+\label{fig:prompt-comparison}
+\end{figure}
+
+Prompt effects are model-dependent and non-uniform. Most models show small differences between prompt conditions (within 3--5 percentage points of PSR). However, Claude Sonnet 4.5 shows a reversal, with higher PSR under \textsc{Minimal} (47.0\%) than \textsc{Detailed} (43.0\%) prompting, while Gemini 3 Flash shows the opposite pattern (67.0\% D vs.\ 70.0\% M). In this dataset, prompt sensitivity is therefore observable but heterogeneous, and no single template uniformly dominates across all model families.
+
+To assess whether these prompt differences are statistically compelling at the problem level, we ran exact McNemar tests on the paired PSR indicators for each model. Under this test, no model reaches $p<0.05$; the largest observed PSR shifts are 4 percentage points (Qwen-Turbo in favor of \textsc{Detailed}, Claude Sonnet 4.5 in favor of \textsc{Minimal}), and both correspond to $p=0.219$ under exact paired testing. Across the 13 fully evaluated models, 8 favor \textsc{Detailed} and 5 favor \textsc{Minimal}, with a mean absolute PSR difference of approximately 2.1 percentage points. We therefore interpret the prompt results as evidence of model-dependent directional variation, but not as strong evidence that either template yields a consistent advantage at the current benchmark size.
+
+\subsection{Accuracy--Stability Gap}
+
+Although RLPR and PSR are strongly correlated overall, the gap $\Delta = \mathrm{RLPR} - \mathrm{PSR}$ is practically significant and non-uniform across models. Across all 26 configurations, $\Delta$ ranges from 2.4\% (Qwen-Turbo, \textsc{Detailed}) to 16.2\% (Gemini 3.1 Flash-Lite, \textsc{Detailed}). The gap peaks in the middle of the performance spectrum, where models succeed frequently enough to generate trial-to-trial variability but not consistently enough to eliminate it. This non-linearity means that a single RLPR ranking cannot be used to infer the magnitude of the accuracy--stability gap: two models with similar RLPR can differ substantially in how much of their accuracy converts to retry-free reliability. PSR makes this distinction explicit.
+
+\section{Scope and Practical Implications}
+
+This study is intentionally scoped to repeated-run correctness under a fixed evaluation harness. Stability remains practically important because deterministic programming tasks are used in settings that assume reproducibility. When a system is invoked repeatedly under the same input, instability creates concrete risks: non-reproducibility complicates debugging; workflow overhead arises from retry requirements; and validation burden increases from inconsistent outputs.
+
+From a decision-theoretic perspective, selecting a model based solely on pass rate optimizes expected success but ignores the cost of stochastic failures. PSR provides a direct estimate of the workload fraction that is ``retry-free.'' Even when two models have similar RLPR, they may differ substantially in PSR: this gap represents problems that require repeated invocations to reliably succeed in production, incurring latency, cost, and engineering complexity. A model ranked lower by RLPR could be preferable in deployment if its PSR is higher---a tradeoff invisible to single-run benchmarking.
+
+For this reason, we view repeated-run metrics as complementary rather than replacement metrics. RLPR remains useful for characterizing average invocation success, while PSR and AV summarize whether that success is concentrated in consistently solved problems or dispersed across unstable outcomes.
+
+At the same time, our deployment interpretation remains intentionally narrow. In practical systems, generated code may flow through larger agentic or tool-mediated runtimes, introducing additional operational and security risks beyond single-turn correctness alone \cite{jiang2026agenticaicybersecurityattack}. Our evaluation does not attempt to measure those broader runtime-supply-chain concerns; instead, it isolates one lower-level component of reliability: whether the model repeatedly produces correct solutions for the same deterministic task.
+
+\section{Limitations}
+
+Several limitations qualify our results. First, the benchmark is relatively small ($N=100$) and restricted to recent LeetCode-style problems. This design helps reduce direct overlap with heavily circulated historical benchmarks, but it does not eliminate contamination risk and should not be interpreted as proof of benchmark novelty. Second, our repeated-run protocol is intentionally narrow: we vary prompt template and repeated sampling while holding the evaluation harness fixed. As a result, the study does not characterize the effects of broader prompt engineering, tool use, self-repair, retrieval, test-time selection, or multi-turn interaction.
+
+Third, model access is mediated through provider APIs and platform infrastructure. Even though task grading is deterministic, we do not control all backend implementation details, model refreshes, or service-side changes that may affect outputs over time. Fourth, our summary metrics compress distinct failure modes into a binary pass/fail outcome. This is appropriate for end-task correctness, but it does not by itself explain whether instability arises from reasoning errors, formatting mistakes, runtime failures, or judge-specific edge cases. Finally, our conclusions are limited to Python code generation on deterministic coding tasks with executable tests. They should not be read as a complete account of reliability for other programming languages, for open-ended generation tasks, or for production systems that include additional orchestration and verification layers.
+
+\section{Ethics Statement}
+
+This paper evaluates commercial and open-access LLM APIs on deterministic programming tasks. The study does not involve human subjects, personal data collection, or annotation labor. The main ethical considerations are instead tied to platform use and deployment interpretation. First, the evaluation relies on automated submission to an external online judge. Such use should be understood as research benchmarking under the platform's operational constraints, and any public release should avoid exposing credentials, session artifacts, or procedures that would enable abusive automation. Second, the evaluated models are accessed through third-party APIs whose outputs and availability may be governed by provider-specific terms of service and may change over time. Our reported results should therefore be interpreted as measurements of accessed systems under a documented evaluation protocol, not as immutable properties of any provider's model family.
+
+More broadly, stronger performance on coding benchmarks can increase both beneficial and harmful capabilities. Better repeated-run reliability can support legitimate software engineering workflows, but it may also lower the barrier to generating code in settings where security review is weak. For this reason, we frame our contribution as an evaluation methodology rather than as an endorsement of fully autonomous code deployment.
+
+\section{Conclusion}
+
+We presented a repeated-run evaluation framework for deterministic programming tasks and reported complementary summaries that separate mean performance from stability. Across 13 models, 100 problems, and 5 repeated runs per configuration (13{,}000 total instances), run-level pass rate and retry-free coverage are strongly correlated, but run-level accuracy consistently exceeds perfect stability. The resulting gap is non-uniform across models and is largest in the middle of the performance spectrum, where problem outcomes are most variable across runs. Prompt effects are also heterogeneous across model families rather than uniformly positive. Taken together, these findings suggest that repeated-run evaluation is a useful complement to standard code-generation reporting whenever outputs are consumed in deterministic, reproducibility-sensitive workflows.
+
+\bibliography{references}
+
+\end{document}

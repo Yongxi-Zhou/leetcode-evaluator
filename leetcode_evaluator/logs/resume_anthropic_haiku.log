@@ -1,0 +1,566 @@
+2026-04-03 15:15:34,341 - INFO - Experiment started: 20260403_151534_claude-haiku-4-5-20251001
+2026-04-03 15:15:34,341 - INFO - Provider: anthropic, Model: claude-haiku-4-5-20251001
+2026-04-03 15:15:34,341 - INFO - Experiment Name: claude-haiku-4-5-20251001
+2026-04-03 15:15:34,889 - INFO - Initialized evaluator with anthropic
+Running Anthropic batch generation from: experiments/paper_anthropic_batch.json
+Mode: resume
+Run id: anthropic_batch_paper_anthropic_batch_8b59109138
+Batch root: output/batch_jobs/anthropic_batch_paper_anthropic_batch_8b59109138
+Filter models: ['claude-haiku-4-5-20251001']
+
+------------------------------------------------------------
+ANTHROPIC BATCH MODEL: claude-haiku-4-5-20251001
+------------------------------------------------------------
+Reusing normalized batch output: model=claude-haiku-4-5-20251001, prompt=detailed
+Reusing normalized batch output: model=claude-haiku-4-5-20251001, prompt=minimal
+Results file: output/anthropic_batch_paper_anthropic_batch_8b59109138/results/evaluations/evaluation_results_20260403_151534.json
+✓ Session cookies configured: ['gr_user_id', '__stripe_mid', '87b5a3c3f1a55520_gr_last_sent_cs1', 'cf_clearance', 'LEETCODE_SESSION', 'INGRESSCOOKIE', 'ip_check', '87b5a3c3f1a55520_gr_session_id', '87b5a3c3f1a55520_gr_last_sent_sid_with_cs1', '87b5a3c3f1a55520_gr_cs1', '_gid', '_gat', '_ga', '87b5a3c3f1a55520_gr_session_id_sent_vst', 'FCCDCF', '__gads', '__gpi', '__eoi', 'FCNEC', '_ga_CDRWKZTDEX', 'csrftoken']
+============================================================
+LeetCode AI Solution Evaluator
+============================================================
+✓ Successfully authenticated as taylorjones0286
+✓ Using anthropic provider with model: claude-haiku-4-5-20251001
+
+
+🚀 Starting generated-result submission batch:
+  - Total Problems: 100
+  - Submission Delay: 15s
+  - Total Generated Attempts: 1000
+Progress:   0%|          | 0/100 [00:00<?, ?it/s]Progress:   1%|          | 1/100 [05:02<8:18:55, 302.38s/it]Progress:   2%|▏         | 2/100 [09:40<7:50:12, 287.88s/it]Progress:   3%|▎         | 3/100 [12:34<6:21:46, 236.15s/it]Progress:   4%|▍         | 4/100 [15:56<5:56:04, 222.55s/it]Progress:   5%|▌         | 5/100 [23:02<7:48:51, 296.13s/it]Progress:   6%|▌         | 6/100 [26:38<7:01:03, 268.76s/it]Progress:   7%|▋         | 7/100 [29:53<6:18:54, 244.46s/it]Progress:   8%|▊         | 8/100 [32:47<5:40:52, 222.31s/it]Progress:   9%|▉         | 9/100 [36:51<5:47:01, 228.81s/it]Progress:  10%|█         | 10/100 [41:31<6:07:02, 244.70s/it]Progress:  11%|█         | 11/100 [44:48<5:41:26, 230.19s/it]Progress:  12%|█▏        | 12/100 [47:42<5:12:41, 213.19s/it]Progress:  13%|█▎        | 13/100 [52:52<5:51:28, 242.39s/it]Progress:  14%|█▍        | 14/100 [57:51<6:11:52, 259.45s/it]Progress:  15%|█▌        | 15/100 [1:01:35<5:52:21, 248.72s/it]Progress:  16%|█▌        | 16/100 [1:04:30<5:17:19, 226.66s/it]Progress:  17%|█▋        | 17/100 [1:08:16<5:13:17, 226.48s/it]Progress:  18%|█▊        | 18/100 [1:12:14<5:13:59, 229.75s/it]Progress:  19%|█▉        | 19/100 [1:15:12<4:49:31, 214.46s/it]Progress:  20%|██        | 20/100 [1:18:08<4:30:25, 202.82s/it]Progress:  21%|██        | 21/100 [1:21:39<4:30:11, 205.21s/it]Progress:  22%|██▏       | 22/100 [1:24:53<4:22:24, 201.85s/it]Progress:  23%|██▎       | 23/100 [1:29:49<4:55:26, 230.21s/it]Progress:  24%|██▍       | 24/100 [1:32:45<4:30:46, 213.77s/it]Progress:  25%|██▌       | 25/100 [1:37:46<5:00:05, 240.07s/it]Progress:  26%|██▌       | 26/100 [1:42:42<5:16:49, 256.89s/it]Progress:  27%|██▋       | 27/100 [1:45:55<4:49:18, 237.79s/it]Progress:  28%|██▊       | 28/100 [1:48:50<4:22:24, 218.67s/it]Progress:  29%|██▉       | 29/100 [1:53:51<4:48:02, 243.41s/it]Progress:  30%|███       | 30/100 [1:58:20<4:53:06, 251.24s/it]Progress:  31%|███       | 31/100 [2:01:32<4:28:16, 233.29s/it]Progress:  32%|███▏      | 32/100 [2:04:28<4:04:56, 216.13s/it]Progress:  33%|███▎      | 33/100 [2:08:01<4:00:18, 215.20s/it]Progress:  34%|███▍      | 34/100 [2:12:59<4:24:05, 240.09s/it]Progress:  35%|███▌      | 35/100 [2:17:55<4:38:21, 256.95s/it]Progress:  36%|███▌      | 36/100 [2:20:50<4:07:44, 232.26s/it]Progress:  37%|███▋      | 37/100 [2:23:46<3:46:07, 215.36s/it]Progress:  38%|███▊      | 38/100 [2:28:47<4:09:03, 241.02s/it]Progress:  39%|███▉      | 39/100 [2:32:02<3:51:02, 227.25s/it]Progress:  40%|████      | 40/100 [2:37:01<4:08:52, 248.88s/it]Progress:  41%|████      | 41/100 [2:40:01<3:44:31, 228.33s/it]Progress:  42%|████▏     | 42/100 [2:47:31<4:44:55, 294.75s/it]Progress:  43%|████▎     | 43/100 [2:52:33<4:42:00, 296.86s/it]Progress:  44%|████▍     | 44/100 [2:55:52<4:09:40, 267.51s/it]Progress:  45%|████▌     | 45/100 [2:58:46<3:39:33, 239.53s/it]Progress:  46%|████▌     | 46/100 [3:01:52<3:21:04, 223.41s/it]Progress:  47%|████▋     | 47/100 [3:05:08<3:10:04, 215.18s/it]Progress:  48%|████▊     | 48/100 [3:08:22<3:00:59, 208.83s/it]Progress:  49%|████▉     | 49/100 [3:13:21<3:20:25, 235.80s/it]Traceback (most recent call last):
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/main.py", line 638, in main
+    batch_results = batch_runner.run(
+        mode=args.anthropic_batch_mode,
+    ...<5 lines>...
+        skip_premium=args.skip_premium,
+    )
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/anthropic_batch_runner.py", line 452, in run
+    results_file = evaluator.run_generated_evaluation(generated_items, stability_runs=self.stability_runs, results_file=active_results_file)
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/evaluator.py", line 616, in run_generated_evaluation
+    results = self.evaluate_generated_batch(generated_items, results_file=results_file)
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/evaluator.py", line 410, in evaluate_generated_batch
+    self._process_submission_item(item, results, None, pbar)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/evaluator.py", line 241, in _process_submission_item
+    raise RateLimitExhaustedException(
+    ...<3 lines>...
+    )
+leetcode_evaluator.core.evaluator.RateLimitExhaustedException: LeetCode rate limit exhausted: 10 consecutive submission failures (no submission_id). Switch LeetCode account and re-run.
+Progress:  49%|████▉     | 49/100 [3:25:38<3:34:01, 251.80s/it]
+✓ Submission created: 1968124450
+✓ Submission created: 1968124580
+✓ Submission created: 1968124739
+✓ Submission created: 1968124884
+✓ Submission created: 1968125033
+✓ Submission created: 1968125175
+✓ Submission created: 1968125296
+✓ Submission created: 1968125432
+✓ Submission created: 1968125589
+✓ Submission created: 1968125752
+✓ Submission created: 1968125885
+✓ Submission created: 1968126036
+✓ Submission created: 1968126197
+✓ Submission created: 1968126304
+✓ Submission created: 1968126455
+✓ Submission created: 1968126614
+✓ Submission created: 1968126786
+✓ Submission created: 1968126926
+✓ Submission created: 1968127023
+✓ Submission created: 1968127171
+✓ Submission created: 1968127289
+✓ Submission created: 1968127383
+✓ Submission created: 1968127482
+✓ Submission created: 1968127549
+✓ Submission created: 1968127615
+✓ Submission created: 1968127697
+✓ Submission created: 1968127784
+✓ Submission created: 1968127868
+✓ Submission created: 1968127963
+✓ Submission created: 1968128054
+✓ Submission created: 1968128161
+✓ Submission created: 1968128267
+✓ Submission created: 1968128356
+✓ Submission created: 1968128449
+✓ Submission created: 1968128538
+✓ Submission created: 1968128634
+✓ Submission created: 1968128729
+✓ Submission created: 1968128806
+✓ Submission created: 1968128905
+✓ Submission created: 1968128991
+✓ Submission created: 1968129106
+✓ Submission created: 1968129318
+✓ Submission created: 1968129504
+✓ Submission created: 1968129702
+✓ Submission created: 1968129901
+✓ Submission created: 1968130092
+✓ Submission created: 1968130307
+✓ Submission created: 1968130521
+✓ Submission created: 1968130732
+✓ Submission created: 1968130939
+✓ Submission created: 1968131163
+✓ Submission created: 1968131248
+✓ Submission created: 1968131352
+✓ Submission created: 1968131467
+✓ Submission created: 1968131572
+✓ Submission created: 1968131660
+✓ Submission created: 1968131743
+✓ Submission created: 1968131830
+✓ Submission created: 1968131990
+✓ Submission created: 1968132071
+✓ Submission created: 1968132184
+✓ Submission created: 1968132276
+✓ Submission created: 1968132373
+✓ Submission created: 1968132458
+✓ Submission created: 1968132552
+✓ Submission created: 1968132647
+✓ Submission created: 1968132738
+✓ Submission created: 1968132817
+✓ Submission created: 1968132906
+✓ Submission created: 1968133006
+✓ Submission created: 1968133100
+✓ Submission created: 1968133191
+✓ Submission created: 1968133279
+✓ Submission created: 1968133360
+✓ Submission created: 1968133440
+✓ Submission created: 1968133524
+✓ Submission created: 1968133598
+✓ Submission created: 1968133675
+✓ Submission created: 1968133766
+✓ Submission created: 1968133854
+✓ Submission created: 1968133936
+✓ Submission created: 1968134044
+✓ Submission created: 1968134148
+✓ Submission created: 1968134255
+✓ Submission created: 1968134363
+✓ Submission created: 1968134484
+✓ Submission created: 1968134615
+✓ Submission created: 1968134720
+✓ Submission created: 1968134821
+✓ Submission created: 1968134919
+✓ Submission created: 1968135027
+✓ Submission created: 1968135128
+✓ Submission created: 1968135272
+✓ Submission created: 1968135397
+✓ Submission created: 1968135528
+✓ Submission created: 1968135653
+✓ Submission created: 1968135811
+✓ Submission created: 1968135938
+✓ Submission created: 1968136071
+✓ Submission created: 1968136208
+✓ Submission created: 1968136288
+✓ Submission created: 1968136374
+✓ Submission created: 1968136455
+✓ Submission created: 1968136532
+✓ Submission created: 1968136622
+✓ Submission created: 1968136717
+✓ Submission created: 1968136802
+✓ Submission created: 1968136896
+✓ Submission created: 1968136977
+✓ Submission created: 1968137061
+✓ Submission created: 1968137146
+✓ Submission created: 1968137233
+✓ Submission created: 1968137304
+✓ Submission created: 1968137380
+✓ Submission created: 1968137454
+✓ Submission created: 1968137520
+✓ Submission created: 1968137594
+✓ Submission created: 1968137668
+✓ Submission created: 1968137746
+✓ Submission created: 1968137827
+✓ Submission created: 1968137895
+✓ Submission created: 1968138038
+✓ Submission created: 1968138167
+✓ Submission created: 1968138300
+✓ Submission created: 1968138438
+✓ Submission created: 1968138524
+✓ Submission created: 1968138648
+✓ Submission created: 1968138776
+✓ Submission created: 1968138918
+✓ Submission created: 1968139054
+✓ Submission created: 1968139178
+✓ Submission created: 1968139306
+✓ Submission created: 1968139437
+✓ Submission created: 1968139567
+✓ Submission created: 1968139704
+✓ Submission created: 1968139829
+✓ Submission created: 1968139946
+✓ Submission created: 1968140048
+✓ Submission created: 1968140161
+✓ Submission created: 1968140273
+✓ Submission created: 1968140392
+✓ Submission created: 1968140482
+✓ Submission created: 1968140574
+✓ Submission created: 1968140679
+✓ Submission created: 1968140789
+✓ Submission created: 1968140892
+✓ Submission created: 1968140993
+✓ Submission created: 1968141062
+✓ Submission created: 1968141132
+✓ Submission created: 1968141194
+✓ Submission created: 1968141296
+✓ Submission created: 1968141357
+✓ Submission created: 1968141423
+✓ Submission created: 1968141495
+✓ Submission created: 1968141556
+✓ Submission created: 1968141611
+✓ Submission created: 1968141692
+✓ Submission created: 1968141746
+✓ Submission created: 1968141796
+✓ Submission created: 1968141877
+✓ Submission created: 1968141946
+✓ Submission created: 1968142022
+✓ Submission created: 1968142091
+✓ Submission created: 1968142219
+✓ Submission created: 1968142281
+✓ Submission created: 1968142378
+✓ Submission created: 1968142447
+✓ Submission created: 1968142508
+✓ Submission created: 1968142633
+✓ Submission created: 1968142696
+✓ Submission created: 1968142810
+✓ Submission created: 1968142889
+✓ Submission created: 1968143014
+✓ Submission created: 1968143105
+✓ Submission created: 1968143175
+✓ Submission created: 1968143246
+✓ Submission created: 1968143328
+✓ Submission created: 1968143420
+✓ Submission created: 1968143487
+✓ Submission created: 1968143598
+✓ Submission created: 1968143733
+✓ Submission created: 1968143808
+✓ Submission created: 1968143868
+✓ Submission created: 1968143931
+✓ Submission created: 1968144000
+✓ Submission created: 1968144082
+✓ Submission created: 1968144163
+✓ Submission created: 1968144238
+✓ Submission created: 1968144311
+✓ Submission created: 1968144373
+✓ Submission created: 1968144439
+✓ Submission created: 1968144521
+✓ Submission created: 1968144605
+✓ Submission created: 1968144678
+✓ Submission created: 1968144748
+✓ Submission created: 1968144805
+✓ Submission created: 1968144871
+✓ Submission created: 1968144935
+✓ Submission created: 1968145006
+✓ Submission created: 1968145065
+✓ Submission created: 1968145129
+✓ Submission created: 1968145197
+✓ Submission created: 1968145309
+✓ Submission created: 1968145402
+✓ Submission created: 1968145501
+✓ Submission created: 1968145586
+✓ Submission created: 1968145669
+✓ Submission created: 1968145756
+✓ Submission created: 1968145829
+✓ Submission created: 1968145907
+✓ Submission created: 1968145988
+✓ Submission created: 1968146071
+✓ Submission created: 1968146160
+✓ Submission created: 1968146237
+✓ Submission created: 1968146317
+✓ Submission created: 1968146388
+✓ Submission created: 1968146462
+✓ Submission created: 1968146522
+✓ Submission created: 1968146596
+✓ Submission created: 1968146672
+✓ Submission created: 1968146735
+✓ Submission created: 1968146852
+✓ Submission created: 1968146970
+✓ Submission created: 1968147078
+✓ Submission created: 1968147196
+✓ Submission created: 1968147312
+✓ Submission created: 1968147414
+✓ Submission created: 1968147532
+✓ Submission created: 1968147639
+✓ Submission created: 1968147741
+✓ Submission created: 1968147841
+✓ Submission created: 1968147899
+✓ Submission created: 1968147965
+✓ Submission created: 1968148033
+✓ Submission created: 1968148095
+✓ Submission created: 1968148149
+✓ Submission created: 1968148216
+✓ Submission created: 1968148280
+✓ Submission created: 1968148356
+✓ Submission created: 1968148414
+✓ Submission created: 1968148471
+✓ Submission created: 1968148567
+✓ Submission created: 1968148665
+✓ Submission created: 1968148794
+✓ Submission created: 1968148894
+✓ Submission created: 1968148993
+✓ Submission created: 1968149093
+✓ Submission created: 1968149215
+✓ Submission created: 1968149329
+✓ Submission created: 1968149421
+✓ Submission created: 1968149529
+✓ Submission created: 1968149664
+✓ Submission created: 1968149776
+✓ Submission created: 1968149885
+✓ Submission created: 1968150004
+✓ Submission created: 1968150144
+✓ Submission created: 1968150266
+✓ Submission created: 1968150393
+✓ Submission created: 1968150505
+✓ Submission created: 1968150625
+✓ Submission created: 1968150741
+✓ Submission created: 1968150812
+✓ Submission created: 1968150886
+✓ Submission created: 1968150959
+✓ Submission created: 1968151037
+✓ Submission created: 1968151115
+✓ Submission created: 1968151191
+✓ Submission created: 1968151259
+✓ Submission created: 1968151350
+✓ Submission created: 1968151417
+✓ Submission created: 1968151498
+✓ Submission created: 1968151559
+✓ Submission created: 1968151627
+✓ Submission created: 1968151675
+✓ Submission created: 1968151722
+✓ Submission created: 1968151782
+✓ Submission created: 1968151834
+✓ Submission created: 1968151885
+✓ Submission created: 1968151951
+✓ Submission created: 1968152012
+✓ Submission created: 1968152083
+✓ Submission created: 1968152187
+✓ Submission created: 1968152294
+✓ Submission created: 1968152400
+✓ Submission created: 1968152508
+✓ Submission created: 1968152609
+✓ Submission created: 1968152734
+✓ Submission created: 1968152850
+✓ Submission created: 1968152980
+✓ Submission created: 1968153119
+✓ Submission created: 1968153232
+✓ Submission created: 1968153317
+✓ Submission created: 1968153384
+✓ Submission created: 1968153487
+✓ Submission created: 1968153593
+✓ Submission created: 1968153676
+✓ Submission created: 1968153803
+✓ Submission created: 1968153909
+✓ Submission created: 1968154027
+✓ Submission created: 1968154138
+✓ Submission created: 1968154243
+✓ Submission created: 1968154332
+✓ Submission created: 1968154402
+✓ Submission created: 1968154465
+✓ Submission created: 1968154539
+✓ Submission created: 1968154632
+✓ Submission created: 1968154701
+✓ Submission created: 1968154788
+✓ Submission created: 1968154867
+✓ Submission created: 1968154945
+✓ Submission created: 1968155010
+✓ Submission created: 1968155086
+✓ Submission created: 1968155170
+✓ Submission created: 1968155238
+✓ Submission created: 1968155323
+✓ Submission created: 1968155395
+✓ Submission created: 1968155455
+✓ Submission created: 1968155538
+✓ Submission created: 1968155611
+✓ Submission created: 1968155667
+✓ Submission created: 1968155736
+✓ Submission created: 1968155863
+✓ Submission created: 1968155933
+✓ Submission created: 1968156001
+✓ Submission created: 1968156123
+✓ Submission created: 1968156206
+✓ Submission created: 1968156283
+✓ Submission created: 1968156359
+✓ Submission created: 1968156431
+✓ Submission created: 1968156496
+✓ Submission created: 1968156558
+✓ Submission created: 1968156674
+✓ Submission created: 1968156779
+✓ Submission created: 1968156892
+✓ Submission created: 1968156997
+✓ Submission created: 1968157109
+✓ Submission created: 1968157237
+✓ Submission created: 1968157365
+✓ Submission created: 1968157479
+✓ Submission created: 1968157605
+✓ Submission created: 1968157727
+✓ Submission created: 1968157839
+✓ Submission created: 1968157940
+✓ Submission created: 1968158053
+✓ Submission created: 1968158173
+✓ Submission created: 1968158292
+✓ Submission created: 1968158415
+✓ Submission created: 1968158518
+✓ Submission created: 1968158617
+✓ Submission created: 1968158718
+✓ Submission created: 1968158835
+✓ Submission created: 1968158899
+✓ Submission created: 1968158963
+✓ Submission created: 1968159021
+✓ Submission created: 1968159092
+✓ Submission created: 1968159163
+✓ Submission created: 1968159229
+✓ Submission created: 1968159281
+✓ Submission created: 1968159348
+✓ Submission created: 1968159413
+✓ Submission created: 1968159466
+✓ Submission created: 1968159510
+✓ Submission created: 1968159569
+✓ Submission created: 1968159637
+✓ Submission created: 1968159702
+✓ Submission created: 1968159778
+✓ Submission created: 1968159860
+✓ Submission created: 1968159940
+✓ Submission created: 1968160007
+✓ Submission created: 1968160077
+✓ Submission created: 1968160145
+✓ Submission created: 1968160254
+✓ Submission created: 1968160385
+✓ Submission created: 1968160500
+✓ Submission created: 1968160603
+✓ Submission created: 1968160720
+✓ Submission created: 1968160853
+✓ Submission created: 1968160955
+✓ Submission created: 1968161072
+✓ Submission created: 1968161218
+✓ Submission created: 1968161348
+✓ Submission created: 1968161436
+✓ Submission created: 1968161516
+✓ Submission created: 1968161618
+✓ Submission created: 1968161687
+✓ Submission created: 1968161770
+✓ Submission created: 1968161862
+✓ Submission created: 1968161950
+✓ Submission created: 1968162046
+✓ Submission created: 1968162118
+✓ Submission created: 1968162225
+✓ Submission created: 1968162339
+✓ Submission created: 1968162448
+✓ Submission created: 1968162560
+✓ Submission created: 1968162690
+✓ Submission created: 1968162806
+✓ Submission created: 1968162924
+✓ Submission created: 1968163036
+✓ Submission created: 1968163146
+✓ Submission created: 1968163237
+✓ Submission created: 1968163342
+✓ Submission created: 1968163409
+✓ Submission created: 1968163493
+✓ Submission created: 1968163557
+✓ Submission created: 1968163627
+✓ Submission created: 1968163681
+✓ Submission created: 1968163753
+✓ Submission created: 1968163828
+✓ Submission created: 1968163887
+✓ Submission created: 1968163944
+✓ Submission created: 1968164015
+✓ Submission created: 1968164189
+✓ Submission created: 1968164390
+✓ Submission created: 1968164567
+✓ Submission created: 1968164740
+✓ Submission created: 1968164923
+✓ Submission created: 1968165084
+✓ Submission created: 1968165253
+✓ Submission created: 1968165450
+✓ Submission created: 1968165633
+✓ Submission created: 1968165794
+✓ Submission created: 1968165910
+✓ Submission created: 1968166026
+✓ Submission created: 1968166149
+✓ Submission created: 1968166253
+✓ Submission created: 1968166372
+✓ Submission created: 1968166502
+✓ Submission created: 1968166636
+✓ Submission created: 1968166744
+✓ Submission created: 1968166862
+✓ Submission created: 1968166973
+✓ Submission created: 1968167073
+✓ Submission created: 1968167157
+✓ Submission created: 1968167228
+✓ Submission created: 1968167298
+✓ Submission created: 1968167378
+✓ Submission created: 1968167468
+✓ Submission created: 1968167553
+✓ Submission created: 1968167623
+✓ Submission created: 1968167712
+✓ Submission created: 1968167796
+✓ Submission created: 1968167868
+✓ Submission created: 1968167943
+✓ Submission created: 1968168025
+✓ Submission created: 1968168078
+✓ Submission created: 1968168157
+✓ Submission created: 1968168226
+✓ Submission created: 1968168298
+✓ Submission created: 1968168362
+✓ Submission created: 1968168441
+✓ Submission created: 1968168502
+✓ Submission created: 1968168571
+✓ Submission created: 1968168643
+✓ Submission created: 1968168725
+✓ Submission created: 1968168801
+✓ Submission created: 1968168868
+✓ Submission created: 1968168936
+✓ Submission created: 1968169019
+✓ Submission created: 1968169132
+✓ Submission created: 1968169207
+✓ Submission created: 1968169270
+✓ Submission created: 1968169349
+✓ Submission created: 1968169440
+✓ Submission created: 1968169520
+✓ Submission created: 1968169599
+✓ Submission created: 1968169679
+✓ Submission created: 1968169754
+✓ Submission created: 1968169829
+✓ Submission created: 1968169919
+✓ Submission created: 1968169983
+✓ Submission created: 1968170074
+✓ Submission created: 1968170151
+✓ Submission created: 1968170229
+✓ Submission created: 1968170302
+✓ Submission created: 1968170372
+✓ Submission created: 1968170467
+✓ Submission created: 1968170557
+✓ Submission created: 1968170655
+✓ Submission created: 1968170741
+✓ Submission created: 1968170837
+✓ Submission created: 1968170930
+✓ Submission created: 1968171058
+✓ Submission created: 1968171198
+✓ Submission created: 1968171303
+✓ Submission created: 1968171429
+✓ Submission created: 1968171544
+✓ Submission created: 1968171645
+✓ Submission created: 1968171746
+✓ Submission created: 1968171863
+✓ Submission created: 1968171983
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+RATE LIMIT EXHAUSTED for model: claude-haiku-4-5-20251001
+Progress saved. Switch LeetCode account and re-run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+✗ Error: LeetCode rate limit exhausted: 10 consecutive submission failures (no submission_id). Switch LeetCode account and re-run.

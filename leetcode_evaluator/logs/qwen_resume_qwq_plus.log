@@ -1,0 +1,393 @@
+2026-03-23 00:56:07,155 - INFO - Experiment started: 20260323_005607_qwq-plus
+2026-03-23 00:56:07,155 - INFO - Provider: qwen, Model: qwq-plus
+2026-03-23 00:56:07,155 - INFO - Experiment Name: qwq-plus
+2026-03-23 00:56:07,441 - INFO - Initialized evaluator with qwen
+🚀 Running Qwen batch generation from: experiments/paper_qwen_batch.json
+Mode: resume
+Stable run id: qwen_batch_paper_qwen_batch_608ffde791
+Batch root: output/batch_jobs/qwen_batch_paper_qwen_batch_608ffde791
+Filter models: ['qwq-plus']
+
+------------------------------------------------------------
+QWEN BATCH MODEL: qwq-plus
+------------------------------------------------------------
+Reusing normalized batch output: model=qwq-plus, prompt=detailed
+Reusing normalized batch output: model=qwq-plus, prompt=minimal
+Resuming from results file: output/qwen_batch_paper_qwen_batch_608ffde791/results/evaluations/evaluation_results_20260323_010824.json
+✓ Session cookies configured: ['_gid', 'ip_check', 'gr_user_id', '87b5a3c3f1a55520_gr_session_id', '87b5a3c3f1a55520_gr_session_id_sent_vst', 'cf_clearance', 'LEETCODE_SESSION', 'INGRESSCOOKIE', '_dd_s', '87b5a3c3f1a55520_gr_last_sent_sid_with_cs1', '87b5a3c3f1a55520_gr_last_sent_cs1', 'messages', '87b5a3c3f1a55520_gr_cs1', '_ga', 'FCCDCF', 'FCNEC', '_ga_CDRWKZTDEX', 'csrftoken']
+============================================================
+LeetCode AI Solution Evaluator
+============================================================
+✓ Successfully authenticated as ccchow971
+✓ Using qwen provider with model: qwq-plus
+
+
+🚀 Starting generated-result submission batch:
+  - Total Problems: 100
+  - Already complete (resuming): 23, remaining: 77
+  - Submission Delay: 15s
+  - Total Generated Attempts: 770
+Progress:   0%|          | 0/77 [00:00<?, ?it/s]Progress:   1%|▏         | 1/77 [07:27<9:26:35, 447.31s/it]Progress:   3%|▎         | 2/77 [12:18<7:24:07, 355.31s/it]Progress:   4%|▍         | 3/77 [17:12<6:44:02, 327.60s/it]Progress:   5%|▌         | 4/77 [23:02<6:49:16, 336.38s/it]Progress:   6%|▋         | 5/77 [27:10<6:05:26, 304.53s/it]Progress:   8%|▊         | 6/77 [30:15<5:12:14, 263.87s/it]Progress:   9%|▉         | 7/77 [34:26<5:02:48, 259.55s/it]Progress:  10%|█         | 8/77 [38:07<4:44:30, 247.41s/it]Progress:  12%|█▏        | 9/77 [43:55<5:16:02, 278.86s/it]Progress:  13%|█▎        | 10/77 [49:35<5:32:14, 297.52s/it]Progress:  14%|█▍        | 11/77 [57:28<6:26:26, 351.31s/it]Progress:  16%|█▌        | 12/77 [1:01:40<5:47:56, 321.17s/it]Progress:  17%|█▋        | 13/77 [1:05:34<5:14:30, 294.85s/it]Progress:  18%|█▊        | 14/77 [1:08:32<4:32:19, 259.35s/it]Progress:  19%|█▉        | 15/77 [1:12:44<4:25:48, 257.23s/it]Progress:  21%|██        | 16/77 [1:15:59<4:02:34, 238.59s/it]Progress:  22%|██▏       | 17/77 [1:22:47<4:49:33, 289.56s/it]Progress:  23%|██▎       | 18/77 [1:25:49<4:12:58, 257.26s/it]Progress:  25%|██▍       | 19/77 [1:30:24<4:13:46, 262.52s/it]Progress:  26%|██▌       | 20/77 [1:34:56<4:11:59, 265.26s/it]Progress:  27%|██▋       | 21/77 [1:38:13<3:48:29, 244.82s/it]Progress:  29%|██▊       | 22/77 [1:44:06<4:14:05, 277.19s/it]Progress:  30%|██▉       | 23/77 [1:50:56<4:45:16, 316.98s/it]Progress:  31%|███       | 24/77 [1:55:08<4:22:50, 297.56s/it]Progress:  32%|███▏      | 25/77 [1:58:23<3:51:18, 266.88s/it]Progress:  34%|███▍      | 26/77 [2:01:31<3:26:44, 243.23s/it]Progress:  35%|███▌      | 27/77 [2:06:40<3:39:10, 263.00s/it]Progress:  36%|███▋      | 28/77 [2:18:17<5:21:09, 393.25s/it]Traceback (most recent call last):
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/main.py", line 385, in main
+    batch_results = batch_runner.run(
+        mode=args.qwen_batch_mode,
+    ...<5 lines>...
+        skip_premium=args.skip_premium,
+    )
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/qwen_batch_runner.py", line 686, in run
+    results_file = evaluator.run_generated_evaluation(
+        generated_items,
+        stability_runs=self.stability_runs,
+        results_file=active_results_file,
+    )
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/evaluator.py", line 616, in run_generated_evaluation
+    results = self.evaluate_generated_batch(generated_items, results_file=results_file)
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/evaluator.py", line 410, in evaluate_generated_batch
+    self._process_submission_item(item, results, None, pbar)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/evaluator.py", line 241, in _process_submission_item
+    raise RateLimitExhaustedException(
+    ...<3 lines>...
+    )
+leetcode_evaluator.core.evaluator.RateLimitExhaustedException: LeetCode rate limit exhausted: 10 consecutive submission failures (no submission_id). Switch LeetCode account and re-run.
+Progress:  36%|███▋      | 28/77 [2:19:18<4:03:47, 298.53s/it]
+✓ Submission created: 1956478704
+✓ Submission created: 1956478905
+✓ Submission created: 1956479113
+✓ Submission created: 1956479318
+✓ Submission created: 1956479531
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956480562
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956483272
+✓ Submission created: 1956483467
+✓ Submission created: 1956483634
+✓ Submission created: 1956483820
+✓ Submission created: 1956483981
+✓ Submission created: 1956484161
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956485110
+✓ Submission created: 1956485284
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956486183
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956487090
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956488033
+✓ Submission created: 1956488224
+✓ Submission created: 1956488439
+✓ Submission created: 1956488644
+✓ Submission created: 1956488815
+✓ Submission created: 1956489006
+✓ Submission created: 1956489199
+✓ Submission created: 1956489427
+✓ Submission created: 1956489614
+✓ Submission created: 1956489806
+✓ Submission created: 1956489998
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956492591
+✓ Submission created: 1956492778
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956493754
+✓ Submission created: 1956493950
+✓ Submission created: 1956494161
+✓ Submission created: 1956494348
+✓ Submission created: 1956494586
+✓ Submission created: 1956494808
+✓ Submission created: 1956495019
+✓ Submission created: 1956495219
+✓ Submission created: 1956495399
+✓ Submission created: 1956495620
+✓ Submission created: 1956495836
+✓ Submission created: 1956496025
+✓ Submission created: 1956496241
+✓ Submission created: 1956496475
+✓ Submission created: 1956496685
+✓ Submission created: 1956496883
+✓ Submission created: 1956497095
+✓ Submission created: 1956497286
+✓ Submission created: 1956497471
+✓ Submission created: 1956497655
+✓ Submission created: 1956497874
+✓ Submission created: 1956498114
+✓ Submission created: 1956498326
+✓ Submission created: 1956498541
+✓ Submission created: 1956498761
+✓ Submission created: 1956498972
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956499991
+✓ Submission created: 1956500192
+✓ Submission created: 1956500405
+✓ Submission created: 1956500656
+✓ Submission created: 1956500917
+✓ Submission created: 1956501144
+✓ Submission created: 1956501353
+✓ Submission created: 1956501598
+✓ Submission created: 1956501830
+✓ Submission created: 1956502089
+✓ Submission created: 1956502341
+✓ Submission created: 1956502596
+✓ Submission created: 1956502835
+✓ Submission created: 1956503038
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956504091
+✓ Submission created: 1956504314
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956505354
+✓ Submission created: 1956505566
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956506643
+✓ Submission created: 1956506851
+✓ Submission created: 1956507190
+✓ Submission created: 1956507544
+✓ Submission created: 1956507864
+✓ Submission created: 1956508266
+✓ Submission created: 1956508571
+✓ Submission created: 1956508928
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956510203
+✓ Submission created: 1956510542
+✓ Submission created: 1956510900
+✓ Submission created: 1956511121
+✓ Submission created: 1956511357
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956513409
+✓ Submission created: 1956513634
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956516586
+✓ Submission created: 1956516835
+✓ Submission created: 1956517081
+✓ Submission created: 1956517325
+✓ Submission created: 1956517603
+✓ Submission created: 1956517837
+✓ Submission created: 1956518086
+✓ Submission created: 1956518324
+✓ Submission created: 1956518565
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956519855
+✓ Submission created: 1956520070
+✓ Submission created: 1956520316
+✓ Submission created: 1956520561
+✓ Submission created: 1956520764
+✓ Submission created: 1956521003
+✓ Submission created: 1956521229
+✓ Submission created: 1956521462
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956522707
+✓ Submission created: 1956522935
+✓ Submission created: 1956523145
+✓ Submission created: 1956523396
+✓ Submission created: 1956523613
+✓ Submission created: 1956523830
+✓ Submission created: 1956524057
+✓ Submission created: 1956524296
+✓ Submission created: 1956524560
+✓ Submission created: 1956524766
+✓ Submission created: 1956524996
+✓ Submission created: 1956525240
+✓ Submission created: 1956525495
+✓ Submission created: 1956525762
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956527048
+✓ Submission created: 1956527313
+✓ Submission created: 1956527590
+✓ Submission created: 1956527838
+✓ Submission created: 1956528108
+✓ Submission created: 1956528363
+✓ Submission created: 1956528629
+✓ Submission created: 1956528890
+✓ Submission created: 1956529174
+✓ Submission created: 1956529452
+✓ Submission created: 1956529720
+✓ Submission created: 1956530007
+✓ Submission created: 1956530271
+✓ Submission created: 1956530549
+✓ Submission created: 1956530782
+✓ Submission created: 1956531078
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956532400
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956533620
+✓ Submission created: 1956533895
+✓ Submission created: 1956534148
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956535483
+✓ Submission created: 1956535724
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956537017
+✓ Submission created: 1956537239
+✓ Submission created: 1956537492
+✓ Submission created: 1956537734
+✓ Submission created: 1956537988
+✓ Submission created: 1956538242
+✓ Submission created: 1956538529
+✓ Submission created: 1956538781
+✓ Submission created: 1956539045
+✓ Submission created: 1956539312
+✓ Submission created: 1956539593
+✓ Submission created: 1956539925
+✓ Submission created: 1956540225
+✓ Submission created: 1956540566
+✓ Submission created: 1956540899
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956542296
+✓ Submission created: 1956542596
+✓ Submission created: 1956542921
+✓ Submission created: 1956543244
+✓ Submission created: 1956543596
+✓ Submission created: 1956543874
+✓ Submission created: 1956544195
+✓ Submission created: 1956544492
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956545866
+✓ Submission created: 1956546159
+✓ Submission created: 1956546465
+✓ Submission created: 1956546770
+✓ Submission created: 1956547077
+✓ Submission created: 1956547379
+✓ Submission created: 1956547642
+✓ Submission created: 1956547916
+✓ Submission created: 1956548173
+✓ Submission created: 1956548456
+✓ Submission created: 1956548734
+✓ Submission created: 1956549001
+✓ Submission created: 1956549299
+✓ Submission created: 1956549590
+✓ Submission created: 1956549862
+✓ Submission created: 1956550161
+✓ Submission created: 1956550470
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956551751
+✓ Submission created: 1956552021
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956553280
+✓ Submission created: 1956553523
+✓ Submission created: 1956553776
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956556102
+✓ Submission created: 1956556315
+✓ Submission created: 1956556571
+✓ Submission created: 1956556827
+✓ Submission created: 1956557063
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956559352
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956560579
+✓ Submission created: 1956560809
+✓ Submission created: 1956561049
+✓ Submission created: 1956561295
+✓ Submission created: 1956561568
+✓ Submission created: 1956561809
+✓ Submission created: 1956562072
+✓ Submission created: 1956562337
+✓ Submission created: 1956562595
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956563923
+✓ Submission created: 1956564197
+✓ Submission created: 1956564494
+✓ Submission created: 1956564757
+✓ Submission created: 1956565050
+✓ Submission created: 1956565336
+✓ Submission created: 1956565594
+✓ Submission created: 1956565832
+✓ Submission created: 1956566089
+✓ Submission created: 1956566385
+✓ Submission created: 1956566670
+✓ Submission created: 1956566915
+✓ Submission created: 1956567146
+✓ Submission created: 1956567406
+✓ Submission created: 1956567654
+✓ Submission created: 1956567939
+✓ Submission created: 1956568176
+✓ Submission created: 1956568406
+✓ Submission created: 1956568694
+✓ Submission created: 1956568961
+✓ Submission created: 1956569238
+✓ Submission created: 1956569534
+✓ Submission created: 1956569787
+✓ Submission created: 1956570049
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+✓ Submission created: 1956572397
+✓ Submission created: 1956572677
+✓ Submission created: 1956572956
+✓ Submission created: 1956573233
+✓ Submission created: 1956573515
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+RATE LIMIT EXHAUSTED for model: qwq-plus
+Progress saved. Switch LeetCode account and re-run the same command.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+✗ Error: LeetCode rate limit exhausted: 10 consecutive submission failures (no submission_id). Switch LeetCode account and re-run.

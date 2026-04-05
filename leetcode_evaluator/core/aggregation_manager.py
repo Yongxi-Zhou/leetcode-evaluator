@@ -22,7 +22,10 @@ class AggregationManager:
 
     PAPER_MIN_NUM_PROBLEMS = 10
     PAPER_MIN_STABILITY_RUNS = 3
-    PAPER_ALLOWED_GENERATION_MODES = {'realtime', 'qwen_batch'}
+    PAPER_ALLOWED_GENERATION_MODES = {
+        'realtime', 'qwen_batch', 'openai_batch', 'anthropic_batch',
+        'gemini_batch', 'azure_batch', 'bedrock_batch',
+    }
     
     def __init__(
         self,
@@ -427,68 +430,125 @@ class AggregationManager:
         if summary_df.empty:
             return
 
-        # Figure 2 and Figure 3 are anchored on the strongest scoped configuration.
-        sort_cols = ['run_level_pass_rate', 'perfect_stability_rate', 'first_pass_accuracy']
-        ascending = [False, False, False]
-        best_cfg = summary_df.sort_values(by=sort_cols, ascending=ascending).iloc[0]
-        best_model = best_cfg['model_name']
-        best_prompt = best_cfg['prompt_type']
+        # Figure 2: cross-model stability heatmap (problems × models)
+        # Use "detailed" prompt; rows = models sorted by RLPR desc; cols = problems sorted by difficulty then pass rate
+        detailed_trials = trial_df[trial_df['prompt_type'] == 'detailed'].copy()
 
-        best_trials = trial_df[
-            (trial_df['model_name'] == best_model) &
-            (trial_df['prompt_type'] == best_prompt)
-        ].copy()
+        # Load difficulty labels from dataset
+        difficulty_map: Dict[str, str] = {}
+        dataset_path = os.path.join(os.path.dirname(__file__), '..', '..', 'dataset', 'main-dataset.json')
+        dataset_path = os.path.normpath(dataset_path)
+        if os.path.exists(dataset_path):
+            with open(dataset_path) as _f:
+                for _p in json.load(_f):
+                    difficulty_map[str(_p.get('frontend_question_id', ''))] = _p.get('difficulty', 'Unknown')
 
-        if not best_trials.empty:
-            heatmap_df = (
-                best_trials
-                .pivot_table(
-                    index=['problem_id', 'problem'],
-                    columns='trial_index',
-                    values='accepted_bool',
-                    aggfunc='first',
-                    fill_value=0
-                )
-                .sort_index(axis=1)
+        # Paper-eligible model names (detailed prompt)
+        paper_models = (
+            summary_df[summary_df['prompt_type'] == 'detailed']
+            .sort_values('run_level_pass_rate', ascending=False)['model_name']
+            .tolist()
+        )
+        paper_models = list(dict.fromkeys(paper_models))  # deduplicate, preserve order
+
+        if paper_models and not detailed_trials.empty:
+            heatmap_trials = detailed_trials[detailed_trials['model_name'].isin(paper_models)].copy()
+            heatmap_trials['problem_id'] = heatmap_trials['problem_id'].astype(str)
+
+            # Compute mean pass rate per model × problem
+            model_problem_rate = (
+                heatmap_trials
+                .groupby(['model_name', 'problem_id'])['accepted_bool']
+                .mean()
+                .reset_index()
             )
-            problem_success = best_trials.groupby(['problem_id', 'problem'])['accepted_bool'].mean()
-            ordered_index = problem_success.sort_values(ascending=False).index
-            heatmap_df = heatmap_df.reindex(ordered_index)
-            heatmap_plot = heatmap_df.copy()
-            heatmap_plot.index = [f"{pid}: {name}" for pid, name in heatmap_plot.index]
+            matrix = model_problem_rate.pivot(index='model_name', columns='problem_id', values='accepted_bool').fillna(0)
 
-            plt.figure(figsize=(10, max(4, 0.45 * len(heatmap_plot.index))))
+            # Sort columns: by difficulty tier (Easy < Medium < Hard) then mean pass rate desc within tier
+            diff_order_map = {'Easy': 0, 'Medium': 1, 'Hard': 2, 'Unknown': 3}
+            col_sort_key = pd.DataFrame({
+                'pid': matrix.columns,
+                'diff_order': [diff_order_map.get(difficulty_map.get(c, 'Unknown'), 3) for c in matrix.columns],
+                'mean_rate': matrix.mean(axis=0).values,
+            })
+            col_sort_key = col_sort_key.sort_values(['diff_order', 'mean_rate'], ascending=[True, False])
+            matrix = matrix[col_sort_key['pid'].tolist()]
+            matrix = matrix.reindex([m for m in paper_models if m in matrix.index])
+
+            # Difficulty tier boundaries for vertical separator lines
+            tier_boundaries = []
+            prev_tier = col_sort_key.iloc[0]['diff_order']
+            for i, row in enumerate(col_sort_key.itertuples()):
+                if row.diff_order != prev_tier:
+                    tier_boundaries.append(i)
+                    prev_tier = row.diff_order
+
+            # Short display names for y-axis
+            model_display = {
+                'gemini-3.1-pro-preview': 'Gemini 3.1 Pro',
+                'deepseek-r1': 'DeepSeek-R1',
+                'gemini-3-flash-preview': 'Gemini 3 Flash',
+                'qwq-plus': 'QwQ-Plus',
+                'gemini-3.1-flash-lite-preview': 'Gemini 3.1 Flash-Lite',
+                'qwen-plus': 'Qwen-Plus',
+                'gpt-4.1': 'GPT-4.1',
+                'gpt-4.1-mini': 'GPT-4.1-mini',
+                'claude-sonnet-4-5-20250929': 'Claude Sonnet 4.5',
+                'deepseek-v3.2': 'DeepSeek-V3.2',
+                'claude-haiku-4-5-20251001': 'Claude Haiku 4.5',
+                'qwen-turbo': 'Qwen-Turbo',
+                'qwen-max': 'Qwen-Max',
+            }
+            matrix.index = [model_display.get(m, m) for m in matrix.index]
+
+            fig, ax = plt.subplots(figsize=(20, 5))
+            cmap = sns.color_palette(["#d73027", "#ffffbf", "#1a9850"], as_cmap=True)
             sns.heatmap(
-                heatmap_plot,
-                cmap=sns.color_palette(["#d73027", "#1a9850"], as_cmap=True),
-                cbar=False,
-                linewidths=0.5,
-                linecolor='white',
-                vmin=0,
-                vmax=1
+                matrix, ax=ax, cmap=cmap, vmin=0, vmax=1, linewidths=0,
+                cbar_kws={'label': 'Pass rate (0=always fail, 1=always pass)', 'shrink': 0.8, 'pad': 0.01},
             )
-            plt.title(f'Per-Problem Stability Heatmap ({best_model}, {best_prompt})')
-            plt.xlabel('Trial Index')
-            plt.ylabel('Problem')
+
+            for xpos in tier_boundaries:
+                ax.axvline(x=xpos, color='gray', linewidth=1.5, linestyle='--')
+
+            tier_names = {0: 'Easy', 1: 'Medium', 2: 'Hard'}
+            tier_starts = [0] + tier_boundaries
+            tier_ends = tier_boundaries + [len(matrix.columns)]
+            tier_diff_orders = [
+                int(col_sort_key[col_sort_key['pid'] == col_sort_key.iloc[s]['pid']]['diff_order'].iloc[0])
+                for s in tier_starts
+            ]
+            for s, e, td in zip(tier_starts, tier_ends, tier_diff_orders):
+                mid = (s + e) / 2
+                ax.text(mid, -0.7, tier_names.get(td, ''), ha='center', va='bottom',
+                        fontsize=11, fontweight='bold', transform=ax.get_xaxis_transform())
+
+            ax.set_xlabel('Problems sorted by difficulty tier, then pass rate (high→low within tier)', fontsize=9)
+            ax.set_ylabel('')
+            ax.set_xticks([])
+            ax.set_yticklabels(ax.get_yticklabels(), fontsize=9, rotation=0)
             plt.tight_layout()
-            plt.savefig(os.path.join(fig_dir, "paper_figure2_stability_heatmap.png"), dpi=300)
+            plt.savefig(os.path.join(fig_dir, "paper_figure2_stability_heatmap.png"), dpi=150, bbox_inches='tight')
             plt.close()
 
+        # Figure 3: problem-level success distribution across all paper-eligible models (detailed)
+        if paper_models and not detailed_trials.empty:
+            heatmap_trials = detailed_trials[detailed_trials['model_name'].isin(paper_models)].copy()
+            problem_success = heatmap_trials.groupby(['problem_id', 'problem'])['accepted_bool'].mean()
             success_dist = problem_success.reset_index(name='success_rate')
-            bins = np.array([0.0, 1/3, 2/3, 1.0])
-            labels = ['0/3', '1/3', '2/3', '3/3']
+            labels_5 = ['0/5', '1/5', '2/5', '3/5', '4/5', '5/5']
             success_dist['bucket'] = pd.cut(
                 success_dist['success_rate'].round(4),
-                bins=[-0.01, 0.01, 0.34, 0.67, 1.01],
-                labels=labels,
+                bins=[-0.01, 0.01, 0.21, 0.41, 0.61, 0.81, 1.01],
+                labels=labels_5,
                 include_lowest=True
             )
-            bucket_counts = success_dist['bucket'].value_counts().reindex(labels, fill_value=0)
+            bucket_counts = success_dist['bucket'].value_counts().reindex(labels_5, fill_value=0)
 
             plt.figure(figsize=(7, 4.5))
             sns.barplot(x=bucket_counts.index, y=bucket_counts.values, color='#4c78a8')
-            plt.title(f'Problem-Level Success Distribution ({best_model}, {best_prompt})')
-            plt.xlabel(r'Empirical success probability $\hat{p}_i$')
+            plt.title('Problem-Level Success Distribution (all models, detailed prompt)')
+            plt.xlabel(r'Empirical mean pass rate $\bar{p}_i$ across models')
             plt.ylabel('Number of problems')
             plt.tight_layout()
             plt.savefig(os.path.join(fig_dir, "paper_figure3_success_distribution.png"), dpi=300)

@@ -1,0 +1,7 @@
+🚀 Generating paper-ready aggregated report...
+
+✓ Aggregation complete!
+✓ Dataset stats saved to: output/aggregate/tables/dataset_stats.md
+✓ Leaderboard saved to: output/aggregate/tables/leaderboard.md
+✓ Tables saved to: output/aggregate/tables/
+✓ Figures saved to: output/aggregate/figures/

@@ -1,0 +1,153 @@
+2026-03-23 00:15:36,672 - INFO - Experiment started: 20260323_001536_qwen-max
+2026-03-23 00:15:36,672 - INFO - Provider: qwen, Model: qwen-max
+2026-03-23 00:15:36,673 - INFO - Experiment Name: qwen-max
+2026-03-23 00:15:36,959 - INFO - Initialized evaluator with qwen
+🚀 Running Qwen batch generation from: experiments/paper_qwen_batch.json
+Mode: resume
+Stable run id: qwen_batch_paper_qwen_batch_608ffde791
+Batch root: output/batch_jobs/qwen_batch_paper_qwen_batch_608ffde791
+Filter models: ['qwen-max']
+
+------------------------------------------------------------
+QWEN BATCH MODEL: qwen-max
+------------------------------------------------------------
+Reusing normalized batch output: model=qwen-max, prompt=detailed
+Reusing normalized batch output: model=qwen-max, prompt=minimal
+Resuming from results file: output/qwen_batch_paper_qwen_batch_608ffde791/results/evaluations/evaluation_results_20260322_024735.json
+✓ Session cookies configured: ['_gid', 'ip_check', 'gr_user_id', 'INGRESSCOOKIE', '__gads', '__gpi', '__eoi', '87b5a3c3f1a55520_gr_last_sent_cs1', 'FCCDCF', 'FCNEC', '__stripe_mid', '87b5a3c3f1a55520_gr_session_id', '87b5a3c3f1a55520_gr_last_sent_sid_with_cs1', '87b5a3c3f1a55520_gr_session_id_sent_vst', '__stripe_sid', '_ga', '87b5a3c3f1a55520_gr_cs1', 'cf_clearance', 'messages', 'LEETCODE_SESSION', '_dd_s', '_ga_CDRWKZTDEX', 'csrftoken']
+============================================================
+LeetCode AI Solution Evaluator
+============================================================
+✓ Successfully authenticated as sim465329
+✓ Using qwen provider with model: qwen-max
+
+
+🚀 Starting generated-result submission batch:
+  - Total Problems: 100
+  - Already complete (resuming): 92, remaining: 8
+  - Submission Delay: 15s
+  - Total Generated Attempts: 80
+Progress:   0%|          | 0/8 [00:00<?, ?it/s]Progress:  12%|█▎        | 1/8 [03:20<23:20, 200.01s/it]Progress:  25%|██▌       | 2/8 [06:36<19:46, 197.74s/it]Progress:  38%|███▊      | 3/8 [09:30<15:36, 187.21s/it]Progress:  50%|█████     | 4/8 [12:27<12:11, 182.90s/it]Progress:  62%|██████▎   | 5/8 [17:04<10:51, 217.10s/it]Progress:  75%|███████▌  | 6/8 [21:43<07:56, 238.05s/it]Progress:  88%|████████▊ | 7/8 [24:43<03:38, 218.95s/it]Progress: 100%|██████████| 8/8 [27:56<00:00, 210.77s/it]Progress: 100%|██████████| 8/8 [27:56<00:00, 209.56s/it]
+2026-03-23 00:43:33,639 - INFO - Summary saved to output/qwen_batch_paper_qwen_batch_608ffde791/experiments/20260323_001536_qwen-max/summary.csv
+2026-03-23 00:43:33,731 - INFO - Stability summary saved to output/qwen_batch_paper_qwen_batch_608ffde791/experiments/20260323_001536_qwen-max/stability_summary.json
+✓ Submission created: 1956452682
+✓ Submission created: 1956452941
+✓ Submission created: 1956453198
+✓ Submission created: 1956453441
+✓ Submission created: 1956453690
+✓ Submission created: 1956453903
+✓ Submission created: 1956454114
+✓ Submission created: 1956454342
+✓ Submission created: 1956454593
+✓ Submission created: 1956454800
+✓ Submission created: 1956455057
+✓ Submission created: 1956455277
+✓ Submission created: 1956455516
+✓ Submission created: 1956455729
+✓ Submission created: 1956455951
+✓ Submission created: 1956456165
+✓ Submission created: 1956456401
+✓ Submission created: 1956456654
+✓ Submission created: 1956456911
+✓ Submission created: 1956457151
+✓ Submission created: 1956457344
+✓ Submission created: 1956457536
+✓ Submission created: 1956457739
+✓ Submission created: 1956457928
+✓ Submission created: 1956458123
+✓ Submission created: 1956458339
+✓ Submission created: 1956458543
+✓ Submission created: 1956458754
+✓ Submission created: 1956458980
+✓ Submission created: 1956459187
+✓ Submission created: 1956459387
+✓ Submission created: 1956459604
+✓ Submission created: 1956459802
+✓ Submission created: 1956460025
+✓ Submission created: 1956460238
+✓ Submission created: 1956460445
+✓ Submission created: 1956460634
+✓ Submission created: 1956460843
+✓ Submission created: 1956461042
+✓ Submission created: 1956461234
+✓ Submission created: 1956461427
+✓ Submission created: 1956461734
+✓ Submission created: 1956461937
+✓ Submission created: 1956462265
+✓ Submission created: 1956462495
+✓ Submission created: 1956462820
+✓ Submission created: 1956463147
+✓ Submission created: 1956463466
+✓ Submission created: 1956463800
+✓ Submission created: 1956464136
+✓ Submission created: 1956464424
+✓ Submission created: 1956464715
+✓ Submission created: 1956465043
+✓ Submission created: 1956465231
+✓ Submission created: 1956465499
+✓ Submission created: 1956465822
+✓ Submission created: 1956466131
+✓ Submission created: 1956466435
+✓ Submission created: 1956466719
+✓ Submission created: 1956466914
+✓ Submission created: 1956467244
+✓ Submission created: 1956467431
+✓ Submission created: 1956467601
+✓ Submission created: 1956467803
+✓ Submission created: 1956467990
+✓ Submission created: 1956468159
+✓ Submission created: 1956468364
+✓ Submission created: 1956468532
+✓ Submission created: 1956468712
+✓ Submission created: 1956468897
+✓ Submission created: 1956469076
+✓ Submission created: 1956469241
+✓ Submission created: 1956469436
+✓ Submission created: 1956469627
+✓ Submission created: 1956469836
+✓ Submission created: 1956470031
+✓ Submission created: 1956470221
+✓ Submission created: 1956470388
+✓ Submission created: 1956470586
+✓ Submission created: 1956470785
+
+========================================
+STABILITY EVALUATION SUMMARY
+========================================
+Total Problems:          200
+Total Runs:              1000
+Run-Level Pass Rate:     30.5%
+95% CI (RLPR):           [27.73%, 33.42%]
+Perfect Stability Rate:  25.5%
+95% CI (PSR):            [19.96%, 31.96%]
+First-Pass Accuracy:     30.0%
+95% CI (FPA):            [24.07%, 36.68%]
+Pass@1:                  30.00%
+Pass@3:                  34.50%
+Pass@5:                  36.00%
+Average Variance:        0.0224
+95% CI (AV):             [0.0136, 0.032]
+p50 Latency:             0.0 ms
+p90 Latency:             0.0 ms
+========================================
+
+
+============================================================
+✓ Evaluation complete!
+✓ Results saved to: output/qwen_batch_paper_qwen_batch_608ffde791/results/evaluations/evaluation_results_20260322_024735.json
+============================================================
+✓ Raw data archived to output/qwen_batch_paper_qwen_batch_608ffde791/results/raw/20260323_001536_qwen-max.jsonl
+✓ Raw data archived to output/aggregate/raw/20260323_001536_qwen-max.jsonl
+✓ Visualizations saved to output/qwen_batch_paper_qwen_batch_608ffde791/reports/20260323_001536_qwen-max
+✓ Report generated: output/qwen_batch_paper_qwen_batch_608ffde791/reports/20260323_001536_qwen-max/analysis_report.md
+✓ Raw data archived to output/qwen_batch_paper_qwen_batch_608ffde791/results/raw/20260323_001536_qwen-max.jsonl
+✓ Raw data archived to output/aggregate/raw/20260323_001536_qwen-max.jsonl
+✓ Model fully complete: 100/100 problems
+
+============================================================
+✓ Qwen batch resume completed!
+============================================================
+Model: qwen-max
+Results: output/qwen_batch_paper_qwen_batch_608ffde791/results/evaluations/evaluation_results_20260322_024735.json
+Report: output/qwen_batch_paper_qwen_batch_608ffde791/reports/20260323_001536_qwen-max/analysis_report.md
+------------------------------------------------------------

@@ -1,0 +1,139 @@
+/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/clients/llm/gemini.py:6: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+2026-03-30 08:03:29,211 - INFO - Experiment started: 20260330_080329_gemini-3.1-flash-lite-preview
+2026-03-30 08:03:29,211 - INFO - Provider: gemini, Model: gemini-3.1-flash-lite-preview
+2026-03-30 08:03:29,211 - INFO - Experiment Name: gemini-3.1-flash-lite-preview
+2026-03-30 08:03:29,874 - INFO - Initialized evaluator with gemini
+Running Gemini batch generation from: experiments/paper_gemini_batch.json
+Mode: resume
+Stable run id: gemini_batch_paper_gemini_batch_fb12aead32
+Batch root: output/batch_jobs/gemini_batch_paper_gemini_batch_fb12aead32
+Filter models: ['gemini-3.1-flash-lite-preview']
+
+------------------------------------------------------------
+GEMINI BATCH MODEL: gemini-3.1-flash-lite-preview
+------------------------------------------------------------
+Reusing normalized batch output: model=gemini-3.1-flash-lite-preview, prompt=detailed
+Reusing normalized batch output: model=gemini-3.1-flash-lite-preview, prompt=minimal
+Resuming from results file: output/gemini_batch_paper_gemini_batch_fb12aead32/results/evaluations/evaluation_results_20260329_142122.json
+✓ Session cookies configured: ['gr_user_id', '__stripe_mid', '87b5a3c3f1a55520_gr_last_sent_cs1', 'cf_clearance', 'ip_check', '_gid', 'INGRESSCOOKIE', 'LEETCODE_SESSION', '87b5a3c3f1a55520_gr_session_id', '87b5a3c3f1a55520_gr_last_sent_sid_with_cs1', '_gat', '87b5a3c3f1a55520_gr_session_id_sent_vst', 'FCCDCF', '__gads', '__gpi', '__eoi', 'FCNEC', '87b5a3c3f1a55520_gr_cs1', '_ga', '__stripe_sid', '_ga_CDRWKZTDEX', 'csrftoken']
+============================================================
+LeetCode AI Solution Evaluator
+============================================================
+✓ Successfully authenticated as taylorjones0286
+✓ Using gemini provider with model: gemini-3.1-flash-lite-preview
+
+
+🚀 Starting generated-result submission batch:
+  - Total Problems: 100
+  - Already complete (resuming): 94, remaining: 6
+  - Submission Delay: 15s
+  - Total Generated Attempts: 60
+Progress:   0%|          | 0/6 [00:00<?, ?it/s]Progress:  17%|█▋        | 1/6 [02:58<14:51, 178.26s/it]Progress:  33%|███▎      | 2/6 [05:24<10:38, 159.61s/it]Progress:  50%|█████     | 3/6 [09:06<09:24, 188.04s/it]Progress:  67%|██████▋   | 4/6 [12:14<06:15, 187.83s/it]Progress:  83%|████████▎ | 5/6 [15:15<03:05, 185.44s/it]Progress: 100%|██████████| 6/6 [18:28<00:00, 187.99s/it]Progress: 100%|██████████| 6/6 [18:28<00:00, 184.72s/it]
+2026-03-30 08:21:58,495 - INFO - Summary saved to output/gemini_batch_paper_gemini_batch_fb12aead32/experiments/20260330_080329_gemini-3.1-flash-lite-preview/summary.csv
+2026-03-30 08:21:58,611 - INFO - Stability summary saved to output/gemini_batch_paper_gemini_batch_fb12aead32/experiments/20260330_080329_gemini-3.1-flash-lite-preview/stability_summary.json
+✓ Submission created: 1963942314
+✓ Submission created: 1963942570
+✓ Submission created: 1963942844
+✓ Submission created: 1963943121
+✓ Submission created: 1963943412
+✓ Submission created: 1963943689
+✓ Submission created: 1963943969
+✓ Submission created: 1963944248
+✓ Submission created: 1963944552
+✓ Submission created: 1963944828
+✓ Submission created: 1963945092
+✓ Submission created: 1963945376
+✓ Submission created: 1963945670
+✓ Submission created: 1963945941
+✓ Submission created: 1963946202
+✓ Submission created: 1963946467
+✓ Submission created: 1963946779
+✓ Submission created: 1963947056
+✓ Submission created: 1963947365
+✓ Submission created: 1963947796
+✓ Submission created: 1963948114
+✓ Submission created: 1963948497
+✓ Submission created: 1963948771
+✓ Submission created: 1963949240
+✓ Submission created: 1963949501
+✓ Submission created: 1963949983
+✓ Submission created: 1963950444
+✓ Submission created: 1963950820
+✓ Submission created: 1963951100
+✓ Submission created: 1963951395
+✓ Submission created: 1963951652
+✓ Submission created: 1963951938
+✓ Submission created: 1963952242
+✓ Submission created: 1963952549
+✓ Submission created: 1963952824
+✓ Submission created: 1963953103
+✓ Submission created: 1963953446
+✓ Submission created: 1963953782
+✓ Submission created: 1963954053
+✓ Submission created: 1963954330
+✓ Submission created: 1963954605
+✓ Submission created: 1963954854
+✓ Submission created: 1963955117
+✓ Submission created: 1963955395
+✓ Submission created: 1963955667
+✓ Submission created: 1963955975
+✓ Submission created: 1963956257
+✓ Submission created: 1963956534
+✓ Submission created: 1963956844
+✓ Submission created: 1963957172
+✓ Submission created: 1963957452
+✓ Submission created: 1963957761
+✓ Submission created: 1963958126
+✓ Submission created: 1963958475
+✓ Submission created: 1963958769
+✓ Submission created: 1963959103
+✓ Submission created: 1963959423
+
+========================================
+STABILITY EVALUATION SUMMARY
+========================================
+Total Problems:          200
+Total Runs:              1000
+Run-Level Pass Rate:     66.4%
+95% CI (RLPR):           [63.41%, 69.26%]
+Perfect Stability Rate:  51.5%
+95% CI (PSR):            [44.61%, 58.33%]
+First-Pass Accuracy:     67.0%
+95% CI (FPA):            [60.22%, 73.14%]
+Pass@1:                  67.00%
+Pass@3:                  76.50%
+Pass@5:                  79.00%
+Average Variance:        0.0536
+95% CI (AV):             [0.042, 0.066]
+p50 Latency:             0.0 ms
+p90 Latency:             0.0 ms
+========================================
+
+
+============================================================
+✓ Evaluation complete!
+✓ Results saved to: output/gemini_batch_paper_gemini_batch_fb12aead32/results/evaluations/evaluation_results_20260329_142122.json
+============================================================
+✓ Raw data archived to output/gemini_batch_paper_gemini_batch_fb12aead32/results/raw/20260330_080329_gemini-3.1-flash-lite-preview.jsonl
+✓ Raw data archived to output/aggregate/raw/20260330_080329_gemini-3.1-flash-lite-preview.jsonl
+✓ Visualizations saved to output/gemini_batch_paper_gemini_batch_fb12aead32/reports/20260330_080329_gemini-3.1-flash-lite-preview
+✓ Report generated: output/gemini_batch_paper_gemini_batch_fb12aead32/reports/20260330_080329_gemini-3.1-flash-lite-preview/analysis_report.md
+✓ Raw data archived to output/gemini_batch_paper_gemini_batch_fb12aead32/results/raw/20260330_080329_gemini-3.1-flash-lite-preview.jsonl
+✓ Raw data archived to output/aggregate/raw/20260330_080329_gemini-3.1-flash-lite-preview.jsonl
+Model fully complete: 100/100 problems
+
+============================================================
+Gemini batch resume completed!
+============================================================
+Model: gemini-3.1-flash-lite-preview
+Results: output/gemini_batch_paper_gemini_batch_fb12aead32/results/evaluations/evaluation_results_20260329_142122.json
+Report: output/gemini_batch_paper_gemini_batch_fb12aead32/reports/20260330_080329_gemini-3.1-flash-lite-preview/analysis_report.md
+------------------------------------------------------------

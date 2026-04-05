@@ -1,0 +1,39 @@
+/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/clients/llm/gemini.py:6: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+2026-03-29 14:40:04,820 - INFO - Experiment started: 20260329_144004_gemini-3.1-flash-lite-preview
+2026-03-29 14:40:04,820 - INFO - Provider: gemini, Model: gemini-3.1-flash-lite-preview
+2026-03-29 14:40:04,820 - INFO - Experiment Name: gemini-3.1-flash-lite-preview
+2026-03-29 14:40:05,215 - INFO - Initialized evaluator with gemini
+Running Gemini batch generation from: experiments/paper_gemini_batch.json
+Mode: resume
+Stable run id: gemini_batch_paper_gemini_batch_fb12aead32
+Batch root: output/batch_jobs/gemini_batch_paper_gemini_batch_fb12aead32
+Filter models: ['gemini-3.1-flash-lite-preview']
+
+------------------------------------------------------------
+GEMINI BATCH MODEL: gemini-3.1-flash-lite-preview
+------------------------------------------------------------
+Reusing normalized batch output: model=gemini-3.1-flash-lite-preview, prompt=detailed
+Reusing normalized batch output: model=gemini-3.1-flash-lite-preview, prompt=minimal
+Resuming from results file: output/gemini_batch_paper_gemini_batch_fb12aead32/results/evaluations/evaluation_results_20260329_142122.json
+✓ Session cookies configured: ['gr_user_id', 'cf_clearance', '87b5a3c3f1a55520_gr_last_sent_cs1', 'INGRESSCOOKIE', 'ip_check', 'LEETCODE_SESSION', '87b5a3c3f1a55520_gr_session_id', '87b5a3c3f1a55520_gr_last_sent_sid_with_cs1', '87b5a3c3f1a55520_gr_cs1', '_gid', '_gat', '87b5a3c3f1a55520_gr_session_id_sent_vst', '_ga', 'FCCDCF', '__gads', '__gpi', '__eoi', 'FCNEC', '_ga_CDRWKZTDEX', 'csrftoken']
+============================================================
+LeetCode AI Solution Evaluator
+============================================================
+✓ Successfully authenticated as bce896482
+✓ Using gemini provider with model: gemini-3.1-flash-lite-preview
+
+
+🚀 Starting generated-result submission batch:
+  - Total Problems: 100
+  - Already complete (resuming): 4, remaining: 96
+  - Submission Delay: 15s
+  - Total Generated Attempts: 960
+Progress:   0%|          | 0/96 [00:00<?, ?it/s]Progress:   1%|          | 1/96 [05:38<8:55:50, 338.43s/it]Progress:   2%|▏         | 2/96 [08:10<5:58:24, 228.77s/it]Progress:   3%|▎         | 3/96 [11:21<5:28:01, 211.63s/it]Progress:   4%|▍         | 4/96 [14:18<5:03:26, 197.89s/it]Progress:   5%|▌         | 5/96 [18:00<5:13:16, 206.55s/it]Progress:   6%|▋         | 6/96 [24:01<6:28:47, 259.19s/it]Progress:   7%|▋         | 7/96 [27:38<6:03:38, 245.15s/it]Progress:   8%|▊         | 8/96 [33:27<6:48:10, 278.30s/it]Progress:   9%|▉         | 9/96 [35:52<5:43:22, 236.81s/it]Progress:  10%|█         | 10/96 [40:27<5:56:16, 248.57s/it]Progress:  11%|█▏        | 11/96 [43:39<5:27:28, 231.16s/it]Progress:  12%|█▎        | 12/96 [46:37<5:00:51, 214.90s/it]Progress:  14%|█▎        | 13/96 [1:33:42<23:11:06, 1005.61s/it]Progress:  15%|█▍        | 14/96 [1:42:56<19:47:57, 869.24s/it] Progress:  16%|█▌        | 15/96 [1:48:45<16:01:56, 712.55s/it]Progress:  17%|█▋        | 16/96 [1:52:38<12:37:35, 568.19s/it]Progress:  18%|█▊        | 17/96 [1:57:36<10:40:57, 486.80s/it]Progress:  19%|█▉        | 18/96 [2:00:51<8:38:58, 399.21s/it] Progress:  20%|█▉        | 19/96 [2:04:44<7:28:22, 349.38s/it]Progress:  21%|██        | 20/96 [2:07:44<6:18:06, 298.50s/it]Progress:  22%|██▏       | 21/96 [2:13:52<6:39:05, 319.27s/it]Progress:  23%|██▎       | 22/96 [2:19:27<6:39:37, 324.02s/it]Progress:  24%|██▍       | 23/96 [2:22:37<5:45:22, 283.86s/it]Progress:  25%|██▌       | 24/96 [2:25:32<5:01:29, 251.24s/it]Progress:  26%|██▌       | 25/96 [2:28:52<4:38:51, 235.65s/it]Progress:  27%|██▋       | 26/96 [2:33:58<4:59:35, 256.79s/it]Progress:  28%|██▊       | 27/96 [2:39:57<5:30:41, 287.55s/it]Progress:  29%|██▉       | 28/96 [2:42:57<4:49:09, 255.15s/it]Progress:  30%|███       | 29/96 [2:46:46<4:36:13, 247.36s/it]Progress:  31%|███▏      | 30/96 [2:50:00<4:14:37, 231.48s/it]Progress:  32%|███▏      | 31/96 [2:56:57<5:11:04, 287.14s/it]Progress:  33%|███▎      | 32/96 [3:00:54<4:50:01, 271.90s/it]Progress:  34%|███▍      | 33/96 [3:07:39<5:27:24, 311.81s/it]Progress:  35%|███▌      | 34/96 [3:10:56<4:46:52, 277.62s/it]Progress:  36%|███▋      | 35/96 [3:15:02<4:32:34, 268.11s/it]Progress:  38%|███▊      | 36/96 [3:18:15<4:05:34, 245.58s/it]

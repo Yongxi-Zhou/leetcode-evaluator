@@ -1,0 +1,583 @@
+2026-03-25 08:40:25,081 - INFO - Experiment started: 20260325_084025_deepseek-v3.2
+2026-03-25 08:40:25,081 - INFO - Provider: qwen, Model: deepseek-v3.2
+2026-03-25 08:40:25,081 - INFO - Experiment Name: deepseek-v3.2
+2026-03-25 08:40:25,403 - INFO - Initialized evaluator with qwen
+🚀 Running Qwen batch generation from: experiments/paper_qwen_batch_deepseek.json
+Mode: resume
+Stable run id: qwen_batch_paper_qwen_batch_deepseek_f372dc2788
+Batch root: output/batch_jobs/qwen_batch_paper_qwen_batch_deepseek_f372dc2788
+Filter models: ['deepseek-v3.2']
+
+------------------------------------------------------------
+QWEN BATCH MODEL: deepseek-v3.2
+------------------------------------------------------------
+Resuming batch job: model=deepseek-v3.2, prompt=detailed, status=validating, job_id=batch_4b6cb153-8053-465d-b3b8-966609b4f919
+Resuming batch job: model=deepseek-v3.2, prompt=minimal, status=validating, job_id=batch_9491f0c2-cca4-4c66-bf71-c0c686e06b5a
+Reusing normalized batch output: model=deepseek-v3.2, prompt=detailed
+Reusing normalized batch output: model=deepseek-v3.2, prompt=minimal
+Results file: output/qwen_batch_paper_qwen_batch_deepseek_f372dc2788/results/evaluations/evaluation_results_20260325_084025.json
+✓ Session cookies configured: ['gr_user_id', '__stripe_mid', '87b5a3c3f1a55520_gr_last_sent_cs1', '__gads', '__gpi', '__eoi', 'cf_clearance', 'messages', 'FCCDCF', 'FCNEC', 'ip_check', 'LEETCODE_SESSION', '_gid', '_gat', '_ga', '87b5a3c3f1a55520_gr_session_id', '87b5a3c3f1a55520_gr_last_sent_sid_with_cs1', '87b5a3c3f1a55520_gr_cs1', '87b5a3c3f1a55520_gr_session_id_sent_vst', '__stripe_sid', 'INGRESSCOOKIE', '_ga_CDRWKZTDEX', 'csrftoken']
+============================================================
+LeetCode AI Solution Evaluator
+============================================================
+✓ Successfully authenticated as taylorjones0286
+✓ Using qwen provider with model: deepseek-v3.2
+
+
+🚀 Starting generated-result submission batch:
+  - Total Problems: 100
+  - Submission Delay: 15s
+  - Total Generated Attempts: 1000
+Progress:   0%|          | 0/100 [00:00<?, ?it/s]Progress:   1%|          | 1/100 [04:30<7:25:37, 270.08s/it]Progress:   2%|▏         | 2/100 [08:02<6:25:52, 236.25s/it]Progress:   3%|▎         | 3/100 [10:59<5:38:16, 209.24s/it]Progress:   4%|▍         | 4/100 [14:05<5:19:38, 199.78s/it]Progress:   5%|▌         | 5/100 [20:46<7:11:39, 272.62s/it]Progress:   6%|▌         | 6/100 [24:15<6:33:12, 250.99s/it]Progress:   7%|▋         | 7/100 [28:09<6:20:26, 245.45s/it]Progress:   8%|▊         | 8/100 [31:08<5:43:35, 224.08s/it]Progress:   9%|▉         | 9/100 [34:57<5:42:20, 225.72s/it]Progress:  10%|█         | 10/100 [38:58<5:45:31, 230.36s/it]Progress:  11%|█         | 11/100 [43:15<5:53:44, 238.48s/it]Progress:  12%|█▏        | 12/100 [46:14<5:23:20, 220.46s/it]Progress:  13%|█▎        | 13/100 [49:59<5:21:41, 221.86s/it]Progress:  14%|█▍        | 14/100 [54:55<5:50:17, 244.39s/it]Progress:  15%|█▌        | 15/100 [58:20<5:29:19, 232.46s/it]Progress:  16%|█▌        | 16/100 [1:01:23<5:04:26, 217.46s/it]Progress:  17%|█▋        | 17/100 [1:05:06<5:03:23, 219.32s/it]Progress:  18%|█▊        | 18/100 [1:09:06<5:07:55, 225.31s/it]Progress:  19%|█▉        | 19/100 [1:12:11<4:48:06, 213.42s/it]Progress:  20%|██        | 20/100 [1:15:07<4:29:25, 202.07s/it]Progress:  21%|██        | 21/100 [1:19:05<4:40:18, 212.90s/it]Progress:  22%|██▏       | 22/100 [1:22:19<4:29:24, 207.24s/it]Progress:  23%|██▎       | 23/100 [1:25:49<4:26:58, 208.03s/it]Progress:  24%|██▍       | 24/100 [1:28:48<4:12:18, 199.20s/it]Progress:  25%|██▌       | 25/100 [1:33:18<4:35:35, 220.47s/it]Progress:  26%|██▌       | 26/100 [1:37:11<4:36:29, 224.18s/it]Progress:  27%|██▋       | 27/100 [1:40:20<4:20:08, 213.81s/it]Progress:  28%|██▊       | 28/100 [1:43:26<4:06:22, 205.31s/it]Progress:  29%|██▉       | 29/100 [1:47:40<4:20:17, 219.97s/it]Progress:  30%|███       | 30/100 [1:51:10<4:13:00, 216.86s/it]Progress:  31%|███       | 31/100 [1:54:13<3:57:47, 206.77s/it]Progress:  32%|███▏      | 32/100 [1:57:13<3:45:19, 198.81s/it]Progress:  33%|███▎      | 33/100 [2:01:34<4:02:52, 217.50s/it]Progress:  34%|███▍      | 34/100 [2:04:52<3:52:47, 211.63s/it]Progress:  35%|███▌      | 35/100 [2:08:10<3:44:43, 207.43s/it]Progress:  36%|███▌      | 36/100 [2:11:12<3:33:15, 199.93s/it]Progress:  37%|███▋      | 37/100 [2:14:08<3:22:15, 192.62s/it]Progress:  38%|███▊      | 38/100 [2:17:46<3:27:02, 200.37s/it]Progress:  39%|███▉      | 39/100 [2:21:02<3:22:24, 199.09s/it]Progress:  40%|████      | 40/100 [2:24:12<3:16:22, 196.38s/it]Progress:  41%|████      | 41/100 [2:27:10<3:07:32, 190.72s/it]Progress:  42%|████▏     | 42/100 [2:34:36<4:18:28, 267.38s/it]Progress:  43%|████▎     | 43/100 [2:38:57<4:12:14, 265.51s/it]Progress:  44%|████▍     | 44/100 [2:42:20<3:50:19, 246.78s/it]Progress:  45%|████▌     | 45/100 [2:45:16<3:26:46, 225.58s/it]Progress:  46%|████▌     | 46/100 [2:48:29<3:14:01, 215.58s/it]Progress:  47%|████▋     | 47/100 [2:51:44<3:05:05, 209.53s/it]Progress:  48%|████▊     | 48/100 [2:54:57<2:57:17, 204.58s/it]Progress:  49%|████▉     | 49/100 [2:58:19<2:53:08, 203.69s/it]Progress:  50%|█████     | 50/100 [3:01:35<2:48:01, 201.62s/it]Progress:  51%|█████     | 51/100 [3:13:10<4:45:21, 349.42s/it]Traceback (most recent call last):
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/main.py", line 385, in main
+    batch_results = batch_runner.run(
+        mode=args.qwen_batch_mode,
+    ...<5 lines>...
+        skip_premium=args.skip_premium,
+    )
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/qwen_batch_runner.py", line 686, in run
+    results_file = evaluator.run_generated_evaluation(
+        generated_items,
+        stability_runs=self.stability_runs,
+        results_file=active_results_file,
+    )
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/evaluator.py", line 616, in run_generated_evaluation
+    results = self.evaluate_generated_batch(generated_items, results_file=results_file)
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/evaluator.py", line 410, in evaluate_generated_batch
+    self._process_submission_item(item, results, None, pbar)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/evaluator.py", line 241, in _process_submission_item
+    raise RateLimitExhaustedException(
+    ...<3 lines>...
+    )
+leetcode_evaluator.core.evaluator.RateLimitExhaustedException: LeetCode rate limit exhausted: 10 consecutive submission failures (no submission_id). Switch LeetCode account and re-run.
+✓ Submission created: 1959008650
+✓ Submission created: 1959009071
+✓ Submission created: 1959009596
+✓ Submission created: 1959009969
+✓ Submission created: 1959010475
+✓ Submission created: 1959010805
+✓ Submission created: 1959011328
+✓ Submission created: 1959011806
+✓ Submission created: 1959012277
+✓ Submission created: 1959012790
+✓ Submission created: 1959013289
+✓ Submission created: 1959013592
+✓ Submission created: 1959013930
+✓ Submission created: 1959014287
+✓ Submission created: 1959014804
+✓ Submission created: 1959015218
+✓ Submission created: 1959015573
+✓ Submission created: 1959015957
+✓ Submission created: 1959016294
+✓ Submission created: 1959016680
+✓ Submission created: 1959017036
+✓ Submission created: 1959017373
+✓ Submission created: 1959017676
+✓ Submission created: 1959018006
+✓ Submission created: 1959018323
+✓ Submission created: 1959018643
+✓ Submission created: 1959018919
+✓ Submission created: 1959019212
+✓ Submission created: 1959019525
+✓ Submission created: 1959019842
+✓ Submission created: 1959020142
+✓ Submission created: 1959020475
+✓ Submission created: 1959020796
+✓ Submission created: 1959021081
+✓ Submission created: 1959021372
+✓ Submission created: 1959021691
+✓ Submission created: 1959022015
+✓ Submission created: 1959022394
+✓ Submission created: 1959022802
+✓ Submission created: 1959023137
+✓ Submission created: 1959023492
+✓ Submission created: 1959024215
+✓ Submission created: 1959024657
+✓ Submission created: 1959025385
+✓ Submission created: 1959026116
+✓ Submission created: 1959026846
+✓ Submission created: 1959027584
+✓ Submission created: 1959028266
+✓ Submission created: 1959029015
+✓ Submission created: 1959029755
+✓ Submission created: 1959030536
+✓ Submission created: 1959030885
+✓ Submission created: 1959031231
+✓ Submission created: 1959031588
+✓ Submission created: 1959031947
+✓ Submission created: 1959032270
+✓ Submission created: 1959032794
+✓ Submission created: 1959033142
+✓ Submission created: 1959033508
+✓ Submission created: 1959033890
+✓ Submission created: 1959034237
+✓ Submission created: 1959034559
+✓ Submission created: 1959034912
+Submission error: HTTPSConnectionPool(host='leetcode.com', port=443): Read timed out. (read timeout=30)
+✓ Submission created: 1959036388
+✓ Submission created: 1959036779
+✓ Submission created: 1959037150
+✓ Submission created: 1959037505
+✓ Submission created: 1959037869
+✓ Submission created: 1959038228
+✓ Submission created: 1959038641
+✓ Submission created: 1959039023
+✓ Submission created: 1959039358
+✓ Submission created: 1959039698
+✓ Submission created: 1959040018
+✓ Submission created: 1959040346
+✓ Submission created: 1959040672
+✓ Submission created: 1959041018
+✓ Submission created: 1959041374
+✓ Submission created: 1959041689
+✓ Submission created: 1959042006
+✓ Submission created: 1959042449
+✓ Submission created: 1959042904
+✓ Submission created: 1959043302
+✓ Submission created: 1959043729
+✓ Submission created: 1959044158
+✓ Submission created: 1959044561
+✓ Submission created: 1959045128
+✓ Submission created: 1959045543
+✓ Submission created: 1959045915
+✓ Submission created: 1959046311
+✓ Submission created: 1959046689
+✓ Submission created: 1959047274
+✓ Submission created: 1959047871
+✓ Submission created: 1959048256
+✓ Submission created: 1959048779
+✓ Submission created: 1959049248
+✓ Submission created: 1959049594
+✓ Submission created: 1959050003
+✓ Submission created: 1959050373
+✓ Submission created: 1959050906
+✓ Submission created: 1959051302
+✓ Submission created: 1959051713
+✓ Submission created: 1959052122
+✓ Submission created: 1959052713
+✓ Submission created: 1959053110
+✓ Submission created: 1959053667
+✓ Submission created: 1959054180
+✓ Submission created: 1959054728
+✓ Submission created: 1959055267
+✓ Submission created: 1959055830
+✓ Submission created: 1959056198
+✓ Submission created: 1959056569
+✓ Submission created: 1959056952
+✓ Submission created: 1959057301
+✓ Submission created: 1959057654
+✓ Submission created: 1959057996
+✓ Submission created: 1959058325
+✓ Submission created: 1959058672
+✓ Submission created: 1959059001
+✓ Submission created: 1959059353
+✓ Submission created: 1959059895
+✓ Submission created: 1959060251
+✓ Submission created: 1959060644
+✓ Submission created: 1959061035
+✓ Submission created: 1959061450
+✓ Submission created: 1959061809
+✓ Submission created: 1959062481
+✓ Submission created: 1959062852
+✓ Submission created: 1959063196
+✓ Submission created: 1959063808
+✓ Submission created: 1959064349
+✓ Submission created: 1959064963
+✓ Submission created: 1959065589
+✓ Submission created: 1959066182
+✓ Submission created: 1959066745
+✓ Submission created: 1959067380
+✓ Submission created: 1959067951
+✓ Submission created: 1959068579
+✓ Submission created: 1959069160
+✓ Submission created: 1959069702
+✓ Submission created: 1959070119
+✓ Submission created: 1959070506
+✓ Submission created: 1959070909
+✓ Submission created: 1959071319
+✓ Submission created: 1959071745
+✓ Submission created: 1959072139
+✓ Submission created: 1959072534
+✓ Submission created: 1959072890
+✓ Submission created: 1959073340
+✓ Submission created: 1959073736
+✓ Submission created: 1959074086
+✓ Submission created: 1959074450
+✓ Submission created: 1959074853
+✓ Submission created: 1959075232
+✓ Submission created: 1959075601
+✓ Submission created: 1959075939
+✓ Submission created: 1959076299
+✓ Submission created: 1959076667
+✓ Submission created: 1959077002
+✓ Submission created: 1959077345
+✓ Submission created: 1959077670
+✓ Submission created: 1959078238
+✓ Submission created: 1959078593
+✓ Submission created: 1959078930
+✓ Submission created: 1959079541
+✓ Submission created: 1959079922
+✓ Submission created: 1959080261
+✓ Submission created: 1959080615
+✓ Submission created: 1959081224
+✓ Submission created: 1959081855
+✓ Submission created: 1959082270
+✓ Submission created: 1959082729
+✓ Submission created: 1959083190
+✓ Submission created: 1959083581
+✓ Submission created: 1959084212
+✓ Submission created: 1959084671
+✓ Submission created: 1959085112
+✓ Submission created: 1959085489
+✓ Submission created: 1959086101
+✓ Submission created: 1959086700
+✓ Submission created: 1959087115
+✓ Submission created: 1959087500
+✓ Submission created: 1959087898
+✓ Submission created: 1959088334
+✓ Submission created: 1959088764
+✓ Submission created: 1959089110
+✓ Submission created: 1959089517
+✓ Submission created: 1959089918
+✓ Submission created: 1959090302
+✓ Submission created: 1959090634
+✓ Submission created: 1959091024
+✓ Submission created: 1959091388
+✓ Submission created: 1959091756
+✓ Submission created: 1959092084
+✓ Submission created: 1959092443
+✓ Submission created: 1959092789
+✓ Submission created: 1959093152
+✓ Submission created: 1959093506
+✓ Submission created: 1959093828
+✓ Submission created: 1959094170
+✓ Submission created: 1959094496
+✓ Submission created: 1959095100
+✓ Submission created: 1959095755
+✓ Submission created: 1959096168
+✓ Submission created: 1959096584
+✓ Submission created: 1959097138
+✓ Submission created: 1959097708
+✓ Submission created: 1959098295
+✓ Submission created: 1959098665
+✓ Submission created: 1959099073
+✓ Submission created: 1959099514
+✓ Submission created: 1959099956
+✓ Submission created: 1959100359
+✓ Submission created: 1959100715
+✓ Submission created: 1959101153
+✓ Submission created: 1959101559
+✓ Submission created: 1959101918
+✓ Submission created: 1959102291
+✓ Submission created: 1959102669
+✓ Submission created: 1959103098
+✓ Submission created: 1959103490
+✓ Submission created: 1959103850
+✓ Submission created: 1959104253
+✓ Submission created: 1959104628
+✓ Submission created: 1959104993
+✓ Submission created: 1959105349
+✓ Submission created: 1959105936
+✓ Submission created: 1959106392
+✓ Submission created: 1959106882
+✓ Submission created: 1959107454
+✓ Submission created: 1959107804
+✓ Submission created: 1959108167
+✓ Submission created: 1959108537
+✓ Submission created: 1959108907
+✓ Submission created: 1959109278
+✓ Submission created: 1959109672
+✓ Submission created: 1959110073
+✓ Submission created: 1959110429
+✓ Submission created: 1959110790
+✓ Submission created: 1959111135
+✓ Submission created: 1959111522
+✓ Submission created: 1959112163
+✓ Submission created: 1959112829
+✓ Submission created: 1959113234
+✓ Submission created: 1959113808
+✓ Submission created: 1959114271
+✓ Submission created: 1959114931
+✓ Submission created: 1959115573
+✓ Submission created: 1959116151
+✓ Submission created: 1959116621
+✓ Submission created: 1959117033
+✓ Submission created: 1959117448
+✓ Submission created: 1959117860
+✓ Submission created: 1959118431
+✓ Submission created: 1959119092
+✓ Submission created: 1959119452
+✓ Submission created: 1959119777
+✓ Submission created: 1959120173
+✓ Submission created: 1959120764
+✓ Submission created: 1959121336
+✓ Submission created: 1959121689
+✓ Submission created: 1959122072
+✓ Submission created: 1959122437
+✓ Submission created: 1959122820
+✓ Submission created: 1959123227
+✓ Submission created: 1959123604
+✓ Submission created: 1959124012
+✓ Submission created: 1959124391
+✓ Submission created: 1959124782
+✓ Submission created: 1959125191
+✓ Submission created: 1959125522
+✓ Submission created: 1959125904
+✓ Submission created: 1959126261
+✓ Submission created: 1959126607
+✓ Submission created: 1959126990
+✓ Submission created: 1959127445
+✓ Submission created: 1959127803
+✓ Submission created: 1959128172
+✓ Submission created: 1959128564
+✓ Submission created: 1959128942
+✓ Submission created: 1959129549
+✓ Submission created: 1959130191
+✓ Submission created: 1959130655
+✓ Submission created: 1959131294
+✓ Submission created: 1959131663
+✓ Submission created: 1959132072
+✓ Submission created: 1959132722
+✓ Submission created: 1959133135
+✓ Submission created: 1959133776
+✓ Submission created: 1959134275
+✓ Submission created: 1959134683
+✓ Submission created: 1959135084
+✓ Submission created: 1959135499
+✓ Submission created: 1959136144
+✓ Submission created: 1959136569
+✓ Submission created: 1959137013
+✓ Submission created: 1959137391
+✓ Submission created: 1959137820
+✓ Submission created: 1959138234
+✓ Submission created: 1959138657
+✓ Submission created: 1959139001
+✓ Submission created: 1959139387
+✓ Submission created: 1959139816
+✓ Submission created: 1959140170
+✓ Submission created: 1959140565
+✓ Submission created: 1959140984
+✓ Submission created: 1959141369
+✓ Submission created: 1959141761
+✓ Submission created: 1959142189
+✓ Submission created: 1959142557
+✓ Submission created: 1959142971
+✓ Submission created: 1959143420
+✓ Submission created: 1959143752
+✓ Submission created: 1959144156
+✓ Submission created: 1959144530
+✓ Submission created: 1959144907
+✓ Submission created: 1959145285
+✓ Submission created: 1959145697
+✓ Submission created: 1959146066
+✓ Submission created: 1959146430
+✓ Submission created: 1959147262
+✓ Submission created: 1959147666
+✓ Submission created: 1959148401
+✓ Submission created: 1959148813
+✓ Submission created: 1959149227
+✓ Submission created: 1959150025
+✓ Submission created: 1959150398
+✓ Submission created: 1959150844
+✓ Submission created: 1959151327
+✓ Submission created: 1959152154
+✓ Submission created: 1959152579
+✓ Submission created: 1959153007
+✓ Submission created: 1959153450
+✓ Submission created: 1959153895
+✓ Submission created: 1959154369
+✓ Submission created: 1959154811
+✓ Submission created: 1959155234
+✓ Submission created: 1959155633
+✓ Submission created: 1959156048
+✓ Submission created: 1959156459
+✓ Submission created: 1959156899
+✓ Submission created: 1959157316
+✓ Submission created: 1959157729
+✓ Submission created: 1959158174
+✓ Submission created: 1959158581
+✓ Submission created: 1959158993
+✓ Submission created: 1959159404
+✓ Submission created: 1959159857
+✓ Submission created: 1959160292
+✓ Submission created: 1959160720
+✓ Submission created: 1959161079
+✓ Submission created: 1959161443
+✓ Submission created: 1959161849
+✓ Submission created: 1959162251
+✓ Submission created: 1959162641
+✓ Submission created: 1959163016
+✓ Submission created: 1959163395
+✓ Submission created: 1959163830
+✓ Submission created: 1959164226
+✓ Submission created: 1959164671
+✓ Submission created: 1959165052
+✓ Submission created: 1959165448
+✓ Submission created: 1959165814
+✓ Submission created: 1959166216
+✓ Submission created: 1959166601
+✓ Submission created: 1959166957
+✓ Submission created: 1959167331
+✓ Submission created: 1959167704
+✓ Submission created: 1959168102
+✓ Submission created: 1959168509
+✓ Submission created: 1959168926
+✓ Submission created: 1959169333
+✓ Submission created: 1959169763
+✓ Submission created: 1959170401
+✓ Submission created: 1959170875
+✓ Submission created: 1959171355
+✓ Submission created: 1959171762
+✓ Submission created: 1959172226
+✓ Submission created: 1959172730
+✓ Submission created: 1959173190
+✓ Submission created: 1959173643
+✓ Submission created: 1959174079
+✓ Submission created: 1959174515
+✓ Submission created: 1959174936
+✓ Submission created: 1959175327
+✓ Submission created: 1959175750
+✓ Submission created: 1959176190
+✓ Submission created: 1959176569
+✓ Submission created: 1959176978
+✓ Submission created: 1959177397
+✓ Submission created: 1959177842
+✓ Submission created: 1959178249
+✓ Submission created: 1959178670
+✓ Submission created: 1959179016
+✓ Submission created: 1959179379
+✓ Submission created: 1959179775
+✓ Submission created: 1959180169
+✓ Submission created: 1959180562
+✓ Submission created: 1959180900
+✓ Submission created: 1959181275
+✓ Submission created: 1959181672
+✓ Submission created: 1959182090
+✓ Submission created: 1959182466
+✓ Submission created: 1959182870
+✓ Submission created: 1959183227
+✓ Submission created: 1959183550
+✓ Submission created: 1959183926
+✓ Submission created: 1959184249
+✓ Submission created: 1959184618
+✓ Submission created: 1959184965
+✓ Submission created: 1959185898
+✓ Submission created: 1959186882
+✓ Submission created: 1959187838
+✓ Submission created: 1959188767
+✓ Submission created: 1959189674
+✓ Submission created: 1959190521
+✓ Submission created: 1959191415
+✓ Submission created: 1959192291
+✓ Submission created: 1959193223
+✓ Submission created: 1959194114
+✓ Submission created: 1959194775
+✓ Submission created: 1959195251
+✓ Submission created: 1959195744
+✓ Submission created: 1959196211
+✓ Submission created: 1959196880
+✓ Submission created: 1959197417
+✓ Submission created: 1959197891
+✓ Submission created: 1959198344
+✓ Submission created: 1959198931
+✓ Submission created: 1959199544
+✓ Submission created: 1959199940
+✓ Submission created: 1959200356
+✓ Submission created: 1959200746
+✓ Submission created: 1959201218
+✓ Submission created: 1959201612
+✓ Submission created: 1959202009
+✓ Submission created: 1959202388
+✓ Submission created: 1959202778
+✓ Submission created: 1959203212
+✓ Submission created: 1959203603
+✓ Submission created: 1959203966
+✓ Submission created: 1959204331
+✓ Submission created: 1959204670
+✓ Submission created: 1959205013
+✓ Submission created: 1959205380
+✓ Submission created: 1959205754
+✓ Submission created: 1959206114
+✓ Submission created: 1959206507
+✓ Submission created: 1959206877
+✓ Submission created: 1959207242
+✓ Submission created: 1959207637
+✓ Submission created: 1959208029
+✓ Submission created: 1959208424
+✓ Submission created: 1959208824
+✓ Submission created: 1959209253
+✓ Submission created: 1959209631
+✓ Submission created: 1959210036
+✓ Submission created: 1959210435
+✓ Submission created: 1959210850
+✓ Submission created: 1959211268
+✓ Submission created: 1959211684
+✓ Submission created: 1959212077
+✓ Submission created: 1959212433
+✓ Submission created: 1959212826
+✓ Submission created: 1959213167
+✓ Submission created: 1959213531
+✓ Submission created: 1959213891
+✓ Submission created: 1959214265
+✓ Submission created: 1959214590
+✓ Submission created: 1959214919
+✓ Submission created: 1959215261
+✓ Submission created: 1959215602
+✓ Submission created: 1959215946
+✓ Submission created: 1959216253
+✓ Submission created: 1959216580
+✓ Submission created: 1959216902
+✓ Submission created: 1959217227
+✓ Submission created: 1959217525
+✓ Submission created: 1959217851
+✓ Submission created: 1959218167
+✓ Submission created: 1959218447
+✓ Submission created: 1959218758
+✓ Submission created: 1959219226
+✓ Submission created: 1959219590
+✓ Submission created: 1959219912
+✓ Submission created: 1959220243
+✓ Submission created: 1959220566
+✓ Submission created: 1959220906
+✓ Submission created: 1959221203
+✓ Submission created: 1959221522
+✓ Submission created: 1959221824
+✓ Submission created: 1959222124
+✓ Submission created: 1959222422
+✓ Submission created: 1959222729
+✓ Submission created: 1959223053
+✓ Submission created: 1959223361
+✓ Submission created: 1959223663
+✓ Submission created: 1959223985
+✓ Submission created: 1959224290
+✓ Submission created: 1959224603
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+RATE LIMIT EXHAUSTED for model: deepseek-v3.2
+Progress saved. Switch LeetCode account and re-run the same command.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+✗ Error: LeetCode rate limit exhausted: 10 consecutive submission failures (no submission_id). Switch LeetCode account and re-run.
+Progress:  51%|█████     | 51/100 [3:14:10<3:06:33, 228.45s/it]

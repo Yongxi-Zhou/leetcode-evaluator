@@ -1,0 +1,580 @@
+2026-03-23 08:37:52,364 - INFO - Experiment started: 20260323_083752_qwq-plus
+2026-03-23 08:37:52,364 - INFO - Provider: qwen, Model: qwq-plus
+2026-03-23 08:37:52,365 - INFO - Experiment Name: qwq-plus
+2026-03-23 08:37:52,726 - INFO - Initialized evaluator with qwen
+🚀 Running Qwen batch generation from: experiments/paper_qwen_batch.json
+Mode: resume
+Stable run id: qwen_batch_paper_qwen_batch_608ffde791
+Batch root: output/batch_jobs/qwen_batch_paper_qwen_batch_608ffde791
+Filter models: ['qwq-plus']
+
+------------------------------------------------------------
+QWEN BATCH MODEL: qwq-plus
+------------------------------------------------------------
+Reusing normalized batch output: model=qwq-plus, prompt=detailed
+Reusing normalized batch output: model=qwq-plus, prompt=minimal
+Resuming from results file: output/qwen_batch_paper_qwen_batch_608ffde791/results/evaluations/evaluation_results_20260323_010824.json
+✓ Session cookies configured: ['gr_user_id', '87b5a3c3f1a55520_gr_last_sent_cs1', '__stripe_mid', 'INGRESSCOOKIE', '_gid', 'ip_check', '87b5a3c3f1a55520_gr_session_id', '87b5a3c3f1a55520_gr_last_sent_sid_with_cs1', '87b5a3c3f1a55520_gr_session_id_sent_vst', 'cf_clearance', '_dd_s', 'messages', 'LEETCODE_SESSION', '87b5a3c3f1a55520_gr_cs1', '_ga', '__stripe_sid', '_gat', '_ga_CDRWKZTDEX', 'csrftoken']
+============================================================
+LeetCode AI Solution Evaluator
+============================================================
+✓ Successfully authenticated as colindickson5303
+✓ Using qwen provider with model: qwq-plus
+
+
+🚀 Starting generated-result submission batch:
+  - Total Problems: 100
+  - Already complete (resuming): 31, remaining: 69
+  - Submission Delay: 15s
+  - Total Generated Attempts: 690
+Progress:   0%|          | 0/69 [00:00<?, ?it/s]Progress:   1%|▏         | 1/69 [04:08<4:41:29, 248.38s/it]Progress:   3%|▎         | 2/69 [07:06<3:51:26, 207.26s/it]Progress:   4%|▍         | 3/69 [10:02<3:32:16, 192.97s/it]Progress:   6%|▌         | 4/69 [13:04<3:24:02, 188.34s/it]Progress:   7%|▋         | 5/69 [16:08<3:19:21, 186.90s/it]Progress:   9%|▊         | 6/69 [19:27<3:20:26, 190.89s/it]Progress:  10%|█         | 7/69 [22:23<3:12:17, 186.09s/it]Progress:  12%|█▏        | 8/69 [27:17<3:44:18, 220.63s/it]Progress:  13%|█▎        | 9/69 [30:56<3:40:02, 220.04s/it]Progress:  14%|█▍        | 10/69 [34:13<3:29:19, 212.88s/it]Progress:  16%|█▌        | 11/69 [37:23<3:19:04, 205.94s/it]Progress:  17%|█▋        | 12/69 [40:45<3:14:29, 204.73s/it]Progress:  19%|█▉        | 13/69 [43:50<3:05:34, 198.83s/it]Progress:  20%|██        | 14/69 [47:39<3:10:28, 207.80s/it]Progress:  22%|██▏       | 15/69 [51:18<3:10:08, 211.28s/it]Progress:  23%|██▎       | 16/69 [54:14<2:57:08, 200.54s/it]Progress:  25%|██▍       | 17/69 [57:19<2:49:47, 195.91s/it]Progress:  26%|██▌       | 18/69 [1:00:36<2:46:56, 196.40s/it]Progress:  28%|██▊       | 19/69 [1:03:55<2:44:11, 197.02s/it]Progress:  29%|██▉       | 20/69 [1:07:12<2:40:58, 197.12s/it]Progress:  30%|███       | 21/69 [1:10:43<2:41:00, 201.26s/it]Progress:  32%|███▏      | 22/69 [1:13:45<2:33:05, 195.43s/it]Progress:  33%|███▎      | 23/69 [1:17:04<2:30:39, 196.51s/it]Progress:  35%|███▍      | 24/69 [1:20:22<2:27:43, 196.98s/it]Progress:  36%|███▌      | 25/69 [1:23:26<2:21:27, 192.89s/it]Progress:  38%|███▊      | 26/69 [1:26:40<2:18:39, 193.47s/it]Progress:  39%|███▉      | 27/69 [1:29:36<2:11:45, 188.21s/it]Progress:  41%|████      | 28/69 [1:32:52<2:10:11, 190.53s/it]Progress:  42%|████▏     | 29/69 [1:36:12<2:08:48, 193.22s/it]Progress:  43%|████▎     | 30/69 [1:39:25<2:05:42, 193.39s/it]Progress:  45%|████▍     | 31/69 [1:42:25<1:59:53, 189.30s/it]Progress:  46%|████▋     | 32/69 [1:47:12<2:14:48, 218.61s/it]Progress:  48%|████▊     | 33/69 [1:50:26<2:06:36, 211.02s/it]Progress:  49%|████▉     | 34/69 [1:53:25<1:57:39, 201.69s/it]Progress:  51%|█████     | 35/69 [1:56:24<1:50:22, 194.78s/it]Progress:  52%|█████▏    | 36/69 [2:00:11<1:52:26, 204.45s/it]Progress:  54%|█████▎    | 37/69 [2:03:29<1:48:03, 202.62s/it]Progress:  55%|█████▌    | 38/69 [2:06:47<1:43:53, 201.07s/it]Progress:  57%|█████▋    | 39/69 [2:09:47<1:37:21, 194.73s/it]Progress:  58%|█████▊    | 40/69 [2:11:52<1:24:02, 173.89s/it]Progress:  59%|█████▉    | 41/69 [2:15:53<1:30:34, 194.07s/it]Progress:  61%|██████    | 42/69 [2:19:09<1:27:29, 194.43s/it]Progress:  62%|██████▏   | 43/69 [2:22:05<1:21:51, 188.90s/it]Progress:  64%|██████▍   | 44/69 [2:25:18<1:19:15, 190.24s/it]Progress:  65%|██████▌   | 45/69 [2:28:45<1:18:06, 195.27s/it]Progress:  67%|██████▋   | 46/69 [2:32:19<1:16:57, 200.77s/it]Progress:  68%|██████▊   | 47/69 [2:35:26<1:12:10, 196.82s/it]Progress:  70%|██████▉   | 48/69 [2:38:22<1:06:39, 190.43s/it]Progress:  71%|███████   | 49/69 [2:41:22<1:02:28, 187.43s/it]Progress:  72%|███████▏  | 50/69 [2:44:47<1:00:59, 192.60s/it]Progress:  74%|███████▍  | 51/69 [2:55:28<1:38:09, 327.22s/it]Traceback (most recent call last):
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/main.py", line 385, in main
+    batch_results = batch_runner.run(
+        mode=args.qwen_batch_mode,
+    ...<5 lines>...
+        skip_premium=args.skip_premium,
+    )
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/qwen_batch_runner.py", line 686, in run
+    results_file = evaluator.run_generated_evaluation(
+        generated_items,
+        stability_runs=self.stability_runs,
+        results_file=active_results_file,
+    )
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/evaluator.py", line 616, in run_generated_evaluation
+    results = self.evaluate_generated_batch(generated_items, results_file=results_file)
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/evaluator.py", line 410, in evaluate_generated_batch
+    self._process_submission_item(item, results, None, pbar)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/evaluator.py", line 241, in _process_submission_item
+    raise RateLimitExhaustedException(
+    ...<3 lines>...
+    )
+leetcode_evaluator.core.evaluator.RateLimitExhaustedException: LeetCode rate limit exhausted: 10 consecutive submission failures (no submission_id). Switch LeetCode account and re-run.
+Progress:  74%|███████▍  | 51/69 [2:57:44<1:02:43, 209.10s/it]
+✓ Submission created: 1956846430
+✓ Submission created: 1956846777
+✓ Submission created: 1956847102
+✓ Submission created: 1956847401
+✓ Submission created: 1956847774
+✓ Submission created: 1956848119
+✓ Submission created: 1956848453
+✓ Submission created: 1956849151
+✓ Submission created: 1956849877
+✓ Submission created: 1956850186
+✓ Submission created: 1956850485
+✓ Submission created: 1956850768
+✓ Submission created: 1956851042
+✓ Submission created: 1956851339
+✓ Submission created: 1956851639
+✓ Submission created: 1956851983
+✓ Submission created: 1956852301
+✓ Submission created: 1956852599
+✓ Submission created: 1956852889
+✓ Submission created: 1956853179
+✓ Submission created: 1956853496
+✓ Submission created: 1956853792
+✓ Submission created: 1956854130
+✓ Submission created: 1956854449
+✓ Submission created: 1956854745
+✓ Submission created: 1956855013
+✓ Submission created: 1956855335
+✓ Submission created: 1956855642
+✓ Submission created: 1956855941
+✓ Submission created: 1956856247
+✓ Submission created: 1956856541
+✓ Submission created: 1956856790
+✓ Submission created: 1956857116
+✓ Submission created: 1956857396
+✓ Submission created: 1956857727
+✓ Submission created: 1956858026
+✓ Submission created: 1956858343
+✓ Submission created: 1956858677
+✓ Submission created: 1956858965
+✓ Submission created: 1956859285
+✓ Submission created: 1956859597
+✓ Submission created: 1956859964
+✓ Submission created: 1956860289
+✓ Submission created: 1956860585
+✓ Submission created: 1956860864
+✓ Submission created: 1956861207
+✓ Submission created: 1956861518
+✓ Submission created: 1956861872
+✓ Submission created: 1956862216
+✓ Submission created: 1956862490
+✓ Submission created: 1956862801
+✓ Submission created: 1956863129
+✓ Submission created: 1956863498
+✓ Submission created: 1956863819
+✓ Submission created: 1956864160
+✓ Submission created: 1956864495
+✓ Submission created: 1956864853
+✓ Submission created: 1956865191
+✓ Submission created: 1956865539
+✓ Submission created: 1956865846
+✓ Submission created: 1956866177
+✓ Submission created: 1956866515
+✓ Submission created: 1956866809
+✓ Submission created: 1956867094
+✓ Submission created: 1956867397
+✓ Submission created: 1956867722
+✓ Submission created: 1956868057
+✓ Submission created: 1956868364
+✓ Submission created: 1956868692
+✓ Submission created: 1956868976
+✓ Submission created: 1956869281
+✓ Submission created: 1956869808
+✓ Submission created: 1956870357
+✓ Submission created: 1956870907
+✓ Submission created: 1956871566
+✓ Submission created: 1956872082
+✓ Submission created: 1956872549
+✓ Submission created: 1956873062
+✓ Submission created: 1956873565
+✓ Submission created: 1956874108
+✓ Submission created: 1956874604
+✓ Submission created: 1956874927
+✓ Submission created: 1956875272
+✓ Submission created: 1956875617
+✓ Submission created: 1956875998
+✓ Submission created: 1956876567
+✓ Submission created: 1956876973
+✓ Submission created: 1956877336
+✓ Submission created: 1956877667
+✓ Submission created: 1956878195
+✓ Submission created: 1956878550
+✓ Submission created: 1956878883
+✓ Submission created: 1956879206
+✓ Submission created: 1956879580
+✓ Submission created: 1956879946
+✓ Submission created: 1956880318
+✓ Submission created: 1956880685
+✓ Submission created: 1956881037
+✓ Submission created: 1956881338
+✓ Submission created: 1956881691
+✓ Submission created: 1956882067
+✓ Submission created: 1956882359
+✓ Submission created: 1956882677
+✓ Submission created: 1956883041
+✓ Submission created: 1956883402
+✓ Submission created: 1956883735
+✓ Submission created: 1956884109
+✓ Submission created: 1956884513
+✓ Submission created: 1956884817
+✓ Submission created: 1956885118
+✓ Submission created: 1956885478
+✓ Submission created: 1956885830
+✓ Submission created: 1956886204
+✓ Submission created: 1956886556
+✓ Submission created: 1956886909
+✓ Submission created: 1956887238
+✓ Submission created: 1956887585
+✓ Submission created: 1956887970
+✓ Submission created: 1956888414
+✓ Submission created: 1956888811
+✓ Submission created: 1956889202
+✓ Submission created: 1956889518
+✓ Submission created: 1956889838
+✓ Submission created: 1956890178
+✓ Submission created: 1956890564
+✓ Submission created: 1956890883
+✓ Submission created: 1956891229
+✓ Submission created: 1956891620
+✓ Submission created: 1956892046
+✓ Submission created: 1956892403
+✓ Submission created: 1956892782
+✓ Submission created: 1956893281
+✓ Submission created: 1956893643
+✓ Submission created: 1956894132
+✓ Submission created: 1956894549
+✓ Submission created: 1956894945
+✓ Submission created: 1956895385
+✓ Submission created: 1956895825
+✓ Submission created: 1956896286
+✓ Submission created: 1956896733
+✓ Submission created: 1956897209
+✓ Submission created: 1956897673
+✓ Submission created: 1956898138
+✓ Submission created: 1956898560
+✓ Submission created: 1956898995
+✓ Submission created: 1956899431
+✓ Submission created: 1956899831
+✓ Submission created: 1956900240
+✓ Submission created: 1956900634
+✓ Submission created: 1956901009
+✓ Submission created: 1956901438
+✓ Submission created: 1956901774
+✓ Submission created: 1956902147
+✓ Submission created: 1956902483
+✓ Submission created: 1956902813
+✓ Submission created: 1956903126
+✓ Submission created: 1956903455
+✓ Submission created: 1956903808
+✓ Submission created: 1956904169
+✓ Submission created: 1956904506
+✓ Submission created: 1956904826
+✓ Submission created: 1956905141
+✓ Submission created: 1956905528
+✓ Submission created: 1956905879
+✓ Submission created: 1956906252
+✓ Submission created: 1956906633
+✓ Submission created: 1956906976
+✓ Submission created: 1956907343
+✓ Submission created: 1956907720
+✓ Submission created: 1956908064
+✓ Submission created: 1956908454
+✓ Submission created: 1956908827
+✓ Submission created: 1956909222
+✓ Submission created: 1956909622
+✓ Submission created: 1956910008
+✓ Submission created: 1956910417
+✓ Submission created: 1956910824
+✓ Submission created: 1956911217
+✓ Submission created: 1956911621
+✓ Submission created: 1956912015
+✓ Submission created: 1956912430
+✓ Submission created: 1956912856
+✓ Submission created: 1956913246
+✓ Submission created: 1956913612
+✓ Submission created: 1956914024
+✓ Submission created: 1956914430
+✓ Submission created: 1956914806
+✓ Submission created: 1956915200
+✓ Submission created: 1956915561
+✓ Submission created: 1956915956
+✓ Submission created: 1956916343
+✓ Submission created: 1956916720
+✓ Submission created: 1956917120
+✓ Submission created: 1956917464
+✓ Submission created: 1956917856
+✓ Submission created: 1956918289
+✓ Submission created: 1956918728
+✓ Submission created: 1956919124
+✓ Submission created: 1956919512
+✓ Submission created: 1956919902
+✓ Submission created: 1956920316
+✓ Submission created: 1956920803
+✓ Submission created: 1956921216
+✓ Submission created: 1956921664
+✓ Submission created: 1956922078
+✓ Submission created: 1956922547
+✓ Submission created: 1956922945
+✓ Submission created: 1956923392
+✓ Submission created: 1956923817
+✓ Submission created: 1956924225
+✓ Submission created: 1956924660
+✓ Submission created: 1956925014
+✓ Submission created: 1956925367
+✓ Submission created: 1956925726
+✓ Submission created: 1956926086
+✓ Submission created: 1956926486
+✓ Submission created: 1956926825
+✓ Submission created: 1956927161
+✓ Submission created: 1956927553
+✓ Submission created: 1956928033
+✓ Submission created: 1956928419
+✓ Submission created: 1956928830
+✓ Submission created: 1956929291
+✓ Submission created: 1956929703
+✓ Submission created: 1956930145
+✓ Submission created: 1956930553
+✓ Submission created: 1956930989
+✓ Submission created: 1956931392
+✓ Submission created: 1956931814
+✓ Submission created: 1956932250
+✓ Submission created: 1956932644
+✓ Submission created: 1956933074
+✓ Submission created: 1956933440
+✓ Submission created: 1956933826
+✓ Submission created: 1956934255
+✓ Submission created: 1956934684
+✓ Submission created: 1956935145
+✓ Submission created: 1956935597
+✓ Submission created: 1956936028
+✓ Submission created: 1956936432
+✓ Submission created: 1956936861
+✓ Submission created: 1956937282
+✓ Submission created: 1956937618
+✓ Submission created: 1956938001
+✓ Submission created: 1956938436
+✓ Submission created: 1956938827
+✓ Submission created: 1956939191
+✓ Submission created: 1956939530
+✓ Submission created: 1956939955
+✓ Submission created: 1956940331
+✓ Submission created: 1956940705
+✓ Submission created: 1956941088
+✓ Submission created: 1956941528
+✓ Submission created: 1956941918
+✓ Submission created: 1956942351
+✓ Submission created: 1956942769
+✓ Submission created: 1956943196
+✓ Submission created: 1956943587
+✓ Submission created: 1956943985
+✓ Submission created: 1956944349
+✓ Submission created: 1956944755
+✓ Submission created: 1956945144
+✓ Submission created: 1956945525
+✓ Submission created: 1956945865
+✓ Submission created: 1956946249
+✓ Submission created: 1956946601
+✓ Submission created: 1956946980
+✓ Submission created: 1956947339
+✓ Submission created: 1956947727
+✓ Submission created: 1956948108
+✓ Submission created: 1956948473
+✓ Submission created: 1956948910
+✓ Submission created: 1956949330
+✓ Submission created: 1956949734
+✓ Submission created: 1956950141
+✓ Submission created: 1956950552
+✓ Submission created: 1956950916
+✓ Submission created: 1956951302
+✓ Submission created: 1956951699
+✓ Submission created: 1956952103
+✓ Submission created: 1956952496
+✓ Submission created: 1956952849
+✓ Submission created: 1956953279
+✓ Submission created: 1956953673
+✓ Submission created: 1956954096
+✓ Submission created: 1956954592
+✓ Submission created: 1956955016
+✓ Submission created: 1956955424
+✓ Submission created: 1956955864
+✓ Submission created: 1956956248
+✓ Submission created: 1956956734
+✓ Submission created: 1956957172
+✓ Submission created: 1956957566
+✓ Submission created: 1956957977
+✓ Submission created: 1956958371
+✓ Submission created: 1956958814
+✓ Submission created: 1956959271
+✓ Submission created: 1956959702
+✓ Submission created: 1956960119
+✓ Submission created: 1956960477
+✓ Submission created: 1956960903
+✓ Submission created: 1956961279
+✓ Submission created: 1956961650
+✓ Submission created: 1956962025
+✓ Submission created: 1956962479
+✓ Submission created: 1956962839
+✓ Submission created: 1956963184
+✓ Submission created: 1956963562
+✓ Submission created: 1956963920
+✓ Submission created: 1956964283
+✓ Submission created: 1956964698
+✓ Submission created: 1956965322
+✓ Submission created: 1956965956
+✓ Submission created: 1956966654
+✓ Submission created: 1956967294
+✓ Submission created: 1956967932
+✓ Submission created: 1956968602
+✓ Submission created: 1956969209
+✓ Submission created: 1956969788
+✓ Submission created: 1956970382
+✓ Submission created: 1956970757
+✓ Submission created: 1956971116
+✓ Submission created: 1956971521
+✓ Submission created: 1956971896
+✓ Submission created: 1956972308
+✓ Submission created: 1956972680
+✓ Submission created: 1956973040
+✓ Submission created: 1956973400
+✓ Submission created: 1956974032
+✓ Submission created: 1956974471
+✓ Submission created: 1956974856
+✓ Submission created: 1956975262
+✓ Submission created: 1956975642
+✓ Submission created: 1956976013
+✓ Submission created: 1956976405
+✓ Submission created: 1956976788
+✓ Submission created: 1956977161
+✓ Submission created: 1956977557
+✓ Submission created: 1956977897
+✓ Submission created: 1956978256
+✓ Submission created: 1956978616
+✓ Submission created: 1956978987
+✓ Submission created: 1956979352
+✓ Submission created: 1956979752
+✓ Submission created: 1956980136
+✓ Submission created: 1956980545
+✓ Submission created: 1956980906
+✓ Submission created: 1956981289
+✓ Submission created: 1956981648
+✓ Submission created: 1956982083
+✓ Submission created: 1956982469
+✓ Submission created: 1956982884
+✓ Submission created: 1956983333
+✓ Submission created: 1956983817
+✓ Submission created: 1956984326
+✓ Submission created: 1956984813
+✓ Submission created: 1956985267
+✓ Submission created: 1956985697
+✓ Submission created: 1956986167
+✓ Submission created: 1956986681
+✓ Submission created: 1956987223
+✓ Submission created: 1956987666
+✓ Submission created: 1956988115
+✓ Submission created: 1956988540
+✓ Submission created: 1956988960
+✓ Submission created: 1956989355
+✓ Submission created: 1956989769
+✓ Submission created: 1956990190
+✓ Submission created: 1956990529
+✓ Submission created: 1956990953
+✓ Submission created: 1956991366
+✓ Submission created: 1956991772
+✓ Submission created: 1956992197
+✓ Submission created: 1956992608
+✓ Submission created: 1956993024
+✓ Submission created: 1956993470
+✓ Submission created: 1956993847
+✓ Submission created: 1956994261
+✓ Submission created: 1956994678
+✓ Submission created: 1956995074
+✓ Submission created: 1956995465
+✓ Submission created: 1956995843
+✓ Submission created: 1956996195
+✓ Submission created: 1956996536
+✓ Submission created: 1956996924
+✓ Submission created: 1956997301
+✓ Submission created: 1956997656
+✓ Submission created: 1956998012
+✓ Submission created: 1956998399
+✓ Submission created: 1956998773
+✓ Submission created: 1956999203
+✓ Submission created: 1956999566
+✓ Submission created: 1956999944
+✓ Submission created: 1957000368
+✓ Submission created: 1957000754
+✓ Submission created: 1957001115
+✓ Submission created: 1957001477
+✓ Submission created: 1957001853
+✓ Submission created: 1957002418
+✓ Submission created: 1957002961
+✓ Submission created: 1957003503
+✓ Submission created: 1957004045
+✓ Submission created: 1957004444
+✓ Submission created: 1957004993
+✓ Submission created: 1957005396
+✓ Submission created: 1957005927
+✓ Submission created: 1957006377
+✓ Submission created: 1957006879
+✓ Submission created: 1957007286
+✓ Submission created: 1957007665
+✓ Submission created: 1957008049
+✓ Submission created: 1957008489
+✓ Submission created: 1957008893
+✓ Submission created: 1957009279
+✓ Submission created: 1957009648
+✓ Submission created: 1957010047
+✓ Submission created: 1957010390
+✓ Submission created: 1957010777
+✓ Submission created: 1957011153
+✓ Submission created: 1957011511
+✓ Submission created: 1957011845
+✓ Submission created: 1957012189
+✓ Submission created: 1957012532
+✓ Submission created: 1957012877
+✓ Submission created: 1957013262
+✓ Submission created: 1957013625
+✓ Submission created: 1957013965
+✓ Submission created: 1957014341
+✓ Submission created: 1957014745
+✓ Submission created: 1957015108
+✓ Submission created: 1957015508
+✓ Submission created: 1957015923
+✓ Submission created: 1957016298
+✓ Submission created: 1957016717
+✓ Submission created: 1957017118
+✓ Submission created: 1957017519
+✓ Submission created: 1957017888
+✓ Submission created: 1957018287
+✓ Submission created: 1957018753
+✓ Submission created: 1957019206
+✓ Submission created: 1957019566
+✓ Submission created: 1957019978
+✓ Submission created: 1957020346
+✓ Submission created: 1957020723
+✓ Submission created: 1957021135
+✓ Submission created: 1957021492
+✓ Submission created: 1957021881
+✓ Submission created: 1957022296
+✓ Submission created: 1957022718
+✓ Submission created: 1957023313
+✓ Submission created: 1957023694
+✓ Submission created: 1957024094
+✓ Submission created: 1957024474
+✓ Submission created: 1957024847
+✓ Submission created: 1957025248
+✓ Submission created: 1957025643
+✓ Submission created: 1957026055
+✓ Submission created: 1957026433
+✓ Submission created: 1957026808
+✓ Submission created: 1957027150
+✓ Submission created: 1957027555
+✓ Submission created: 1957027896
+✓ Submission created: 1957028221
+✓ Submission created: 1957028541
+✓ Submission created: 1957028959
+✓ Submission created: 1957029340
+✓ Submission created: 1957029773
+✓ Submission created: 1957030163
+✓ Submission created: 1957030489
+✓ Submission created: 1957030845
+✓ Submission created: 1957031190
+✓ Submission created: 1957031519
+✓ Submission created: 1957031874
+✓ Submission created: 1957032196
+✓ Submission created: 1957032549
+✓ Submission created: 1957032920
+✓ Submission created: 1957033238
+✓ Submission created: 1957033597
+✓ Submission created: 1957033976
+✓ Submission created: 1957034310
+✓ Submission created: 1957034685
+✓ Submission created: 1957035090
+✓ Submission created: 1957035446
+✓ Submission created: 1957035805
+✓ Submission created: 1957036177
+✓ Submission created: 1957036508
+✓ Submission created: 1957036853
+✓ Submission created: 1957037229
+✓ Submission created: 1957037659
+✓ Submission created: 1957038034
+✓ Submission created: 1957038454
+✓ Submission created: 1957038813
+✓ Submission created: 1957039240
+✓ Submission created: 1957039618
+✓ Submission created: 1957039996
+✓ Submission created: 1957040381
+✓ Submission created: 1957040739
+✓ Submission created: 1957041130
+✓ Submission created: 1957041523
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+RATE LIMIT EXHAUSTED for model: qwq-plus
+Progress saved. Switch LeetCode account and re-run the same command.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+✗ Error: LeetCode rate limit exhausted: 10 consecutive submission failures (no submission_id). Switch LeetCode account and re-run.

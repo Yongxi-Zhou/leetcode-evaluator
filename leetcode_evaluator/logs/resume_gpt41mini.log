@@ -1,0 +1,576 @@
+2026-03-30 21:16:30,358 - INFO - Experiment started: 20260330_211630_gpt-4.1-mini
+2026-03-30 21:16:30,359 - INFO - Provider: openai, Model: gpt-4.1-mini
+2026-03-30 21:16:30,359 - INFO - Experiment Name: gpt-4.1-mini
+2026-03-30 21:16:30,751 - INFO - Initialized evaluator with openai
+Running OpenAI batch generation from: experiments/paper_openai_batch.json
+Mode: resume
+Run id: openai_batch_paper_openai_batch_b9c4511d1e
+Batch root: output/batch_jobs/openai_batch_paper_openai_batch_b9c4511d1e
+
+------------------------------------------------------------
+OPENAI BATCH MODEL: gpt-4.1-mini
+------------------------------------------------------------
+Reusing normalized batch output: model=gpt-4.1-mini, prompt=detailed
+Reusing normalized batch output: model=gpt-4.1-mini, prompt=minimal
+Results file: output/openai_batch_paper_openai_batch_b9c4511d1e/results/evaluations/evaluation_results_20260330_211630.json
+✓ Session cookies configured: ['gr_user_id', 'cf_clearance', '__gads', '__gpi', '__eoi', 'FCCDCF', 'FCNEC', '__stripe_mid', 'LEETCODE_SESSION', 'ip_check', '_gid', 'INGRESSCOOKIE', '87b5a3c3f1a55520_gr_session_id', '_gat', '87b5a3c3f1a55520_gr_session_id_sent_vst', '_ga', '_ga_CDRWKZTDEX', 'csrftoken']
+============================================================
+LeetCode AI Solution Evaluator
+============================================================
+✓ Successfully authenticated as JamieChow
+✓ Using openai provider with model: gpt-4.1-mini
+
+
+🚀 Starting generated-result submission batch:
+  - Total Problems: 100
+  - Submission Delay: 15s
+  - Total Generated Attempts: 1000
+Progress:   0%|          | 0/100 [00:00<?, ?it/s]Progress:   1%|          | 1/100 [04:14<6:59:13, 254.08s/it]Progress:   2%|▏         | 2/100 [07:55<6:24:01, 235.12s/it]Progress:   3%|▎         | 3/100 [11:07<5:48:17, 215.44s/it]Progress:   4%|▍         | 4/100 [14:20<5:29:59, 206.25s/it]Progress:   5%|▌         | 5/100 [18:55<6:06:12, 231.28s/it]Progress:   6%|▌         | 6/100 [22:15<5:45:40, 220.65s/it]Progress:   7%|▋         | 7/100 [25:33<5:30:21, 213.13s/it]Progress:   8%|▊         | 8/100 [28:33<5:10:25, 202.45s/it]Progress:   9%|▉         | 9/100 [32:27<5:22:07, 212.39s/it]Progress:  10%|█         | 10/100 [35:40<5:09:33, 206.37s/it]Progress:  11%|█         | 11/100 [39:00<5:03:18, 204.47s/it]Progress:  12%|█▏        | 12/100 [42:10<4:53:33, 200.15s/it]Progress:  13%|█▎        | 13/100 [45:38<4:53:39, 202.52s/it]Progress:  14%|█▍        | 14/100 [48:51<4:46:05, 199.60s/it]Progress:  15%|█▌        | 15/100 [52:10<4:42:36, 199.49s/it]Progress:  16%|█▌        | 16/100 [55:08<4:30:12, 193.01s/it]Progress:  17%|█▋        | 17/100 [58:04<4:19:57, 187.92s/it]Progress:  18%|█▊        | 18/100 [1:01:35<4:26:02, 194.66s/it]Progress:  19%|█▉        | 19/100 [1:05:04<4:28:59, 199.25s/it]Progress:  20%|██        | 20/100 [1:08:08<4:19:12, 194.40s/it]Progress:  21%|██        | 21/100 [1:11:25<4:17:04, 195.25s/it]Progress:  22%|██▏       | 22/100 [1:14:31<4:10:13, 192.48s/it]Progress:  23%|██▎       | 23/100 [1:17:45<4:07:39, 192.97s/it]Progress:  24%|██▍       | 24/100 [1:20:56<4:03:47, 192.47s/it]Progress:  25%|██▌       | 25/100 [1:24:16<4:03:16, 194.63s/it]Progress:  26%|██▌       | 26/100 [1:29:26<4:42:37, 229.16s/it]Progress:  27%|██▋       | 27/100 [1:32:41<4:26:22, 218.94s/it]Progress:  28%|██▊       | 28/100 [1:35:43<4:09:41, 208.07s/it]Progress:  29%|██▉       | 29/100 [1:39:03<4:03:06, 205.45s/it]Progress:  30%|███       | 30/100 [1:42:14<3:54:36, 201.09s/it]Progress:  31%|███       | 31/100 [1:45:12<3:43:32, 194.39s/it]Progress:  32%|███▏      | 32/100 [1:48:12<3:35:07, 189.82s/it]Progress:  33%|███▎      | 33/100 [1:52:56<4:03:45, 218.29s/it]Progress:  34%|███▍      | 34/100 [1:56:14<3:53:27, 212.24s/it]Progress:  35%|███▌      | 35/100 [1:59:27<3:43:36, 206.40s/it]Progress:  36%|███▌      | 36/100 [2:02:35<3:34:17, 200.89s/it]Progress:  37%|███▋      | 37/100 [2:05:39<3:25:35, 195.80s/it]Progress:  38%|███▊      | 38/100 [2:09:00<3:23:58, 197.39s/it]Progress:  39%|███▉      | 39/100 [2:12:11<3:18:40, 195.42s/it]Progress:  40%|████      | 40/100 [2:15:11<3:10:43, 190.72s/it]Progress:  41%|████      | 41/100 [2:18:25<3:08:25, 191.62s/it]Progress:  42%|████▏     | 42/100 [2:25:49<4:18:35, 267.50s/it]Progress:  43%|████▎     | 43/100 [2:30:01<4:09:34, 262.71s/it]Progress:  44%|████▍     | 44/100 [2:33:25<3:48:52, 245.23s/it]Progress:  45%|████▌     | 45/100 [2:36:22<3:25:56, 224.67s/it]Progress:  46%|████▌     | 46/100 [2:39:23<3:10:20, 211.49s/it]Progress:  47%|████▋     | 47/100 [2:42:41<3:03:23, 207.61s/it]Progress:  48%|████▊     | 48/100 [2:45:56<2:56:35, 203.75s/it]Progress:  49%|████▉     | 49/100 [2:49:03<2:48:54, 198.71s/it]Progress:  50%|█████     | 50/100 [2:52:22<2:45:39, 198.79s/it]Progress:  51%|█████     | 51/100 [3:03:58<4:44:17, 348.11s/it]Traceback (most recent call last):
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/main.py", line 544, in main
+    batch_results = batch_runner.run(
+        mode=args.openai_batch_mode,
+    ...<5 lines>...
+        skip_premium=args.skip_premium,
+    )
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/openai_batch_runner.py", line 466, in run
+    results_file = evaluator.run_generated_evaluation(generated_items, stability_runs=self.stability_runs, results_file=active_results_file)
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/evaluator.py", line 616, in run_generated_evaluation
+    results = self.evaluate_generated_batch(generated_items, results_file=results_file)
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/evaluator.py", line 410, in evaluate_generated_batch
+    self._process_submission_item(item, results, None, pbar)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yongxi/Documents/paper-llm-agent/leetcode_evaluator/leetcode_evaluator/core/evaluator.py", line 241, in _process_submission_item
+    raise RateLimitExhaustedException(
+    ...<3 lines>...
+    )
+leetcode_evaluator.core.evaluator.RateLimitExhaustedException: LeetCode rate limit exhausted: 10 consecutive submission failures (no submission_id). Switch LeetCode account and re-run.
+✓ Submission created: 1964439669
+✓ Submission created: 1964439975
+✓ Submission created: 1964440329
+✓ Submission created: 1964440708
+✓ Submission created: 1964440953
+✓ Submission created: 1964441340
+✓ Submission created: 1964441590
+✓ Submission created: 1964441868
+✓ Submission created: 1964442212
+✓ Submission created: 1964442438
+✓ Submission created: 1964442829
+✓ Submission created: 1964443079
+✓ Submission created: 1964443286
+✓ Submission created: 1964443657
+✓ Submission created: 1964443905
+✓ Submission created: 1964444121
+✓ Submission created: 1964444346
+✓ Submission created: 1964444609
+✓ Submission created: 1964444857
+✓ Submission created: 1964445196
+✓ Submission created: 1964445458
+✓ Submission created: 1964445699
+✓ Submission created: 1964445994
+✓ Submission created: 1964446189
+✓ Submission created: 1964446433
+✓ Submission created: 1964446668
+✓ Submission created: 1964446925
+✓ Submission created: 1964447129
+✓ Submission created: 1964447361
+✓ Submission created: 1964447582
+✓ Submission created: 1964447830
+✓ Submission created: 1964448048
+✓ Submission created: 1964448283
+✓ Submission created: 1964448523
+✓ Submission created: 1964448725
+✓ Submission created: 1964448957
+✓ Submission created: 1964449286
+✓ Submission created: 1964449514
+✓ Submission created: 1964449781
+✓ Submission created: 1964450015
+✓ Submission created: 1964450262
+✓ Submission created: 1964450581
+✓ Submission created: 1964450929
+✓ Submission created: 1964451458
+✓ Submission created: 1964451755
+✓ Submission created: 1964452029
+✓ Submission created: 1964452403
+✓ Submission created: 1964452712
+✓ Submission created: 1964453024
+✓ Submission created: 1964453357
+✓ Submission created: 1964453715
+✓ Submission created: 1964453986
+✓ Submission created: 1964454224
+✓ Submission created: 1964454437
+✓ Submission created: 1964454706
+✓ Submission created: 1964454979
+✓ Submission created: 1964455221
+✓ Submission created: 1964455472
+✓ Submission created: 1964455731
+✓ Submission created: 1964455983
+✓ Submission created: 1964456234
+✓ Submission created: 1964456496
+✓ Submission created: 1964456755
+✓ Submission created: 1964457008
+✓ Submission created: 1964457253
+✓ Submission created: 1964457488
+✓ Submission created: 1964457745
+✓ Submission created: 1964457980
+✓ Submission created: 1964458254
+✓ Submission created: 1964458503
+✓ Submission created: 1964458742
+✓ Submission created: 1964458999
+✓ Submission created: 1964459238
+✓ Submission created: 1964459453
+✓ Submission created: 1964459704
+✓ Submission created: 1964459907
+✓ Submission created: 1964460177
+✓ Submission created: 1964460409
+✓ Submission created: 1964460647
+✓ Submission created: 1964460889
+✓ Submission created: 1964461107
+✓ Submission created: 1964461419
+✓ Submission created: 1964461665
+✓ Submission created: 1964462031
+✓ Submission created: 1964462335
+✓ Submission created: 1964462623
+✓ Submission created: 1964462999
+✓ Submission created: 1964463330
+✓ Submission created: 1964463620
+✓ Submission created: 1964463878
+✓ Submission created: 1964464190
+✓ Submission created: 1964464456
+✓ Submission created: 1964464712
+✓ Submission created: 1964464973
+✓ Submission created: 1964465255
+✓ Submission created: 1964465505
+✓ Submission created: 1964465777
+✓ Submission created: 1964466026
+✓ Submission created: 1964466288
+✓ Submission created: 1964466559
+✓ Submission created: 1964466835
+✓ Submission created: 1964467123
+✓ Submission created: 1964467397
+✓ Submission created: 1964467672
+✓ Submission created: 1964467944
+✓ Submission created: 1964468247
+✓ Submission created: 1964468512
+✓ Submission created: 1964468790
+✓ Submission created: 1964469082
+✓ Submission created: 1964469354
+✓ Submission created: 1964469662
+✓ Submission created: 1964469894
+✓ Submission created: 1964470152
+✓ Submission created: 1964470457
+✓ Submission created: 1964470743
+✓ Submission created: 1964471000
+✓ Submission created: 1964471262
+✓ Submission created: 1964471575
+✓ Submission created: 1964471850
+✓ Submission created: 1964472106
+✓ Submission created: 1964472453
+✓ Submission created: 1964472717
+✓ Submission created: 1964473030
+✓ Submission created: 1964473345
+✓ Submission created: 1964473647
+✓ Submission created: 1964473893
+✓ Submission created: 1964474379
+✓ Submission created: 1964474664
+✓ Submission created: 1964474999
+✓ Submission created: 1964475252
+✓ Submission created: 1964475536
+✓ Submission created: 1964475844
+✓ Submission created: 1964476148
+✓ Submission created: 1964476470
+✓ Submission created: 1964476767
+✓ Submission created: 1964477038
+✓ Submission created: 1964477359
+✓ Submission created: 1964477610
+✓ Submission created: 1964477911
+✓ Submission created: 1964478192
+✓ Submission created: 1964478476
+✓ Submission created: 1964478743
+✓ Submission created: 1964479000
+✓ Submission created: 1964479285
+✓ Submission created: 1964479573
+✓ Submission created: 1964479837
+✓ Submission created: 1964480118
+✓ Submission created: 1964480396
+✓ Submission created: 1964480695
+✓ Submission created: 1964481012
+✓ Submission created: 1964481351
+✓ Submission created: 1964481595
+✓ Submission created: 1964481908
+✓ Submission created: 1964482160
+✓ Submission created: 1964482378
+✓ Submission created: 1964482638
+✓ Submission created: 1964482896
+✓ Submission created: 1964483129
+✓ Submission created: 1964483382
+✓ Submission created: 1964483637
+✓ Submission created: 1964483889
+✓ Submission created: 1964484137
+✓ Submission created: 1964484388
+✓ Submission created: 1964484599
+✓ Submission created: 1964484850
+✓ Submission created: 1964485101
+✓ Submission created: 1964485354
+✓ Submission created: 1964485609
+✓ Submission created: 1964485849
+✓ Submission created: 1964486089
+✓ Submission created: 1964486354
+✓ Submission created: 1964486649
+✓ Submission created: 1964486970
+✓ Submission created: 1964487251
+✓ Submission created: 1964487533
+✓ Submission created: 1964487833
+✓ Submission created: 1964488103
+✓ Submission created: 1964488412
+✓ Submission created: 1964488728
+✓ Submission created: 1964489166
+✓ Submission created: 1964489457
+✓ Submission created: 1964489722
+Submission error: HTTPSConnectionPool(host='leetcode.com', port=443): Read timed out. (read timeout=30)
+✓ Submission created: 1964490612
+✓ Submission created: 1964490882
+✓ Submission created: 1964491137
+✓ Submission created: 1964491434
+✓ Submission created: 1964491697
+✓ Submission created: 1964491959
+✓ Submission created: 1964492197
+✓ Submission created: 1964492498
+✓ Submission created: 1964492725
+✓ Submission created: 1964493020
+✓ Submission created: 1964493317
+✓ Submission created: 1964493572
+✓ Submission created: 1964493838
+✓ Submission created: 1964494125
+✓ Submission created: 1964494382
+✓ Submission created: 1964494671
+✓ Submission created: 1964494950
+✓ Submission created: 1964495244
+✓ Submission created: 1964495538
+✓ Submission created: 1964495856
+✓ Submission created: 1964496148
+✓ Submission created: 1964496430
+✓ Submission created: 1964496694
+✓ Submission created: 1964496989
+✓ Submission created: 1964497305
+✓ Submission created: 1964497602
+✓ Submission created: 1964497879
+✓ Submission created: 1964498168
+✓ Submission created: 1964498447
+✓ Submission created: 1964498713
+✓ Submission created: 1964498965
+✓ Submission created: 1964499235
+✓ Submission created: 1964499536
+✓ Submission created: 1964499816
+✓ Submission created: 1964500077
+✓ Submission created: 1964500358
+✓ Submission created: 1964500635
+✓ Submission created: 1964500908
+✓ Submission created: 1964501177
+✓ Submission created: 1964501436
+✓ Submission created: 1964501721
+✓ Submission created: 1964502047
+✓ Submission created: 1964502308
+✓ Submission created: 1964502589
+✓ Submission created: 1964502889
+✓ Submission created: 1964503200
+✓ Submission created: 1964503493
+✓ Submission created: 1964503828
+✓ Submission created: 1964504117
+✓ Submission created: 1964504399
+✓ Submission created: 1964504675
+✓ Submission created: 1964504951
+✓ Submission created: 1964505227
+✓ Submission created: 1964505486
+✓ Submission created: 1964505779
+✓ Submission created: 1964506061
+✓ Submission created: 1964506361
+✓ Submission created: 1964506596
+✓ Submission created: 1964506878
+✓ Submission created: 1964507174
+✓ Submission created: 1964507432
+✓ Submission created: 1964507682
+✓ Submission created: 1964507928
+✓ Submission created: 1964508203
+✓ Submission created: 1964508484
+✓ Submission created: 1964508786
+✓ Submission created: 1964509123
+✓ Submission created: 1964509473
+✓ Submission created: 1964509975
+✓ Submission created: 1964510372
+✓ Submission created: 1964510834
+✓ Submission created: 1964511275
+✓ Submission created: 1964511695
+✓ Submission created: 1964512154
+✓ Submission created: 1964512588
+✓ Submission created: 1964513055
+✓ Submission created: 1964513524
+✓ Submission created: 1964514020
+✓ Submission created: 1964514315
+✓ Submission created: 1964514624
+✓ Submission created: 1964514933
+✓ Submission created: 1964515262
+✓ Submission created: 1964515548
+✓ Submission created: 1964515834
+✓ Submission created: 1964516099
+✓ Submission created: 1964516380
+✓ Submission created: 1964516694
+✓ Submission created: 1964516937
+✓ Submission created: 1964517211
+✓ Submission created: 1964517499
+✓ Submission created: 1964517776
+✓ Submission created: 1964518093
+✓ Submission created: 1964518367
+✓ Submission created: 1964518646
+✓ Submission created: 1964518924
+✓ Submission created: 1964519192
+✓ Submission created: 1964519490
+✓ Submission created: 1964519827
+✓ Submission created: 1964520141
+✓ Submission created: 1964520444
+✓ Submission created: 1964520763
+✓ Submission created: 1964521096
+✓ Submission created: 1964521390
+✓ Submission created: 1964521713
+✓ Submission created: 1964522010
+✓ Submission created: 1964522299
+✓ Submission created: 1964522630
+✓ Submission created: 1964522958
+✓ Submission created: 1964523248
+✓ Submission created: 1964523524
+✓ Submission created: 1964523880
+✓ Submission created: 1964524175
+✓ Submission created: 1964524472
+✓ Submission created: 1964524780
+✓ Submission created: 1964525103
+✓ Submission created: 1964525380
+✓ Submission created: 1964525704
+✓ Submission created: 1964526021
+✓ Submission created: 1964526280
+✓ Submission created: 1964526575
+✓ Submission created: 1964526862
+✓ Submission created: 1964527172
+✓ Submission created: 1964527453
+✓ Submission created: 1964527775
+✓ Submission created: 1964528069
+✓ Submission created: 1964528377
+✓ Submission created: 1964528637
+✓ Submission created: 1964528925
+✓ Submission created: 1964529168
+✓ Submission created: 1964529425
+✓ Submission created: 1964529750
+✓ Submission created: 1964530003
+✓ Submission created: 1964530322
+✓ Submission created: 1964530567
+✓ Submission created: 1964530832
+✓ Submission created: 1964531114
+✓ Submission created: 1964531403
+✓ Submission created: 1964531702
+✓ Submission created: 1964532131
+✓ Submission created: 1964532601
+✓ Submission created: 1964533079
+✓ Submission created: 1964533567
+✓ Submission created: 1964533980
+✓ Submission created: 1964534522
+✓ Submission created: 1964534947
+✓ Submission created: 1964535344
+✓ Submission created: 1964535757
+✓ Submission created: 1964536211
+✓ Submission created: 1964536500
+✓ Submission created: 1964536805
+✓ Submission created: 1964537115
+✓ Submission created: 1964537431
+✓ Submission created: 1964537724
+✓ Submission created: 1964538033
+✓ Submission created: 1964538338
+✓ Submission created: 1964538623
+✓ Submission created: 1964538935
+✓ Submission created: 1964539226
+✓ Submission created: 1964539490
+✓ Submission created: 1964539767
+✓ Submission created: 1964540058
+✓ Submission created: 1964540390
+✓ Submission created: 1964540692
+✓ Submission created: 1964541032
+✓ Submission created: 1964541363
+✓ Submission created: 1964541648
+✓ Submission created: 1964541984
+✓ Submission created: 1964542275
+✓ Submission created: 1964542560
+✓ Submission created: 1964542912
+✓ Submission created: 1964543192
+✓ Submission created: 1964543479
+✓ Submission created: 1964543765
+✓ Submission created: 1964544041
+✓ Submission created: 1964544367
+✓ Submission created: 1964544693
+✓ Submission created: 1964544943
+✓ Submission created: 1964545210
+✓ Submission created: 1964545494
+✓ Submission created: 1964545770
+✓ Submission created: 1964546050
+✓ Submission created: 1964546332
+✓ Submission created: 1964546611
+✓ Submission created: 1964546921
+✓ Submission created: 1964547277
+✓ Submission created: 1964547578
+✓ Submission created: 1964547927
+✓ Submission created: 1964548224
+✓ Submission created: 1964548511
+✓ Submission created: 1964548847
+✓ Submission created: 1964549158
+✓ Submission created: 1964549438
+✓ Submission created: 1964549760
+✓ Submission created: 1964550086
+✓ Submission created: 1964550387
+✓ Submission created: 1964550722
+✓ Submission created: 1964551015
+✓ Submission created: 1964551352
+✓ Submission created: 1964551621
+✓ Submission created: 1964551908
+✓ Submission created: 1964552195
+✓ Submission created: 1964552511
+✓ Submission created: 1964552837
+✓ Submission created: 1964553121
+✓ Submission created: 1964553421
+✓ Submission created: 1964553700
+✓ Submission created: 1964553996
+✓ Submission created: 1964554319
+✓ Submission created: 1964554574
+✓ Submission created: 1964554877
+✓ Submission created: 1964555186
+✓ Submission created: 1964555465
+✓ Submission created: 1964555735
+✓ Submission created: 1964556014
+✓ Submission created: 1964556276
+✓ Submission created: 1964556546
+✓ Submission created: 1964556866
+✓ Submission created: 1964557144
+✓ Submission created: 1964557419
+✓ Submission created: 1964557746
+✓ Submission created: 1964557993
+✓ Submission created: 1964558281
+✓ Submission created: 1964558571
+✓ Submission created: 1964558827
+✓ Submission created: 1964559066
+✓ Submission created: 1964559352
+✓ Submission created: 1964559647
+✓ Submission created: 1964559953
+✓ Submission created: 1964560635
+✓ Submission created: 1964561270
+✓ Submission created: 1964561946
+✓ Submission created: 1964562617
+✓ Submission created: 1964563288
+✓ Submission created: 1964563993
+✓ Submission created: 1964564680
+✓ Submission created: 1964565409
+✓ Submission created: 1964566123
+✓ Submission created: 1964566816
+✓ Submission created: 1964567144
+✓ Submission created: 1964567456
+✓ Submission created: 1964567940
+✓ Submission created: 1964568274
+✓ Submission created: 1964568598
+✓ Submission created: 1964568929
+✓ Submission created: 1964569284
+✓ Submission created: 1964569736
+✓ Submission created: 1964570212
+✓ Submission created: 1964570666
+✓ Submission created: 1964570984
+✓ Submission created: 1964571248
+✓ Submission created: 1964571569
+✓ Submission created: 1964571905
+✓ Submission created: 1964572189
+✓ Submission created: 1964572508
+✓ Submission created: 1964572853
+✓ Submission created: 1964573151
+✓ Submission created: 1964573444
+✓ Submission created: 1964573739
+✓ Submission created: 1964573987
+✓ Submission created: 1964574250
+✓ Submission created: 1964574537
+✓ Submission created: 1964574792
+✓ Submission created: 1964575046
+✓ Submission created: 1964575324
+✓ Submission created: 1964575578
+✓ Submission created: 1964575835
+✓ Submission created: 1964576132
+✓ Submission created: 1964576401
+✓ Submission created: 1964576677
+✓ Submission created: 1964576940
+✓ Submission created: 1964577221
+✓ Submission created: 1964577507
+✓ Submission created: 1964577753
+✓ Submission created: 1964577997
+✓ Submission created: 1964578258
+✓ Submission created: 1964578501
+✓ Submission created: 1964578767
+✓ Submission created: 1964579024
+✓ Submission created: 1964579286
+✓ Submission created: 1964579559
+✓ Submission created: 1964579849
+✓ Submission created: 1964580115
+✓ Submission created: 1964580383
+✓ Submission created: 1964580645
+✓ Submission created: 1964580926
+✓ Submission created: 1964581210
+✓ Submission created: 1964581494
+✓ Submission created: 1964581761
+✓ Submission created: 1964582045
+✓ Submission created: 1964582311
+✓ Submission created: 1964582591
+✓ Submission created: 1964582847
+✓ Submission created: 1964583119
+✓ Submission created: 1964583393
+✓ Submission created: 1964583687
+✓ Submission created: 1964583960
+✓ Submission created: 1964584228
+✓ Submission created: 1964584509
+✓ Submission created: 1964584778
+✓ Submission created: 1964585028
+✓ Submission created: 1964585312
+✓ Submission created: 1964585588
+✓ Submission created: 1964585846
+✓ Submission created: 1964586149
+✓ Submission created: 1964586466
+✓ Submission created: 1964586727
+✓ Submission created: 1964586997
+✓ Submission created: 1964587249
+✓ Submission created: 1964587532
+✓ Submission created: 1964587812
+✓ Submission created: 1964588099
+✓ Submission created: 1964588389
+✓ Submission created: 1964588694
+✓ Submission created: 1964588932
+✓ Submission created: 1964589207
+✓ Submission created: 1964589469
+✓ Submission created: 1964589740
+✓ Submission created: 1964590008
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+CRITICAL: Rate limit hit! Pausing all submissions for 60 seconds.
+Submission error: Rate limited (429)
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+RATE LIMIT EXHAUSTED for model: gpt-4.1-mini
+Progress saved. Switch LeetCode account and re-run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+✗ Error: LeetCode rate limit exhausted: 10 consecutive submission failures (no submission_id). Switch LeetCode account and re-run.
+Progress:  51%|█████     | 51/100 [3:05:00<2:57:44, 217.65s/it]
