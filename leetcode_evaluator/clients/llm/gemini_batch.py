@@ -59,6 +59,28 @@ class GeminiBatchClient(LLMClient):
             return model
         return f"publishers/google/models/{model}"
 
+    def _thinking_config(self, thinking_tokens=None) -> dict:
+        """Return the appropriate thinkingConfig dict for this model, or {} if unsupported.
+
+        If thinking_tokens is set (int > 0), reasoning mode is enabled:
+          Gemini 3.x  → thinkingLevel: HIGH
+          Gemini 2.5  → thinkingBudget: <thinking_tokens>
+
+        If thinking_tokens is None/0 (default), thinking is minimized/disabled:
+          Gemini 3.x  → thinkingLevel: LOW
+          Gemini 2.5  → thinkingBudget: 0
+          Gemini 2.0 and earlier → no thinkingConfig
+        """
+        m = self.model_id.lower()
+        enabled = thinking_tokens and int(thinking_tokens) > 0
+        if m.startswith("gemini-3"):
+            level = "HIGH" if enabled else "LOW"
+            return {"thinkingConfig": {"thinkingLevel": level}}
+        if m.startswith("gemini-2.5"):
+            budget = int(thinking_tokens) if enabled else 0
+            return {"thinkingConfig": {"thinkingBudget": budget}}
+        return {}
+
     def build_custom_id(self, problem: Dict[str, Any], prompt_type: str, trial_index: int) -> str:
         frontend_id = (
             problem.get("frontend_question_id")
@@ -100,9 +122,13 @@ class GeminiBatchClient(LLMClient):
             },
             "generationConfig": {
                 "temperature": generation_params.get("temperature", Config.MODEL_TEMPERATURE),
-                # Batch API does not support thinkingConfig — thinking tokens
-                # count against maxOutputTokens. Use 16384 to prevent truncation.
-                "maxOutputTokens": max(generation_params.get("max_tokens", Config.MODEL_MAX_TOKENS), 16384),
+                # maxOutputTokens covers both thinking tokens and output tokens.
+                # When thinking is enabled, reserve extra budget for thinking so
+                # the actual code output isn't truncated.
+                "maxOutputTokens": max(
+                    generation_params.get("max_tokens", Config.MODEL_MAX_TOKENS),
+                    16384,
+                ) + (int(generation_params.get("thinking_tokens") or 0)),
                 "topP": generation_params.get("top_p", Config.MODEL_TOP_P),
                 "responseMimeType": "application/json",
                 "responseSchema": {
@@ -115,12 +141,11 @@ class GeminiBatchClient(LLMClient):
                     },
                     "required": ["code"]
                 },
-                # Use LOW thinking to minimize thinking token usage.
-                # For Gemini 3.x, thinkingLevel (not thinkingBudget) correctly
-                # separates thinking tokens from maxOutputTokens.
-                "thinkingConfig": {
-                    "thinkingLevel": "LOW"
-                },
+                # thinkingConfig differs by model generation:
+                #   Gemini 3.x uses thinkingLevel (LOW/MEDIUM/HIGH)
+                #   Gemini 2.5 uses thinkingBudget (int; 0 = disabled)
+                # Non-3.x models that don't support thinking at all omit the field.
+                **self._thinking_config(generation_params.get("thinking_tokens")),
             },
         }
 

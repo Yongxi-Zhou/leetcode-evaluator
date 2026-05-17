@@ -56,6 +56,10 @@ class OpenAIBatchClient(LLMClient):
         use_detailed_prompt = prompt_type == 'detailed'
         prompt = self._prepare_prompt(problem, use_detailed_prompt)
         custom_id = self.build_custom_id(problem, prompt_type, trial_index)
+        # o-series reasoning models (o1, o3, o4-mini, etc.) do not support
+        # temperature / top_p and require max_completion_tokens instead of max_tokens.
+        is_o_series = re.match(r'^o\d', self.model_id) is not None
+        max_tok = generation_params.get('max_tokens', Config.MODEL_MAX_TOKENS)
         body = {
             "model": self.model_id,
             "messages": [
@@ -68,10 +72,13 @@ class OpenAIBatchClient(LLMClient):
                     "content": prompt,
                 },
             ],
-            "temperature": generation_params.get('temperature', Config.MODEL_TEMPERATURE),
-            "max_tokens": generation_params.get('max_tokens', Config.MODEL_MAX_TOKENS),
-            "top_p": generation_params.get('top_p', Config.MODEL_TOP_P),
         }
+        if is_o_series:
+            body["max_completion_tokens"] = max_tok
+        else:
+            body["temperature"] = generation_params.get('temperature', Config.MODEL_TEMPERATURE)
+            body["max_tokens"] = max_tok
+            body["top_p"] = generation_params.get('top_p', Config.MODEL_TOP_P)
         request_entry = {
             "custom_id": custom_id,
             "method": "POST",

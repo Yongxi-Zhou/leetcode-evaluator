@@ -45,6 +45,7 @@ class GeminiBatchRunner:
             "temperature": self.config.get("temperature", Config.MODEL_TEMPERATURE),
             "top_p": self.config.get("top_p", Config.MODEL_TOP_P),
             "max_tokens": self.config.get("max_tokens", Config.MODEL_MAX_TOKENS),
+            "thinking_tokens": self.config.get("thinking_tokens"),  # None = disabled
         }
 
     def _load_config(self, path: str) -> Dict[str, Any]:
