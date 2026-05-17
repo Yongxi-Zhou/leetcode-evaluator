@@ -1,0 +1,558 @@
+2026-04-06 17:07:03,923 - INFO - Experiment started: 20260406_170703_o4-mini
+2026-04-06 17:07:03,924 - INFO - Provider: openai, Model: o4-mini
+2026-04-06 17:07:03,924 - INFO - Experiment Name: o4-mini
+2026-04-06 17:07:04,160 - INFO - Initialized evaluator with openai
+Running OpenAI batch generation from: experiments/paper_openai_batch_o4mini.json
+Mode: resume
+Run id: openai_batch_paper_openai_batch_o4mini_f080e2d0ab
+Batch root: output/batch_jobs/openai_batch_paper_openai_batch_o4mini_f080e2d0ab
+
+------------------------------------------------------------
+OPENAI BATCH MODEL: o4-mini
+------------------------------------------------------------
+Reusing normalized batch output: model=o4-mini, prompt=detailed
+Reusing normalized batch output: model=o4-mini, prompt=minimal
+Resuming from results file: output/openai_batch_paper_openai_batch_o4mini_f080e2d0ab/results/evaluations/evaluation_results_20260406_084531.json
+✓ Session cookies configured: ['gr_user_id', '__stripe_mid', '87b5a3c3f1a55520_gr_last_sent_cs1', 'cf_clearance', 'LEETCODE_SESSION', 'INGRESSCOOKIE', 'ip_check', '87b5a3c3f1a55520_gr_session_id', '87b5a3c3f1a55520_gr_last_sent_sid_with_cs1', '87b5a3c3f1a55520_gr_cs1', '_gid', '_gat', '_ga', '87b5a3c3f1a55520_gr_session_id_sent_vst', 'FCCDCF', '__gads', '__gpi', '__eoi', 'FCNEC', '_ga_CDRWKZTDEX', 'csrftoken']
+============================================================
+LeetCode AI Solution Evaluator
+============================================================
+✓ Successfully authenticated as taylorjones0286
+✓ Using openai provider with model: o4-mini
+
+
+🚀 Starting generated-result submission batch:
+  - Total Problems: 100
+  - Already complete (resuming): 50, remaining: 50
+  - Submission Delay: 15s
+  - Total Generated Attempts: 500
+Progress:   0%|          | 0/50 [00:00<?, ?it/s]Progress:   2%|▏         | 1/50 [03:15<2:39:59, 195.92s/it]Progress:   4%|▍         | 2/50 [06:31<2:36:27, 195.56s/it]Progress:   6%|▌         | 3/50 [09:27<2:26:07, 186.54s/it]Progress:   8%|▊         | 4/50 [12:43<2:26:06, 190.58s/it]Progress:  10%|█         | 5/50 [15:58<2:24:07, 192.17s/it]Progress:  12%|█▏        | 6/50 [19:12<2:21:24, 192.84s/it]Progress:  14%|█▍        | 7/50 [22:28<2:18:47, 193.67s/it]Progress:  16%|█▌        | 8/50 [24:30<1:59:40, 170.96s/it]Progress:  18%|█▊        | 9/50 [28:08<2:06:46, 185.52s/it]Progress:  20%|██        | 10/50 [31:21<2:05:15, 187.88s/it]Progress:  22%|██▏       | 11/50 [34:35<2:03:16, 189.65s/it]Progress:  24%|██▍       | 12/50 [37:32<1:57:42, 185.84s/it]Progress:  26%|██▌       | 13/50 [41:42<2:06:37, 205.35s/it]Progress:  28%|██▊       | 14/50 [44:49<1:59:54, 199.84s/it]Progress:  30%|███       | 15/50 [47:46<1:52:30, 192.86s/it]Progress:  32%|███▏      | 16/50 [50:44<1:46:50, 188.54s/it]Progress:  34%|███▍      | 17/50 [54:17<1:47:45, 195.92s/it]Progress:  36%|███▌      | 18/50 [57:33<1:44:25, 195.80s/it]Progress:  38%|███▊      | 19/50 [1:00:48<1:41:05, 195.67s/it]Progress:  40%|████      | 20/50 [1:03:45<1:34:57, 189.93s/it]Progress:  42%|████▏     | 21/50 [1:04:55<1:14:24, 153.96s/it]Progress:  44%|████▍     | 22/50 [1:08:25<1:19:40, 170.74s/it]Progress:  46%|████▌     | 23/50 [1:11:36<1:19:36, 176.89s/it]Progress:  48%|████▊     | 24/50 [1:14:34<1:16:50, 177.32s/it]Progress:  50%|█████     | 25/50 [1:17:48<1:15:57, 182.32s/it]Progress:  52%|█████▏    | 26/50 [1:21:04<1:14:32, 186.34s/it]Progress:  54%|█████▍    | 27/50 [1:24:17<1:12:11, 188.32s/it]Progress:  56%|█████▌    | 28/50 [1:27:30<1:09:32, 189.68s/it]Progress:  58%|█████▊    | 29/50 [1:30:26<1:04:57, 185.61s/it]Progress:  60%|██████    | 30/50 [1:33:21<1:00:49, 182.49s/it]Progress:  62%|██████▏   | 31/50 [1:36:18<57:16, 180.89s/it]  Progress:  64%|██████▍   | 32/50 [1:39:33<55:32, 185.15s/it]Progress:  66%|██████▌   | 33/50 [1:42:47<53:13, 187.83s/it]Progress:  68%|██████▊   | 34/50 [1:45:59<50:23, 188.99s/it]Progress:  70%|███████   | 35/50 [1:49:14<47:41, 190.73s/it]Progress:  72%|███████▏  | 36/50 [1:52:29<44:50, 192.17s/it]Progress:  74%|███████▍  | 37/50 [1:55:29<40:47, 188.26s/it]Progress:  76%|███████▌  | 38/50 [1:58:43<38:02, 190.19s/it]Progress:  78%|███████▊  | 39/50 [2:02:09<35:41, 194.72s/it]Progress:  80%|████████  | 40/50 [2:06:00<34:16, 205.70s/it]Progress:  82%|████████▏ | 41/50 [2:08:59<29:40, 197.82s/it]Progress:  84%|████████▍ | 42/50 [2:12:29<26:50, 201.27s/it]Progress:  86%|████████▌ | 43/50 [2:15:38<23:04, 197.75s/it]Progress:  88%|████████▊ | 44/50 [2:18:46<19:28, 194.77s/it]Progress:  90%|█████████ | 45/50 [2:21:44<15:49, 189.87s/it]Progress:  92%|█████████▏| 46/50 [2:23:29<10:57, 164.36s/it]Progress:  94%|█████████▍| 47/50 [2:27:13<09:06, 182.25s/it]Progress:  96%|█████████▌| 48/50 [2:30:28<06:11, 185.91s/it]Progress:  98%|█████████▊| 49/50 [2:33:26<03:03, 183.64s/it]Progress: 100%|██████████| 50/50 [2:36:36<00:00, 185.50s/it]Progress: 100%|██████████| 50/50 [2:36:36<00:00, 187.93s/it]
+2026-04-06 19:43:40,815 - INFO - Summary saved to output/openai_batch_paper_openai_batch_o4mini_f080e2d0ab/experiments/20260406_170703_o4-mini/summary.csv
+2026-04-06 19:43:40,914 - INFO - Stability summary saved to output/openai_batch_paper_openai_batch_o4mini_f080e2d0ab/experiments/20260406_170703_o4-mini/stability_summary.json
+✓ Submission created: 1971049039
+✓ Submission created: 1971049140
+✓ Submission created: 1971049240
+✓ Submission created: 1971049334
+✓ Submission created: 1971049451
+✓ Submission created: 1971049543
+✓ Submission created: 1971049635
+✓ Submission created: 1971049746
+✓ Submission created: 1971049850
+✓ Submission created: 1971049946
+✓ Submission created: 1971050052
+✓ Submission created: 1971050156
+✓ Submission created: 1971050251
+✓ Submission created: 1971050350
+✓ Submission created: 1971050448
+✓ Submission created: 1971050550
+✓ Submission created: 1971050643
+✓ Submission created: 1971050738
+✓ Submission created: 1971050827
+✓ Submission created: 1971050923
+✓ Submission created: 1971051026
+✓ Submission created: 1971051104
+✓ Submission created: 1971051189
+✓ Submission created: 1971051282
+✓ Submission created: 1971051370
+✓ Submission created: 1971051464
+✓ Submission created: 1971051561
+✓ Submission created: 1971051664
+✓ Submission created: 1971051750
+✓ Submission created: 1971051841
+✓ Submission created: 1971051927
+✓ Submission created: 1971052027
+✓ Submission created: 1971052123
+✓ Submission created: 1971052209
+✓ Submission created: 1971052316
+✓ Submission created: 1971052419
+✓ Submission created: 1971052534
+✓ Submission created: 1971052622
+✓ Submission created: 1971052736
+✓ Submission created: 1971052843
+✓ Submission created: 1971052938
+✓ Submission created: 1971053051
+✓ Submission created: 1971053154
+✓ Submission created: 1971053259
+✓ Submission created: 1971053366
+✓ Submission created: 1971053458
+✓ Submission created: 1971053551
+✓ Submission created: 1971053658
+✓ Submission created: 1971053771
+✓ Submission created: 1971053872
+✓ Submission created: 1971053989
+✓ Submission created: 1971054112
+✓ Submission created: 1971054210
+✓ Submission created: 1971054307
+✓ Submission created: 1971054413
+✓ Submission created: 1971054517
+✓ Submission created: 1971054610
+✓ Submission created: 1971054706
+✓ Submission created: 1971054816
+✓ Submission created: 1971054933
+✓ Submission created: 1971055048
+✓ Submission created: 1971055162
+✓ Submission created: 1971055271
+✓ Submission created: 1971055394
+✓ Submission created: 1971055488
+✓ Submission created: 1971055608
+✓ Submission created: 1971055716
+✓ Submission created: 1971055834
+✓ Submission created: 1971055930
+✓ Submission created: 1971056026
+✓ Submission created: 1971056131
+✓ Submission created: 1971056236
+✓ Submission created: 1971056327
+✓ Submission created: 1971056397
+✓ Submission created: 1971056490
+✓ Submission created: 1971056574
+✓ Submission created: 1971056669
+✓ Submission created: 1971056765
+✓ Submission created: 1971056846
+✓ Submission created: 1971056951
+✓ Submission created: 1971057052
+✓ Submission created: 1971057138
+✓ Submission created: 1971057230
+✓ Submission created: 1971057327
+✓ Submission created: 1971057426
+✓ Submission created: 1971057608
+✓ Submission created: 1971057723
+✓ Submission created: 1971057920
+✓ Submission created: 1971058028
+✓ Submission created: 1971058152
+✓ Submission created: 1971058266
+✓ Submission created: 1971058350
+✓ Submission created: 1971058471
+✓ Submission created: 1971058583
+✓ Submission created: 1971058697
+✓ Submission created: 1971058817
+✓ Submission created: 1971058936
+✓ Submission created: 1971059041
+✓ Submission created: 1971059142
+✓ Submission created: 1971059244
+✓ Submission created: 1971059340
+✓ Submission created: 1971059440
+✓ Submission created: 1971059562
+✓ Submission created: 1971059671
+✓ Submission created: 1971059789
+✓ Submission created: 1971059899
+✓ Submission created: 1971059992
+✓ Submission created: 1971060096
+✓ Submission created: 1971060189
+✓ Submission created: 1971060290
+✓ Submission created: 1971060391
+✓ Submission created: 1971060499
+✓ Submission created: 1971060610
+✓ Submission created: 1971060706
+✓ Submission created: 1971060811
+✓ Submission created: 1971060914
+✓ Submission created: 1971061002
+✓ Submission created: 1971061102
+✓ Submission created: 1971061247
+✓ Submission created: 1971061364
+✓ Submission created: 1971061491
+✓ Submission created: 1971061661
+✓ Submission created: 1971061821
+✓ Submission created: 1971061978
+✓ Submission created: 1971062134
+✓ Submission created: 1971062259
+✓ Submission created: 1971062429
+✓ Submission created: 1971062570
+✓ Submission created: 1971062658
+✓ Submission created: 1971062767
+✓ Submission created: 1971062877
+✓ Submission created: 1971062994
+✓ Submission created: 1971063093
+✓ Submission created: 1971063200
+✓ Submission created: 1971063326
+✓ Submission created: 1971063417
+✓ Submission created: 1971063522
+✓ Submission created: 1971063639
+✓ Submission created: 1971063750
+✓ Submission created: 1971063855
+✓ Submission created: 1971063954
+✓ Submission created: 1971064053
+✓ Submission created: 1971064165
+✓ Submission created: 1971064283
+✓ Submission created: 1971064387
+✓ Submission created: 1971064512
+✓ Submission created: 1971064618
+✓ Submission created: 1971064735
+✓ Submission created: 1971064839
+✓ Submission created: 1971064947
+✓ Submission created: 1971065061
+✓ Submission created: 1971065172
+✓ Submission created: 1971065287
+✓ Submission created: 1971065388
+✓ Submission created: 1971065493
+✓ Submission created: 1971065588
+✓ Submission created: 1971065677
+✓ Submission created: 1971065788
+✓ Submission created: 1971065929
+✓ Submission created: 1971066036
+✓ Submission created: 1971066168
+✓ Submission created: 1971066294
+✓ Submission created: 1971066440
+✓ Submission created: 1971066578
+✓ Submission created: 1971066713
+✓ Submission created: 1971066837
+✓ Submission created: 1971066961
+✓ Submission created: 1971067080
+✓ Submission created: 1971067208
+✓ Submission created: 1971067348
+✓ Submission created: 1971067459
+✓ Submission created: 1971067564
+✓ Submission created: 1971067688
+✓ Submission created: 1971067815
+✓ Submission created: 1971067921
+✓ Submission created: 1971068050
+✓ Submission created: 1971068179
+✓ Submission created: 1971068302
+✓ Submission created: 1971068418
+✓ Submission created: 1971068530
+✓ Submission created: 1971068645
+✓ Submission created: 1971068754
+✓ Submission created: 1971068871
+✓ Submission created: 1971068998
+✓ Submission created: 1971069105
+✓ Submission created: 1971069230
+✓ Submission created: 1971069343
+✓ Submission created: 1971069453
+✓ Submission created: 1971069575
+✓ Submission created: 1971069682
+✓ Submission created: 1971069807
+✓ Submission created: 1971069912
+✓ Submission created: 1971070006
+✓ Submission created: 1971070096
+✓ Submission created: 1971070208
+✓ Submission created: 1971070300
+✓ Submission created: 1971070424
+✓ Submission created: 1971070512
+✓ Submission created: 1971070626
+✓ Submission created: 1971070722
+✓ Submission created: 1971070844
+✓ Submission created: 1971070962
+✓ Submission created: 1971071100
+✓ Submission created: 1971071238
+✓ Submission created: 1971071364
+✓ Submission created: 1971071502
+✓ Submission created: 1971071605
+✓ Submission created: 1971071743
+✓ Submission created: 1971071874
+✓ Submission created: 1971071998
+✓ Submission created: 1971072146
+✓ Submission created: 1971072282
+✓ Submission created: 1971072405
+✓ Submission created: 1971072527
+✓ Submission created: 1971072649
+✓ Submission created: 1971072784
+✓ Submission created: 1971072894
+✓ Submission created: 1971073002
+✓ Submission created: 1971073122
+✓ Submission created: 1971073240
+✓ Submission created: 1971073381
+✓ Submission created: 1971073476
+✓ Submission created: 1971073585
+✓ Submission created: 1971073705
+✓ Submission created: 1971073819
+✓ Submission created: 1971073931
+✓ Submission created: 1971074057
+✓ Submission created: 1971074205
+✓ Submission created: 1971074326
+✓ Submission created: 1971074443
+✓ Submission created: 1971074562
+✓ Submission created: 1971074670
+✓ Submission created: 1971074804
+✓ Submission created: 1971074947
+✓ Submission created: 1971075077
+✓ Submission created: 1971075171
+✓ Submission created: 1971075326
+✓ Submission created: 1971075486
+✓ Submission created: 1971075630
+✓ Submission created: 1971075773
+✓ Submission created: 1971075914
+✓ Submission created: 1971076043
+✓ Submission created: 1971076179
+✓ Submission created: 1971076310
+✓ Submission created: 1971076435
+✓ Submission created: 1971076578
+✓ Submission created: 1971076722
+✓ Submission created: 1971076868
+✓ Submission created: 1971077016
+✓ Submission created: 1971077155
+✓ Submission created: 1971077274
+✓ Submission created: 1971077415
+✓ Submission created: 1971077524
+✓ Submission created: 1971077641
+✓ Submission created: 1971077772
+✓ Submission created: 1971077900
+✓ Submission created: 1971078034
+✓ Submission created: 1971078142
+✓ Submission created: 1971078265
+✓ Submission created: 1971078414
+✓ Submission created: 1971078547
+✓ Submission created: 1971078691
+✓ Submission created: 1971078826
+✓ Submission created: 1971078948
+✓ Submission created: 1971079079
+✓ Submission created: 1971079184
+✓ Submission created: 1971079320
+✓ Submission created: 1971079444
+✓ Submission created: 1971079561
+✓ Submission created: 1971079681
+✓ Submission created: 1971079807
+✓ Submission created: 1971079922
+✓ Submission created: 1971080017
+✓ Submission created: 1971080140
+✓ Submission created: 1971080287
+✓ Submission created: 1971080395
+✓ Submission created: 1971080495
+✓ Submission created: 1971080615
+✓ Submission created: 1971080747
+✓ Submission created: 1971080852
+✓ Submission created: 1971080966
+✓ Submission created: 1971081072
+✓ Submission created: 1971081206
+✓ Submission created: 1971081323
+✓ Submission created: 1971081442
+✓ Submission created: 1971081563
+✓ Submission created: 1971081693
+✓ Submission created: 1971081816
+✓ Submission created: 1971081919
+✓ Submission created: 1971082032
+✓ Submission created: 1971082169
+✓ Submission created: 1971082300
+✓ Submission created: 1971082453
+✓ Submission created: 1971082576
+✓ Submission created: 1971082700
+✓ Submission created: 1971082854
+✓ Submission created: 1971082992
+✓ Submission created: 1971083127
+✓ Submission created: 1971083283
+✓ Submission created: 1971083407
+✓ Submission created: 1971083548
+✓ Submission created: 1971083685
+✓ Submission created: 1971083821
+✓ Submission created: 1971083963
+✓ Submission created: 1971084106
+✓ Submission created: 1971084248
+✓ Submission created: 1971084384
+✓ Submission created: 1971084519
+✓ Submission created: 1971084647
+✓ Submission created: 1971084792
+✓ Submission created: 1971084931
+✓ Submission created: 1971085065
+✓ Submission created: 1971085203
+✓ Submission created: 1971085329
+✓ Submission created: 1971085461
+✓ Submission created: 1971085594
+✓ Submission created: 1971085716
+✓ Submission created: 1971085861
+✓ Submission created: 1971085993
+✓ Submission created: 1971086110
+✓ Submission created: 1971086251
+✓ Submission created: 1971086407
+✓ Submission created: 1971086563
+✓ Submission created: 1971086684
+✓ Submission created: 1971086833
+✓ Submission created: 1971086948
+✓ Submission created: 1971087085
+✓ Submission created: 1971087218
+✓ Submission created: 1971087377
+✓ Submission created: 1971087498
+✓ Submission created: 1971087640
+✓ Submission created: 1971087783
+✓ Submission created: 1971087905
+✓ Submission created: 1971088032
+✓ Submission created: 1971088186
+✓ Submission created: 1971088323
+✓ Submission created: 1971088445
+✓ Submission created: 1971088579
+✓ Submission created: 1971088704
+✓ Submission created: 1971088833
+✓ Submission created: 1971088985
+✓ Submission created: 1971089136
+✓ Submission created: 1971089273
+✓ Submission created: 1971089419
+✓ Submission created: 1971089544
+✓ Submission created: 1971089679
+✓ Submission created: 1971089866
+✓ Submission created: 1971090016
+✓ Submission created: 1971090158
+✓ Submission created: 1971090304
+✓ Submission created: 1971090456
+✓ Submission created: 1971090569
+✓ Submission created: 1971090701
+✓ Submission created: 1971090817
+✓ Submission created: 1971090939
+✓ Submission created: 1971091075
+✓ Submission created: 1971091185
+✓ Submission created: 1971091303
+✓ Submission created: 1971091453
+✓ Submission created: 1971091577
+✓ Submission created: 1971091700
+✓ Submission created: 1971091838
+✓ Submission created: 1971092002
+✓ Submission created: 1971092156
+✓ Submission created: 1971092310
+✓ Submission created: 1971092451
+✓ Submission created: 1971092599
+✓ Submission created: 1971092751
+✓ Submission created: 1971092872
+✓ Submission created: 1971093030
+✓ Submission created: 1971093158
+✓ Submission created: 1971093269
+✓ Submission created: 1971093405
+✓ Submission created: 1971093549
+✓ Submission created: 1971093681
+✓ Submission created: 1971093833
+✓ Submission created: 1971093981
+✓ Submission created: 1971094141
+✓ Submission created: 1971094316
+✓ Submission created: 1971094449
+✓ Submission created: 1971094611
+✓ Submission created: 1971094789
+✓ Submission created: 1971094965
+✓ Submission created: 1971095130
+✓ Submission created: 1971095295
+✓ Submission created: 1971095481
+✓ Submission created: 1971095637
+✓ Submission created: 1971095785
+✓ Submission created: 1971095957
+✓ Submission created: 1971096149
+✓ Submission created: 1971096331
+✓ Submission created: 1971096439
+✓ Submission created: 1971096579
+✓ Submission created: 1971096723
+✓ Submission created: 1971096861
+✓ Submission created: 1971097030
+✓ Submission created: 1971097160
+✓ Submission created: 1971097314
+✓ Submission created: 1971097435
+✓ Submission created: 1971097574
+✓ Submission created: 1971097740
+✓ Submission created: 1971097894
+✓ Submission created: 1971098058
+✓ Submission created: 1971098233
+✓ Submission created: 1971098378
+✓ Submission created: 1971098524
+✓ Submission created: 1971098674
+✓ Submission created: 1971098797
+✓ Submission created: 1971098950
+✓ Submission created: 1971099147
+✓ Submission created: 1971099323
+✓ Submission created: 1971099476
+✓ Submission created: 1971099610
+✓ Submission created: 1971099746
+✓ Submission created: 1971099904
+✓ Submission created: 1971100043
+✓ Submission created: 1971100199
+✓ Submission created: 1971100358
+✓ Submission created: 1971100518
+✓ Submission created: 1971100657
+✓ Submission created: 1971100804
+✓ Submission created: 1971100932
+✓ Submission created: 1971101102
+✓ Submission created: 1971101237
+✓ Submission created: 1971101405
+✓ Submission created: 1971101547
+✓ Submission created: 1971101715
+✓ Submission created: 1971101858
+✓ Submission created: 1971102000
+✓ Submission created: 1971102126
+✓ Submission created: 1971102293
+✓ Submission created: 1971102429
+✓ Submission created: 1971102569
+✓ Submission created: 1971102701
+✓ Submission created: 1971102831
+✓ Submission created: 1971102964
+✓ Submission created: 1971103110
+✓ Submission created: 1971103239
+✓ Submission created: 1971103362
+✓ Submission created: 1971103489
+✓ Submission created: 1971103611
+✓ Submission created: 1971103730
+✓ Submission created: 1971103867
+✓ Submission created: 1971104008
+✓ Submission created: 1971104147
+✓ Submission created: 1971104266
+✓ Submission created: 1971104406
+✓ Submission created: 1971104600
+✓ Submission created: 1971104737
+✓ Submission created: 1971104929
+✓ Submission created: 1971105088
+✓ Submission created: 1971105259
+✓ Submission created: 1971105430
+✓ Submission created: 1971105607
+✓ Submission created: 1971105797
+✓ Submission created: 1971105985
+✓ Submission created: 1971106181
+✓ Submission created: 1971106347
+✓ Submission created: 1971106535
+✓ Submission created: 1971106689
+✓ Submission created: 1971106851
+✓ Submission created: 1971107027
+✓ Submission created: 1971107189
+✓ Submission created: 1971107366
+✓ Submission created: 1971107524
+✓ Submission created: 1971107681
+✓ Submission created: 1971107820
+✓ Submission created: 1971107938
+✓ Submission created: 1971108086
+✓ Submission created: 1971108249
+✓ Submission created: 1971108387
+✓ Submission created: 1971108534
+✓ Submission created: 1971108698
+✓ Submission created: 1971108838
+✓ Submission created: 1971108973
+✓ Submission created: 1971109130
+✓ Submission created: 1971109276
+✓ Submission created: 1971109443
+✓ Submission created: 1971109604
+✓ Submission created: 1971109777
+✓ Submission created: 1971109947
+✓ Submission created: 1971110081
+✓ Submission created: 1971110218
+✓ Submission created: 1971110354
+✓ Submission created: 1971110505
+✓ Submission created: 1971110655
+
+========================================
+STABILITY EVALUATION SUMMARY
+========================================
+Total Problems:          200
+Total Runs:              1000
+Run-Level Pass Rate:     85.9%
+95% CI (RLPR):           [83.61%, 87.92%]
+Perfect Stability Rate:  72.0%
+95% CI (PSR):            [65.41%, 77.76%]
+First-Pass Accuracy:     84.5%
+95% CI (FPA):            [78.84%, 88.86%]
+Pass@1:                  84.50%
+Pass@3:                  93.50%
+Pass@5:                  94.50%
+Average Variance:        0.0428
+95% CI (AV):             [0.0316, 0.0548]
+p50 Latency:             0.0 ms
+p90 Latency:             0.0 ms
+========================================
+
+
+============================================================
+✓ Evaluation complete!
+✓ Results saved to: output/openai_batch_paper_openai_batch_o4mini_f080e2d0ab/results/evaluations/evaluation_results_20260406_084531.json
+============================================================
+✓ Raw data archived to output/openai_batch_paper_openai_batch_o4mini_f080e2d0ab/results/raw/20260406_170703_o4-mini.jsonl
+✓ Raw data archived to output/aggregate/raw/20260406_170703_o4-mini.jsonl
+✓ Visualizations saved to output/openai_batch_paper_openai_batch_o4mini_f080e2d0ab/reports/20260406_170703_o4-mini
+✓ Report generated: output/openai_batch_paper_openai_batch_o4mini_f080e2d0ab/reports/20260406_170703_o4-mini/analysis_report.md
+✓ Raw data archived to output/openai_batch_paper_openai_batch_o4mini_f080e2d0ab/results/raw/20260406_170703_o4-mini.jsonl
+✓ Raw data archived to output/aggregate/raw/20260406_170703_o4-mini.jsonl
+✓ Model fully complete: 100/100 problems
+
+============================================================
+OpenAI batch resume completed!
+============================================================
+Model: o4-mini
+Results: output/openai_batch_paper_openai_batch_o4mini_f080e2d0ab/results/evaluations/evaluation_results_20260406_084531.json
+Report: output/openai_batch_paper_openai_batch_o4mini_f080e2d0ab/reports/20260406_170703_o4-mini/analysis_report.md
+------------------------------------------------------------
