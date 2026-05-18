@@ -1,7 +1,7 @@
 % EMNLP/ARR paper source with switchable modes.
 % Set \anonymoussubmissiontrue for ARR anonymous submission.
 % Set \preprintversiontrue for arXiv/preprint builds.
-\documentclass[11pt]{article}
+\documentclass[11pt,a4paper]{article}
 \newif\ifanonymoussubmission
 \newif\ifpreprintversion
 \anonymoussubmissiontrue
@@ -255,7 +255,7 @@ Knowing the theoretical direction does not eliminate the need to measure the mag
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.92\linewidth]{output/aggregate/figures/paper_figure1_accuracy_vs_stability.png}
+\includegraphics[width=0.92\linewidth]{../output/aggregate/figures/paper_figure1_accuracy_vs_stability.png}
 \caption{RLPR vs.\ PSR scatter plot across all 32 configurations (16 models $\times$ 2 prompt types). Points are colored by model family and shaped by prompt type. The diagonal marks $\mathrm{PSR}=\mathrm{RLPR}$; points below indicate configurations where mean success overstates stable problem coverage.}
 \label{fig:acc-stability-scatter}
 \end{figure}
@@ -266,7 +266,7 @@ Figure~\ref{fig:stability-heatmap} presents a cross-model stability overview. Ea
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.96\linewidth]{output/aggregate/figures/paper_figure2_stability_heatmap.png}
+\includegraphics[width=0.96\linewidth]{../output/aggregate/figures/paper_figure2_stability_heatmap.png}
 \caption{Cross-model stability heatmap (\textsc{Detailed} prompt). Rows: 16 models sorted by RLPR descending. Columns: 100 problems grouped by difficulty tier with dashed separators, and ordered within each tier by decreasing mean pass rate. Cell color encodes empirical pass rate over $R=5$ runs (green $=1.0$, red $=0.0$, yellow $\approx 0.5$).}
 \label{fig:stability-heatmap}
 \end{figure*}
@@ -277,7 +277,7 @@ This view is useful because it exposes qualitatively different reliability profi
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.92\linewidth]{output/aggregate/figures/paper_figure3_success_distribution.png}
+\includegraphics[width=0.92\linewidth]{../output/aggregate/figures/paper_figure3_success_distribution.png}
 \caption{Problem-level success distribution (\textsc{Detailed} prompt). The figure contains one panel per model (16 panels total), arranged in decreasing order of PSR. Each panel shows the fraction of that model's 100 problems falling in each empirical pass-probability bin $\hat{p}_i \in \{0/5, 1/5, \ldots, 5/5\}$, where $0/5$ means the model failed all 5 runs and $5/5$ means it passed all 5.}
 \label{fig:success-distribution}
 \end{figure}
@@ -301,7 +301,7 @@ Figure~\ref{fig:reasoning-scatter} shows the result. Reasoning models show stron
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.90\linewidth]{output/aggregate/figures/paper_figure5_reasoning_vs_standard.png}
+\includegraphics[width=0.90\linewidth]{../output/aggregate/figures/paper_figure5_reasoning_vs_standard.png}
 \caption{Accuracy--stability gap ($\Delta$) vs.\ RLPR for all 32 configurations. Reasoning models (diamonds) and standard models (circles) are shown against an OLS fit. Points below the line have smaller gaps than expected at their accuracy level.}
 \label{fig:reasoning-scatter}
 \end{figure}
@@ -316,7 +316,7 @@ Figure~\ref{fig:prompt-comparison} visualizes the prompt effect as a paired scat
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.8\linewidth]{output/aggregate/figures/paper_figure4_prompt_comparison.png}
+\includegraphics[width=0.8\linewidth]{../output/aggregate/figures/paper_figure4_prompt_comparison.png}
 \caption{Prompt sensitivity: paired scatter of PSR under \textsc{Detailed} vs.\ \textsc{Minimal} prompting for all 16 models. Points above the diagonal indicate that detailed prompting improves stability. Points are colored by model family.}
 \label{fig:prompt-comparison}
 \end{figure}
@@ -355,10 +355,6 @@ Finally, our conclusions are limited to Python code generation on deterministic 
 This paper evaluates commercial and open-access LLM APIs on deterministic programming tasks. The study does not involve human subjects, personal data collection, or annotation labor. The main ethical considerations are instead tied to platform use and deployment interpretation. First, the evaluation relies on automated submission to an external online judge. Such use should be understood as research benchmarking under the platform's operational constraints, and any public release should avoid exposing credentials, session artifacts, or procedures that would enable abusive automation. Second, the evaluated models are accessed through third-party APIs whose outputs and availability may be governed by provider-specific terms of service and may change over time. Our reported results should therefore be interpreted as measurements of accessed systems under a documented evaluation protocol, not as immutable properties of any provider's model family.
 
 More broadly, stronger performance on coding benchmarks can increase both beneficial and harmful capabilities. Better repeated-run reliability can support legitimate software engineering workflows, but it may also lower the barrier to generating code in settings where security review is weak. For this reason, we frame our contribution as an evaluation methodology rather than as an endorsement of fully autonomous code deployment.
-
-\section*{Acknowledgments}
-
-We thank Claude (Anthropic) for assistance in polishing the writing of this paper.
 
 \bibliography{references}
 
