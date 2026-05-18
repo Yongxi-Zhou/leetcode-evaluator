@@ -255,7 +255,7 @@ Knowing the theoretical direction does not eliminate the need to measure the mag
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.92\linewidth]{../output/aggregate/figures/paper_figure1_accuracy_vs_stability.png}
+\includegraphics[width=0.92\linewidth]{figures/paper_figure1_accuracy_vs_stability.png}
 \caption{RLPR vs.\ PSR scatter plot across all 32 configurations (16 models $\times$ 2 prompt types). Points are colored by model family and shaped by prompt type. The diagonal marks $\mathrm{PSR}=\mathrm{RLPR}$; points below indicate configurations where mean success overstates stable problem coverage.}
 \label{fig:acc-stability-scatter}
 \end{figure}
@@ -266,7 +266,7 @@ Figure~\ref{fig:stability-heatmap} presents a cross-model stability overview. Ea
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.96\linewidth]{../output/aggregate/figures/paper_figure2_stability_heatmap.png}
+\includegraphics[width=0.96\linewidth]{figures/paper_figure2_stability_heatmap.png}
 \caption{Cross-model stability heatmap (\textsc{Detailed} prompt). Rows: 16 models sorted by RLPR descending. Columns: 100 problems grouped by difficulty tier with dashed separators, and ordered within each tier by decreasing mean pass rate. Cell color encodes empirical pass rate over $R=5$ runs (green $=1.0$, red $=0.0$, yellow $\approx 0.5$).}
 \label{fig:stability-heatmap}
 \end{figure*}
@@ -277,7 +277,7 @@ This view is useful because it exposes qualitatively different reliability profi
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.92\linewidth]{../output/aggregate/figures/paper_figure3_success_distribution.png}
+\includegraphics[width=0.92\linewidth]{figures/paper_figure3_success_distribution.png}
 \caption{Problem-level success distribution (\textsc{Detailed} prompt). The figure contains one panel per model (16 panels total), arranged in decreasing order of PSR. Each panel shows the fraction of that model's 100 problems falling in each empirical pass-probability bin $\hat{p}_i \in \{0/5, 1/5, \ldots, 5/5\}$, where $0/5$ means the model failed all 5 runs and $5/5$ means it passed all 5.}
 \label{fig:success-distribution}
 \end{figure}
@@ -301,7 +301,7 @@ Figure~\ref{fig:reasoning-scatter} shows the result. Reasoning models show stron
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.90\linewidth]{../output/aggregate/figures/paper_figure5_reasoning_vs_standard.png}
+\includegraphics[width=0.90\linewidth]{figures/paper_figure5_reasoning_vs_standard.png}
 \caption{Accuracy--stability gap ($\Delta$) vs.\ RLPR for all 32 configurations. Reasoning models (diamonds) and standard models (circles) are shown against an OLS fit. Points below the line have smaller gaps than expected at their accuracy level.}
 \label{fig:reasoning-scatter}
 \end{figure}
@@ -316,7 +316,7 @@ Figure~\ref{fig:prompt-comparison} visualizes the prompt effect as a paired scat
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.8\linewidth]{../output/aggregate/figures/paper_figure4_prompt_comparison.png}
+\includegraphics[width=0.8\linewidth]{figures/paper_figure4_prompt_comparison.png}
 \caption{Prompt sensitivity: paired scatter of PSR under \textsc{Detailed} vs.\ \textsc{Minimal} prompting for all 16 models. Points above the diagonal indicate that detailed prompting improves stability. Points are colored by model family.}
 \label{fig:prompt-comparison}
 \end{figure}
@@ -483,5 +483,222 @@ DeepSeek-V3.2 & DeepSeek & deepseek-v3.2 & 2026-03-25 \\
 \end{tabular}
 }
 \end{table*}
+
+% -----------------------------------------------------------------------
+% ACL / ARR Responsible NLP Research Checklist
+% Required for ARR submissions (EMNLP 2025 / ACL 2025 cycle).
+% Items are answered for:
+%   "Accuracy, Stability, and Repeated-Run Reliability of Large Language
+%    Models on Deterministic Programming Tasks"
+% -----------------------------------------------------------------------
+\section*{Checklist}
+
+The checklist follows the guidelines from the ACL Responsible NLP Research
+framework. For each question, the answer should be \textbf{Yes}, \textbf{No},
+or \textbf{N/A}. The answer \textbf{Yes} means that the paper
+provides the relevant information. If the answer is \textbf{No}, an
+explanation must be given. If the answer is \textbf{N/A}, an explanation
+may be given.
+
+\begin{enumerate}
+
+%  ------------------------------------------------------------------
+\item \textbf{Did the paper include a section about limitations?}
+  \textbf{Yes.} The paper contains a dedicated ``Limitations'' section
+  (Section~5) that discusses benchmark size, contamination risk, API
+  non-determinism, metric compression, o4-mini's undocumented decoding
+  regime, prompt contrast limitations, and scope restrictions.
+
+%  ------------------------------------------------------------------
+\item \textbf{Did the paper include a section about ethical
+  considerations?}
+  \textbf{Yes.} The paper contains a dedicated ``Ethics Statement''
+  section addressing platform-use norms, API terms of service,
+  dual-use concerns around automated code generation, and the absence
+  of human subjects or personal data.
+
+%  ------------------------------------------------------------------
+\item \textbf{Did you describe the limitations of your work?}
+  \textbf{Yes.} Six distinct limitations are enumerated in the
+  Limitations section: benchmark scope ($N=100$, one language),
+  contamination risk, narrow experimental protocol, API opacity,
+  metric compression (binary pass/fail), and o4-mini's uncontrolled
+  decoding.
+
+%  ------------------------------------------------------------------
+\item \textbf{Did you discuss any potential negative societal impacts
+  of your work?}
+  \textbf{Yes.} The Ethics Statement acknowledges that improved
+  repeated-run reliability could lower barriers to generating code in
+  settings lacking adequate security review, and frames the contribution
+  as an evaluation methodology rather than an endorsement of autonomous
+  deployment.
+
+%  ------------------------------------------------------------------
+\item \textbf{Have you read the ethics review guidelines and ensured
+  that your paper conforms to them?}
+  \textbf{Yes.}
+
+\end{enumerate}
+
+\noindent\textbf{Artifacts}
+
+\begin{enumerate}
+\setcounter{enumi}{5}
+
+%  ------------------------------------------------------------------
+\item \textbf{Did you describe the study design, the creation of the
+  evaluation benchmark, and the data collection process?}
+  \textbf{Yes.} Section~3 (``Experimental Setup'') describes problem
+  selection by recency rank, difficulty distribution, grading criteria,
+  model families, decoding parameters, prompt templates, normalization,
+  and execution pipeline.
+
+%  ------------------------------------------------------------------
+\item \textbf{Did you use existing data or create new data?}
+  \textbf{Yes} (existing data). The evaluation benchmark consists of
+  the 100 most recently published LeetCode problems at collection time.
+  No new dataset was created; the problems and test cases are sourced
+  from the LeetCode platform.
+
+%  ------------------------------------------------------------------
+\item \textbf{Did you discuss whether and how consent was obtained
+  from people whose data you're using, if it applies?}
+  \textbf{N/A.} The problems are algorithmically specified tasks
+  containing no personal data. No personal identifiers or user-generated
+  content beyond algorithmic problem statements are used.
+
+%  ------------------------------------------------------------------
+\item \textbf{Did you discuss whether the data you are using/curating
+  contains personally identifiable information (PII)?}
+  \textbf{Yes.} Section~3 explicitly states that the benchmark
+  ``consist[s] of algorithmic specifications only and contain[s] no
+  personally identifying information.''
+
+%  ------------------------------------------------------------------
+\item \textbf{Did you provide documentation of the artifacts, e.g.,
+  coverage of domains and languages, demographic groups represented,
+  etc.?}
+  \textbf{Yes.} Section~3 documents benchmark composition: 100 problems,
+  three difficulty tiers (20 Easy / 50 Medium / 30 Hard), algorithmic
+  topics, Python-only evaluation, and selection methodology. Model
+  snapshots (provider, API identifier, access date) are listed in
+  Appendix~B.
+
+%  ------------------------------------------------------------------
+\item \textbf{Did you report the basic statistics of the data you used?}
+  \textbf{Yes.} Benchmark statistics (size, difficulty split, topic
+  coverage) are reported in Section~3.1. Per-model result distributions
+  appear in Table~1, Figure~2, and Figure~3.
+
+\end{enumerate}
+
+\noindent\textbf{Computational experiments}
+
+\begin{enumerate}
+\setcounter{enumi}{11}
+
+%  ------------------------------------------------------------------
+\item \textbf{If you ran experiments, did you report the number of
+  parameters for each model?}
+  \textbf{No.} Parameter counts for the evaluated models are not
+  publicly disclosed by all provider families (OpenAI, Anthropic, Google,
+  Qwen, DeepSeek). The paper reports the API identifiers, model tier
+  designations, and access dates in Table~1 and Appendix~B as the
+  available model descriptors.
+
+%  ------------------------------------------------------------------
+\item \textbf{If you ran experiments, did you report the hyperparameters
+  used and the range of hyperparameters you searched over?}
+  \textbf{Yes.} Section~3.3 specifies temperature $T=0.3$, top-$p=0.9$,
+  $R=5$ runs per problem, and the default 4{,}096-token output budget.
+  Reasoning model budget exceptions are documented. The study does not
+  perform hyperparameter search; values are fixed by experimental design.
+
+%  ------------------------------------------------------------------
+\item \textbf{Did you use the same evaluation procedure for all
+  experiments?}
+  \textbf{Yes.} All 32 model/prompt configurations are evaluated on
+  the identical 100-problem set using the same deterministic judge,
+  normalization pipeline, and metric definitions (RLPR, PSR, AV).
+
+%  ------------------------------------------------------------------
+\item \textbf{Did you report the total amount of compute used to run
+  your experiments?}
+  \textbf{No.} API-based inference costs depend on provider pricing and
+  token consumption, which vary per model and are not uniformly
+  available. The paper reports the number of evaluation instances
+  (16{,}000 total) and the per-model output token budgets as proxies
+  for compute scale. Exact compute cost in GPU-hours or dollar amounts
+  is not reported because all inference is accessed through commercial
+  APIs without access to underlying hardware metrics.
+
+%  ------------------------------------------------------------------
+\item \textbf{Did you use human annotators (e.g., crowdworkers) or
+  research participants in any way?}
+  \textbf{No.} All evaluation is automated. The judge is a deterministic
+  code execution harness; no human annotation is used.
+
+%  ------------------------------------------------------------------
+\item \textbf{Did you report the instructions given to annotators and
+  their payment/compensation?}
+  \textbf{N/A.} No human annotators were used.
+
+%  ------------------------------------------------------------------
+\item \textbf{Did you discuss potential biases in the human annotation
+  process and/or possible mitigation strategies?}
+  \textbf{N/A.} No human annotation was used.
+
+\end{enumerate}
+
+\noindent\textbf{Model development (if applicable)}
+
+\begin{enumerate}
+\setcounter{enumi}{18}
+
+%  ------------------------------------------------------------------
+\item \textbf{Did you report model validation results?}
+  \textbf{N/A.} The paper does not train or fine-tune models; it
+  evaluates pre-existing commercial models through provider APIs.
+
+%  ------------------------------------------------------------------
+\item \textbf{Did you report the results of any ablation study?}
+  \textbf{Yes.} A controlled prompt ablation (\textsc{Detailed} vs.\
+  \textsc{Minimal}) is reported in Section~4.5 with paired McNemar
+  tests. A reasoning-vs.-standard architecture comparison is reported
+  in Section~4.4. Both analyses are explicitly scoped as exploratory
+  given sample-size constraints.
+
+%  ------------------------------------------------------------------
+\item \textbf{Did you use the same evaluation procedure for all model
+  variants?}
+  \textbf{Yes.} Identical metrics, dataset, judge, normalization, and
+  statistical inference procedures are applied to all 32
+  model/prompt configurations (with the documented exception that
+  o4-mini does not expose temperature/top-$p$ controls).
+
+\end{enumerate}
+
+\noindent\textbf{Computational social science / Information extraction}
+
+\begin{enumerate}
+\setcounter{enumi}{21}
+
+%  ------------------------------------------------------------------
+\item \textbf{If your work is on applications in the social sciences or
+  other fields, did you discuss domain expertise?}
+  \textbf{N/A.} The paper is an empirical NLP/ML evaluation study, not
+  a social science or information-extraction application.
+
+%  ------------------------------------------------------------------
+\item \textbf{Did you describe potential applications and use cases of
+  your work in a responsible manner?}
+  \textbf{Yes.} The Conclusion frames the metrics as evaluation tools
+  for reproducibility-sensitive software engineering workflows. The
+  Ethics Statement explicitly cautions against using improved coding
+  performance as justification for fully autonomous code deployment
+  without security review.
+
+\end{enumerate}
 
 \end{document}
