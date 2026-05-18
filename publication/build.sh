@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e
-cd "$(dirname "$0")"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR"
+
+# Ensure figures symlink exists so the paper can reference figures/paper_figure*.png
+if [ ! -d figures ]; then
+  ln -sf ../output/aggregate/figures figures
+fi
 
 MODE="${1:-preprint}"
 TMP_TEX="main.build.tex"
