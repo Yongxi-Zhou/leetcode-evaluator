@@ -6,9 +6,6 @@
 \newif\ifpreprintversion
 \anonymoussubmissiontrue
 \preprintversionfalse
-% Remap fonts unavailable in this TeX installation to CM equivalents
-\renewcommand\sfdefault{cmss}
-\renewcommand\ttdefault{cmtt}
 \ifanonymoussubmission
   \usepackage[review]{acl}
 \else
@@ -21,7 +18,13 @@
 
 % Standard package includes
 \usepackage{times}
-\renewcommand\ttdefault{cmtt}  % times sets ttdefault to pcr (Courier), not available here
+% Official ACL fonts: Times (roman) + Helvetica (sans) + Courier (typewriter).
+% Helvetica (phv) and Courier (pcr) ship with full TeX installations and Overleaf
+% but are absent from minimal installs (e.g. TeX Live Basic). Fall back to Computer
+% Modern ONLY when the official fonts are missing, so submission-grade builds
+% (Overleaf / ARR system) automatically use the official sans and typewriter fonts.
+\IfFileExists{phvr8t.tfm}{}{\renewcommand\sfdefault{cmss}}
+\IfFileExists{pcrr8t.tfm}{}{\renewcommand\ttdefault{cmtt}}
 \usepackage{latexsym}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -45,11 +48,11 @@
 \usepackage{multicol}
 \usepackage{array}
 
-\ifanonymoussubmission
-\setlength\linenumbersep{4pt}
-\renewcommand\linenumberfont{\normalfont\tiny\color{gray}}
-\AtBeginDocument{\leftlinenumbers*}
-\fi
+% Line numbers in review mode are handled entirely by the official acl.sty
+% ([review] -> lineno with `switch`, placing numbers in the OUTER margins and
+% linenumbersep=1.6cm). Do NOT override linenumbersep / \leftlinenumbers here:
+% \leftlinenumbers* forces numbers to the left of BOTH columns, which puts the
+% right-column numbers in the middle of the page (the ARR desk-reject reason).
 
 \title{Accuracy, Stability, and Repeated-Run Reliability of Large Language Models on Deterministic Programming Tasks}
 
@@ -57,10 +60,12 @@
 \author{Anonymous ACL Submission}
 \else
 \author{
-  Yongxi Zhou \\
-  Northeastern University \\
-  Massachusetts, USA \\
-  \texttt{zhou.yongx@northeastern.edu}
+  Yongxi Zhou$^{1}$ \quad Lai Yun Choi$^{1}$ \quad Jiaxi Wen$^{1,\ast}$ \quad Wenbo Ye$^{2}$ \quad Junwei Yao$^{1}$ \\
+  $^{1}$Northeastern University, Massachusetts, USA \\
+  $^{2}$University of Southern California, California, USA \\
+  \texttt{\{zhou.yongx, choi.lai, wen.jiax, yao.junw\}@northeastern.edu} \quad
+  \texttt{ywb6113@gmail.com} \\
+  $^{\ast}$Corresponding author: \texttt{wen.jiax@northeastern.edu}
 }
 \fi
 
@@ -250,9 +255,7 @@ Figure~\ref{fig:acc-stability-scatter} plots RLPR against PSR for all 32 configu
 
 The gap $\Delta = \mathrm{RLPR} - \mathrm{PSR}$ is non-uniform and reaches its maximum in the mid-accuracy tier. Gemini 2.5 Flash has the largest gap (17.8\,pp under \textsc{Detailed}), followed by Gemini 3.1 Flash-Lite (16.2\,pp D) and Gemini 2.5 Flash+Think (17.4\,pp M). At the low end, Qwen-Turbo has a gap of only 2.4\,pp---not because it is uniformly reliable, but because its outcomes are highly polarized: many problems are either always failed or always passed, leaving less room for intermediate trial-to-trial variability. This pattern is reflected in AV: Qwen-Turbo has the lowest AV ($0.0088$), while Gemini 2.5 Flash has the highest ($0.0704$). Together, PSR and AV help distinguish between systems that are consistently strong, consistently weak, and unstable in the middle.
 
-While it is mathematically expected that RLPR $\geq$ PSR for any non-trivial Bernoulli process, and that the two metrics are highly correlated overall, the \emph{non-uniformity} of $\Delta$ across models is the substantive empirical finding. This non-uniformity is itself structurally expected: Bernoulli variance is maximized at $p \approx 0.5$, so mid-performing models---whose per-problem success probabilities cluster in the intermediate range---will exhibit the largest gaps by construction. The practical contribution is that this gap is observable, model-specific, and meaningfully large (up to 17.8 percentage points), meaning that RLPR rankings alone cannot reveal how much of a model's accuracy translates into retry-free reliability.
-
-Knowing the theoretical direction does not eliminate the need to measure the magnitude. The empirically determined quantities---how large $\Delta$ actually is (up to 17.8 pp) and which specific models fall in the mid-accuracy danger zone---cannot be derived from first principles, since per-problem success probabilities are not known a priori. The contribution is therefore best understood as empirical calibration of a theoretically expected pattern at scale.
+While RLPR $\geq$ PSR is mathematically expected for any non-trivial Bernoulli process, and Bernoulli variance peaks at $p \approx 0.5$ so mid-accuracy models exhibit the largest gaps by construction, the \emph{magnitude} of $\Delta$ and \emph{which} models fall in the mid-accuracy danger zone cannot be derived a priori, since per-problem success probabilities are unknown in advance. The empirical contribution is calibrating this expected pattern at scale: the gap is observable, model-specific, and meaningfully large (up to 17.8\,pp), so RLPR rankings alone cannot reveal how much of a model's accuracy translates into retry-free reliability.
 
 \begin{figure}[t]
 \centering
@@ -327,7 +330,7 @@ Prompt effects are model-dependent: most models show small differences (typicall
 \subsection{Accuracy--Stability Gap}
 \label{sec:gap}
 
-Although RLPR and PSR are strongly correlated overall ($r=0.985$), the gap $\Delta = \mathrm{RLPR} - \mathrm{PSR}$ is practically significant and non-uniform across models. Across all 32 configurations, $\Delta$ ranges from 2.4\,pp (Qwen-Turbo, \textsc{Detailed}) to 17.8\,pp (Gemini 2.5 Flash, \textsc{Detailed}). The gap peaks in the middle of the performance spectrum, where models succeed frequently enough to generate trial-to-trial variability but not consistently enough to eliminate it. This non-linearity means that a single RLPR ranking cannot be used to infer the magnitude of the accuracy--stability gap: two models with similar RLPR can differ substantially in how much of their accuracy converts to retry-free reliability. PSR makes this distinction explicit.
+Beyond its magnitude, the gap $\Delta$ can reorder model rankings. Because $\Delta$ peaks in the mid-accuracy tier (as shown earlier), two models with similar RLPR can differ substantially in retry-free reliability, so a single RLPR ranking cannot infer the accuracy--stability gap; PSR makes the distinction explicit.
 
 RLPR and PSR can disagree on model rankings despite the high correlation. For example, GPT-4.1 leads GPT-4.1-mini on RLPR (59.6\% vs.\ 58.4\%) but trails on PSR (47.5\% vs.\ 50.0\%)---a reversal driven by GPT-4.1's larger accuracy--stability gap (12.1\,pp vs.\ 8.4\,pp). This confirms that PSR captures deployment-relevant distinctions invisible to RLPR rankings alone.
 

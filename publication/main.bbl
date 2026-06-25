@@ -1,137 +1,100 @@
-\begin{thebibliography}{18}
+\begin{thebibliography}{19}
 \providecommand{\natexlab}[1]{#1}
 
-\bibitem[{Alvarado~Gonzalez et~al.(2025)}]{alvarado2025repetitions}
-Miguel~Angel Alvarado~Gonzalez and 1 others. 2025.
-\newblock Do repetitions matter? {S}trengthening reliability in {LLM}
-  evaluations.
-\newblock \emph{arXiv preprint arXiv:2509.24086}.
-\newblock Preprint; arXiv:2509.24086.
+\bibitem[{Aggarwal et~al.(2023)Aggarwal, Madaan, Yang, and Mausam}]{aggarwal2023lets}
+Pranjal Aggarwal, Aman Madaan, Yiming Yang, and Mausam. 2023.
+\newblock \href {https://doi.org/10.18653/v1/2023.emnlp-main.761} {Let's sample step by step: Adaptive-consistency for efficient reasoning and coding with {LLMs}}.
+\newblock In \emph{Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing}, pages 12375--12396, Singapore. Association for Computational Linguistics.
 
-\bibitem[{Atil et~al.(2024)Atil, Aykent, Tuncer et~al.}]{atil2024llm}
-Berk Atil, Sarp Aykent, Harun Tuncer, and 1 others. 2024.
-\newblock {LLM} stability: A detailed analysis with some surprises.
-\newblock \emph{arXiv preprint arXiv:2408.04667}.
+\bibitem[{Alvarado~Gonzalez et~al.(2025)Alvarado~Gonzalez, Bruno~Hernandez, Pe{\~n}aloza~Perez, Lopez~Orozco, Cruz~Soto, and Malagon}]{alvarado2025repetitions}
+Miguel~Angel Alvarado~Gonzalez, Michelle Bruno~Hernandez, Miguel~Angel Pe{\~n}aloza~Perez, Bruno Lopez~Orozco, Jesus~Tadeo Cruz~Soto, and Sandra Malagon. 2025.
+\newblock \href {https://arxiv.org/abs/2509.24086} {Do repetitions matter? {S}trengthening reliability in {LLM} evaluations}.
+\newblock \emph{Preprint}, arXiv:2509.24086.
 
-\bibitem[{Austin et~al.(2021)Austin, Odena, Nye, Bosma, Michalewski, Dohan,
-  Jiang, Cai, Terry, Le et~al.}]{austin2021program}
-Jacob Austin, Augustus Odena, Maxwell Nye, Maarten Bosma, Henryk Michalewski,
-  David Dohan, Ellen Jiang, Carrie Cai, Michael Terry, Quoc Le, and 1 others.
-  2021.
+\bibitem[{Atil et~al.(2024)Atil, Aykent, Chittams, Fu, Passonneau, Radcliffe, Rajagopal, Sloan, Tudrej, Ture, Wu, Xu, and Baldwin}]{atil2024llm}
+Berk Atil, Sarp Aykent, Alexa Chittams, Lisheng Fu, Rebecca~J. Passonneau, Evan Radcliffe, Guru~Rajan Rajagopal, Adam Sloan, Tomasz Tudrej, Ferhan Ture, Zhe Wu, Lixinyu Xu, and Breck Baldwin. 2024.
+\newblock \href {https://arxiv.org/abs/2408.04667} {Non-determinism of {``}deterministic{''} {LLM} settings}.
+\newblock \emph{Preprint}, arXiv:2408.04667.
+
+\bibitem[{Austin et~al.(2021)Austin, Odena, Nye, Bosma, Michalewski, Dohan, Jiang, Cai, Terry, Le, and Sutton}]{austin2021program}
+Jacob Austin, Augustus Odena, Maxwell Nye, Maarten Bosma, Henryk Michalewski, David Dohan, Ellen Jiang, Carrie Cai, Michael Terry, Quoc Le, and Charles Sutton. 2021.
 \newblock Program synthesis with large language models.
 \newblock \emph{arXiv preprint arXiv:2108.07732}.
 
-\bibitem[{Brown et~al.(2024)Brown, Juravsky, Ehrlich, Clark, Le, R{\'e}, and
-  Mirhoseini}]{brown2024large}
-Bradley Brown, Jordan Juravsky, Ryan Ehrlich, Ronald Clark, Quoc~V. Le,
-  Christopher R{\'e}, and Azalia Mirhoseini. 2024.
-\newblock Large language monkeys: Scaling inference compute with repeated
-  sampling.
-\newblock \emph{arXiv preprint arXiv:2407.21787}.
+\bibitem[{Brown et~al.(2025)Brown, Juravsky, Ehrlich, Clark, Le, R{\'e}, and Mirhoseini}]{brown2024large}
+Bradley Brown, Jordan Juravsky, Ryan Ehrlich, Ronald Clark, Quoc~V. Le, Christopher R{\'e}, and Azalia Mirhoseini. 2025.
+\newblock \href {https://openreview.net/forum?id=0xUEBQV54B} {Large language monkeys: Scaling inference compute with repeated sampling}.
+\newblock In \emph{The Thirteenth International Conference on Learning Representations (ICLR)}.
 
-\bibitem[{Chen et~al.(2021)Chen, Tworek, Jun, Yuan, Pinto, Kaplan, Edwards,
-  Burda, Joseph, Brockman et~al.}]{chen2021codex}
-Mark Chen, Jerry Tworek, Heewoo Jun, Qiming Yuan, Henrique Ponde de~Oliveira
-  Pinto, Jared Kaplan, Harri Edwards, Yuri Burda, Nicholas Joseph, Greg
-  Brockman, and 1 others. 2021.
+\bibitem[{Chen et~al.(2021)Chen, Tworek, Jun, Yuan, Pinto, Kaplan, Edwards, Burda, Joseph, Brockman, Ray, Puri, Krueger, Petrov, Khlaaf, Sastry, Mishkin, Chan, Gray, Ryder, Pavlov, Power, Kaiser, Bavarian, Winter, Tillet, Such, Cummings, Plappert, Chantzis, Barnes, Herbert-Voss, Guss, Nichol, Paino, Tezak, Tang, Babuschkin, Balaji, Jain, Saunders, Hesse, Carr, Leike, Achiam, Misra, Morikawa, Radford, Knight, Brundage, Murati, Mayer, Welinder, McGrew, Amodei, McCandlish, Sutskever, and Zaremba}]{chen2021codex}
+Mark Chen, Jerry Tworek, Heewoo Jun, Qiming Yuan, Henrique Ponde de~Oliveira Pinto, Jared Kaplan, Harri Edwards, Yuri Burda, Nicholas Joseph, Greg Brockman, Alex Ray, Raul Puri, Gretchen Krueger, Michael Petrov, Heidy Khlaaf, Girish Sastry, Pamela Mishkin, Brooke Chan, Scott Gray, and 39 others. 2021.
 \newblock Evaluating large language models trained on code.
 \newblock \emph{arXiv preprint arXiv:2107.03374}.
 
-\bibitem[{Deng et~al.(2023)Deng, Zhao, Tang, Gerstein, and
-  Cohan}]{deng2023investigating}
-Chunyuan Deng, Yilun Zhao, Xiangru Tang, Mark Gerstein, and Arman Cohan. 2023.
-\newblock Investigating data contamination in modern benchmarks for large
-  language models.
-\newblock \emph{arXiv preprint arXiv:2311.09783}.
+\bibitem[{Deng et~al.(2024)Deng, Zhao, Tang, Gerstein, and Cohan}]{deng2023investigating}
+Chunyuan Deng, Yilun Zhao, Xiangru Tang, Mark Gerstein, and Arman Cohan. 2024.
+\newblock \href {https://aclanthology.org/2024.naacl-long.482/} {Investigating data contamination in modern benchmarks for large language models}.
+\newblock In \emph{Proceedings of the 2024 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)}, pages 8706--8719, Mexico City, Mexico. Association for Computational Linguistics.
 
-\bibitem[{Du et~al.(2024)Du, Liu, Wang, Wang, Liu, Chen, Feng, Sha, Peng, and
-  Lou}]{du2024evaluating}
-Xueying Du, Mingwei Liu, Kaixin Wang, Hanlin Wang, Junwei Liu, Yixuan Chen,
-  Jiayi Feng, Chaofeng Sha, Xin Peng, and Yiling Lou. 2024.
-\newblock Evaluating large language models in class-level code generation.
-\newblock \emph{arXiv preprint arXiv:2308.01861}.
+\bibitem[{Du et~al.(2024)Du, Liu, Wang, Wang, Liu, Chen, Feng, Sha, Peng, and Lou}]{du2024evaluating}
+Xueying Du, Mingwei Liu, Kaixin Wang, Hanlin Wang, Junwei Liu, Yixuan Chen, Jiayi Feng, Chaofeng Sha, Xin Peng, and Yiling Lou. 2024.
+\newblock \href {https://doi.org/10.1145/3597503.3639219} {Evaluating large language models in class-level code generation}.
+\newblock In \emph{Proceedings of the IEEE/ACM 46th International Conference on Software Engineering (ICSE)}.
 
-\bibitem[{Gao et~al.(2024)Gao, Wang, Li, Sun, Qian, Ding, and
-  Zhou}]{gao2023text}
-Dawei Gao, Haibin Wang, Yaliang Li, Xiuyu Sun, Yichen Qian, Bolin Ding, and
-  Jingren Zhou. 2024.
-\newblock Text-to-{SQL} empowered by large language models: A benchmark
-  evaluation.
+\bibitem[{Gao et~al.(2024)Gao, Wang, Li, Sun, Qian, Ding, and Zhou}]{gao2023text}
+Dawei Gao, Haibin Wang, Yaliang Li, Xiuyu Sun, Yichen Qian, Bolin Ding, and Jingren Zhou. 2024.
+\newblock \href {https://doi.org/10.14778/3641204.3641221} {Text-to-{SQL} empowered by large language models: A benchmark evaluation}.
 \newblock \emph{Proceedings of the VLDB Endowment}, 17(5):1132--1145.
 
-\bibitem[{Guo et~al.(2017)Guo, Pleiss, Sun, and
-  Weinberger}]{guo2017calibration}
-Chuan Guo, Geoff Pleiss, Yu~Sun, and Kilian~Q Weinberger. 2017.
-\newblock \href {https://doi.org/10.5555/3305381.3305518} {On calibration of
-  modern neural networks}.
-\newblock In \emph{Proceedings of the 34th International Conference on Machine
-  Learning}, pages 1321--1330.
+\bibitem[{Guo et~al.(2017)Guo, Pleiss, Sun, and Weinberger}]{guo2017calibration}
+Chuan Guo, Geoff Pleiss, Yu~Sun, and Kilian~Q. Weinberger. 2017.
+\newblock \href {https://proceedings.mlr.press/v70/guo17a.html} {On calibration of modern neural networks}.
+\newblock In \emph{Proceedings of the 34th International Conference on Machine Learning}, volume~70 of \emph{Proceedings of Machine Learning Research}, pages 1321--1330.
 
-\bibitem[{Hendrycks et~al.(2021)Hendrycks, Basart, Kadavath, Mazeika, Zou,
-  Song, and Steinhardt}]{hendrycks2021apps}
-Dan Hendrycks, Steven Basart, Saurav Kadavath, Mantas Mazeika, Andy Zou, Dawn
-  Song, and Jacob Steinhardt. 2021.
-\newblock Measuring coding challenge competence with {APPS}.
-\newblock \emph{arXiv preprint arXiv:2105.09938}.
+\bibitem[{Hendrycks et~al.(2021)Hendrycks, Basart, Kadavath, Mazeika, Arora, Guo, Burns, Puranik, He, Song, and Steinhardt}]{hendrycks2021apps}
+Dan Hendrycks, Steven Basart, Saurav Kadavath, Mantas Mazeika, Akul Arora, Ethan Guo, Collin Burns, Samir Puranik, Horace He, Dawn Song, and Jacob Steinhardt. 2021.
+\newblock \href {https://openreview.net/forum?id=sD93GOzH3i5} {Measuring coding challenge competence with {APPS}}.
+\newblock In \emph{Proceedings of the Neural Information Processing Systems Track on Datasets and Benchmarks}.
 
-\bibitem[{Jain et~al.(2024)Jain, Han, Gu, Li, Yan, Zhang, Wang, Solar-Lezama,
-  Sen, and Stoica}]{jain2024livecodebench}
-Naman Jain, King Han, Alex Gu, Wen-Ding Li, Fanjia Yan, Tianjun Zhang, Sida
-  Wang, Armando Solar-Lezama, Koushik Sen, and Ion Stoica. 2024.
-\newblock Livecodebench: Holistic and contamination free evaluation of large
-  language models for code.
-\newblock \emph{arXiv preprint arXiv:2403.07974}.
+\bibitem[{Jain et~al.(2025)Jain, Han, Gu, Li, Yan, Zhang, Wang, Solar-Lezama, Sen, and Stoica}]{jain2024livecodebench}
+Naman Jain, King Han, Alex Gu, Wen-Ding Li, Fanjia Yan, Tianjun Zhang, Sida Wang, Armando Solar-Lezama, Koushik Sen, and Ion Stoica. 2025.
+\newblock \href {https://openreview.net/forum?id=chfJJYC3iL} {{LiveCodeBench}: Holistic and contamination free evaluation of large language models for code}.
+\newblock In \emph{The Thirteenth International Conference on Learning Representations (ICLR)}.
 
-\bibitem[{Jiang et~al.(2026)Jiang, Yang, Yang, Liu, and
-  Ji}]{jiang2026agenticaicybersecurityattack}
+\bibitem[{Jiang et~al.(2026)Jiang, Yang, Yang, Liu, and Ji}]{jiang2026agenticaicybersecurityattack}
 Xiaochong Jiang, Shiqi Yang, Wenting Yang, Yichen Liu, and Cheng Ji. 2026.
-\newblock \href {https://arxiv.org/abs/2602.19555} {{SOK}: A taxonomy of attack
-  vectors and defense strategies for agentic supply chain runtime}.
+\newblock \href {https://arxiv.org/abs/2602.19555} {{SOK}: A taxonomy of attack vectors and defense strategies for agentic supply chain runtime}.
 \newblock \emph{Preprint}, arXiv:2602.19555.
 
-\bibitem[{Jimenez et~al.(2024)Jimenez, Yang, Wettig, Yao, Pei, Press, and
-  Narasimhan}]{jimenez2024swebench}
-Carlos~E. Jimenez, John Yang, Alexander Wettig, Shunyu Yao, Kexin Pei, Ofir
-  Press, and Karthik~R. Narasimhan. 2024.
-\newblock {SWE}-bench: Can language models resolve real-world github issues?
-\newblock \emph{arXiv preprint arXiv:2310.06770}.
+\bibitem[{Jimenez et~al.(2024)Jimenez, Yang, Wettig, Yao, Pei, Press, and Narasimhan}]{jimenez2024swebench}
+Carlos~E. Jimenez, John Yang, Alexander Wettig, Shunyu Yao, Kexin Pei, Ofir Press, and Karthik~R. Narasimhan. 2024.
+\newblock \href {https://openreview.net/forum?id=VTF8yNQM66} {{SWE}-bench: Can language models resolve real-world {GitHub} issues?}
+\newblock In \emph{The Twelfth International Conference on Learning Representations (ICLR)}.
 
-\bibitem[{Kojima et~al.(2022)Kojima, Gu, Reid, Matsuo, and
-  Iwasawa}]{kojima2022zeroshot}
-Takeshi Kojima, Shixiang~Shane Gu, Machel Reid, Yutaka Matsuo, and Yusuke
-  Iwasawa. 2022.
-\newblock Large language models are zero-shot reasoners.
-\newblock \emph{arXiv preprint arXiv:2205.11916}.
+\bibitem[{Kojima et~al.(2022)Kojima, Gu, Reid, Matsuo, and Iwasawa}]{kojima2022zeroshot}
+Takeshi Kojima, Shixiang~Shane Gu, Machel Reid, Yutaka Matsuo, and Yusuke Iwasawa. 2022.
+\newblock \href {https://proceedings.neurips.cc/paper_files/paper/2022/hash/8bb0d291acd4acf06ef112099c16f326-Abstract-Conference.html} {Large language models are zero-shot reasoners}.
+\newblock In \emph{Advances in Neural Information Processing Systems}, volume~35, pages 22199--22213.
 
-\bibitem[{Liu et~al.(2024)Liu, Xia, Wang, and Zhang}]{liu2024your}
-Jiawei Liu, Chunqiu~Steven Xia, Yuyao Wang, and Lingming Zhang. 2024.
-\newblock Is your code generated by chatgpt really correct? rigorous evaluation
-  of large language models for code generation.
-\newblock In \emph{Advances in Neural Information Processing Systems},
-  volume~36.
+\bibitem[{Liu et~al.(2023)Liu, Xia, Wang, and Zhang}]{liu2024your}
+Jiawei Liu, Chunqiu~Steven Xia, Yuyao Wang, and Lingming Zhang. 2023.
+\newblock \href {https://proceedings.neurips.cc/paper_files/paper/2023/hash/43e9d647ccd3e4b7b5baab53f0368686-Abstract-Conference.html} {Is your code generated by {ChatGPT} really correct? rigorous evaluation of large language models for code generation}.
+\newblock In \emph{Advances in Neural Information Processing Systems}, volume~36.
 
-\bibitem[{Wang et~al.(2022)Wang, Wei, Schuurmans, Le, Chi, Narang, Chowdhery,
-  and Zhou}]{wang2022self}
-Xuezhi Wang, Jason Wei, Dale Schuurmans, Quoc Le, Ed~H. Chi, Sharan Narang,
-  Aakanksha Chowdhery, and Denny Zhou. 2022.
-\newblock Self-consistency improves chain of thought reasoning in language
-  models.
-\newblock \emph{arXiv preprint arXiv:2203.11171}.
+\bibitem[{Wang et~al.(2023)Wang, Wei, Schuurmans, Le, Chi, Narang, Chowdhery, and Zhou}]{wang2022self}
+Xuezhi Wang, Jason Wei, Dale Schuurmans, Quoc Le, Ed~H. Chi, Sharan Narang, Aakanksha Chowdhery, and Denny Zhou. 2023.
+\newblock \href {https://openreview.net/forum?id=1PL1NIMMrw} {Self-consistency improves chain of thought reasoning in language models}.
+\newblock In \emph{The Eleventh International Conference on Learning Representations (ICLR)}.
 
 \bibitem[{Zhang et~al.(2026)Zhang, Xiang, and Xu}]{zhang2026performance}
 Yike Zhang, Zuodong Xiang, and Hailu Xu. 2026.
-\newblock Performance-efficiency trade-offs in human preference prediction: A
-  comparative study of traditional machine learning and large language models.
-\newblock In \emph{Proceedings of the 31st IEEE Symposium on Computers and
-  Communications (ISCC)}. IEEE.
+\newblock Performance-efficiency trade-offs in human preference prediction: A comparative study of traditional machine learning and large language models.
+\newblock In \emph{Proceedings of the 31st IEEE Symposium on Computers and Communications (ISCC)}. IEEE.
 \newblock To appear.
 
-\bibitem[{Zhuo et~al.(2024)Zhuo, Zhang, Fang, Duan, Lin, and
-  Chen}]{zhuo2024prosa}
-Jingming Zhuo, Songyang Zhang, Xinyu Fang, Haodong Duan, Dahua Lin, and Kai
-  Chen. 2024.
-\newblock {ProSA}: Assessing and understanding the prompt sensitivity of
-  {LLMs}.
-\newblock \emph{arXiv preprint arXiv:2410.12405}.
+\bibitem[{Zhuo et~al.(2024)Zhuo, Zhang, Fang, Duan, Lin, and Chen}]{zhuo2024prosa}
+Jingming Zhuo, Songyang Zhang, Xinyu Fang, Haodong Duan, Dahua Lin, and Kai Chen. 2024.
+\newblock \href {https://aclanthology.org/2024.findings-emnlp.108/} {{ProSA}: Assessing and understanding the prompt sensitivity of {LLMs}}.
+\newblock In \emph{Findings of the Association for Computational Linguistics: EMNLP 2024}, pages 1950--1976, Miami, Florida, USA. Association for Computational Linguistics.
 
 \end{thebibliography}

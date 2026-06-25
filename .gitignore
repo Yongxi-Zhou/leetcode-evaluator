@@ -53,3 +53,10 @@ ENV/
 
 # */logs
 # main.*
+
+# OMC session state
+.omc/
+
+# LaTeX scratch logs
+missfont.log
+texput.log
